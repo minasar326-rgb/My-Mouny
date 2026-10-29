@@ -1,16 +1,16 @@
-const CACHE_NAME = "khazinti-cache-v8";
+const CACHE_NAME = "my-mouny-cache-v10";
 
-const PRECACHE_URLS = [
-  "/",
-  "/manifest.json",
-  "/favicon.png",
-  "/apple-touch-icon.png",
-  "/privacy.html",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/icons/icon-maskable.png",
-  "/screenshots/screenshot-mobile.png",
-  "/screenshots/screenshot-desktop.png"
+const PRECACHE_ASSETS = [
+  "",
+  "manifest.json",
+  "favicon.png",
+  "apple-touch-icon.png",
+  "privacy.html",
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "icons/icon-maskable.png",
+  "screenshots/screenshot-mobile.png",
+  "screenshots/screenshot-desktop.png"
 ];
 
 // فحص ما إذا كان العنوان هو بيئة تطوير (Vite dev server)
@@ -31,14 +31,16 @@ self.addEventListener("install", (event) => {
     self.skipWaiting();
     return;
   }
+  const scope = self.registration ? self.registration.scope : self.location.href;
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
-      console.log("[ServiceWorker] Pre-caching core offline assets (v7)");
-      for (const url of PRECACHE_URLS) {
+      console.log("[ServiceWorker] Pre-caching core offline assets (v10)");
+      for (const rel of PRECACHE_ASSETS) {
+        const fullUrl = new URL(rel, scope).href;
         try {
-          await cache.add(url);
+          await cache.add(fullUrl);
         } catch (err) {
-          console.warn("[ServiceWorker] Precache skipped for", url);
+          console.warn("[ServiceWorker] Precache skipped for", fullUrl, err);
         }
       }
     })
@@ -98,12 +100,13 @@ self.addEventListener("fetch", (event) => {
 
   // استراتيجية طلبات التنقل (صفحات HTML)
   if (req.mode === "navigate") {
+    const scope = self.registration ? self.registration.scope : "/";
     // في بيئة التطوير المحلية (localhost/127.0.0.1)، جلب النسخة المباشرة دائماً لتجنب تعارض HMR
     if (isDev) {
       event.respondWith(
         fetch(req).catch(async () => {
           const cache = await caches.open(CACHE_NAME);
-          const cached = (await cache.match(req, { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }));
+          const cached = (await cache.match(req, { ignoreSearch: true })) || (await cache.match(scope, { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }));
           return cached || new Response("Offline in development mode", { status: 503 });
         })
       );
@@ -114,14 +117,15 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       (async () => {
         const cache = await caches.open(CACHE_NAME);
-        const cached = (await cache.match(req, { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }));
+        const cached = (await cache.match(req, { ignoreSearch: true })) || (await cache.match(scope, { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }));
 
         // مهمة جلب التحديث من الشبكة وتخزينه في الخلفية
         const networkFetchPromise = fetch(req)
           .then((response) => {
             if (response && response.status === 200) {
               const copy = response.clone();
-              cache.put("/", copy);
+              cache.put(req, copy);
+              cache.put(scope, response.clone());
             }
             return response;
           })
@@ -139,7 +143,7 @@ self.addEventListener("fetch", (event) => {
 
         // Fallback في حال انقطاع الشبكة تماماً قبل التخزين
         return new Response(
-          `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>خزينتي</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;text-align:center;padding:50px 20px;background:#f4f1eb;color:#1c1a17"><h2>خزينتي - الخزنة المالية</h2><p style="color:#666">التطبيق يعمل دون إنترنت. يرجى الضغط أدناه لتحديث الصفحة.</p><button onclick="location.reload()" style="padding:10px 24px;border-radius:10px;background:#0d9488;color:#fff;border:none;cursor:pointer;font-weight:bold;margin-top:20px">تحديث الصفحة</button></body></html>`,
+          `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>My Mouny</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;text-align:center;padding:50px 20px;background:#f4f1eb;color:#1c1a17"><h2>My Mouny</h2><p style="color:#666">التطبيق يعمل دون إنترنت. يرجى الضغط أدناه لتحديث الصفحة.</p><button onclick="location.reload()" style="padding:10px 24px;border-radius:10px;background:#0d9488;color:#fff;border:none;cursor:pointer;font-weight:bold;margin-top:20px">تحديث الصفحة</button></body></html>`,
           { headers: { "Content-Type": "text/html; charset=utf-8" } }
         );
       })()
