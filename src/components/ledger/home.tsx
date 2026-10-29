@@ -53,6 +53,7 @@ import {
 } from "@/lib/ledger/model";
 import { openingAdjust, useLedger, type Draft } from "@/lib/ledger/store";
 import { VaultAuthScreen, BackupModal, SetPinModal } from "./vault-auth";
+import { DeveloperFooter } from "./developer-footer";
 import { useModalBackHandler, useRootBackHandler } from "@/lib/use-back-handler";
 import {
   LANGUAGES,
@@ -1460,25 +1461,30 @@ function Ledger() {
         </div>
       )}
 
-      {/* Footer with Privacy Policy and Local Security assurance */}
-      <footer className="mt-10 border-t border-line pt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-muted">
-        <div className="flex items-center gap-3">
-          <span>{t("appName", lang)} &copy; 2026</span>
-          <span>·</span>
-          <a
-            href="/privacy.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-accent underline underline-offset-2 flex items-center gap-1 font-medium"
-          >
-            <FileText className="size-3.5" />
-            {t("footerPrivacy", lang)}
-          </a>
+      {/* Footer with Privacy Policy, Local Security assurance, and Developer Contact */}
+      <footer className="mt-10 border-t border-line pt-4 flex flex-col gap-4 text-xs text-muted">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span>{t("appName", lang)} &copy; 2026</span>
+            <span>·</span>
+            <a
+              href="/privacy.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent underline underline-offset-2 flex items-center gap-1 font-medium"
+            >
+              <FileText className="size-3.5" />
+              {t("footerPrivacy", lang)}
+            </a>
+          </div>
+          <div className="flex items-center gap-1 text-[11px]">
+            <ShieldCheck className="size-3.5 text-accent" />
+            <span>{t("footerSecurity", lang)}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1 text-[11px]">
-          <ShieldCheck className="size-3.5 text-accent" />
-          <span>{t("footerSecurity", lang)}</span>
-        </div>
+
+        {/* Professional Developer & WhatsApp Contact */}
+        <DeveloperFooter />
       </footer>
     </main>
   );

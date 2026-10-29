@@ -18,6 +18,7 @@ const mimeTypes = {
 
 // Create a static server that simulates GitHub Pages at /My-Mouny/
 const server = http.createServer((req, res) => {
+  console.log("SERVER REQ:", req.url);
   let urlPath = req.url.split("?")[0];
   if (urlPath === "/" || urlPath === "/My-Mouny") {
     res.writeHead(302, { Location: "/My-Mouny/" });
@@ -58,9 +59,13 @@ server.listen(PORT, async () => {
     page.on("console", (msg) => {
       if (msg.type() === "error") consoleErrors.push(msg.text());
     });
-    page.on("pageerror", (err) => {
-      console.log("PAGE ERROR STACK:", err.stack);
-      consoleErrors.push(err.message);
+    page.on("requestfailed", (req) => {
+      console.log("REQUEST FAILED:", req.url(), req.failure()?.errorText);
+    });
+    page.on("response", (res) => {
+      if (res.status() >= 400) {
+        console.log("HTTP ERROR:", res.status(), res.url());
+      }
     });
 
     console.log("Navigating to static build on simulated GitHub Pages...");

@@ -1,11 +1,16 @@
 {
-  "id": "https://minasar326-rgb.github.io/Zaker-MB/",
-  "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
-  "short_name": "ذاكر",
-  "description": "ذاكر: تطبيق إدارة المصاريف والحسابات والخزنة مشفر محلياً ويعمل بالكامل دون إنترنت.",
-  "start_url": "/Zaker-MB/?source=pwa",
-  "scope": "/Zaker-MB/",
+  "id": "https://minasar326-rgb.github.io/My-Mouny/",
+  "name": "my Mouny",
+  "short_name": "my Mouny",
+  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100%.",
+  "start_url": "/My-Mouny/?source=pwa",
+  "scope": "/My-Mouny/",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "portrait",
   "background_color": "#f4f1eb",
   "theme_color": "#1c1a17",
@@ -16,22 +21,91 @@
     "productivity",
     "utilities"
   ],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "scope_extensions": [
+    {
+      "origin": "https://minasar326-rgb.github.io"
+    }
+  ],
   "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.minasar.zakerm",
+      "url": "https://play.google.com/store/apps/details?id=com.minasar.zakerm"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": [
+      "navigate-existing",
+      "auto"
+    ]
+  },
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "file_handlers": [
+    {
+      "action": "/My-Mouny/",
+      "name": "my Mouny Backup",
+      "accept": {
+        "application/json": [
+          ".json",
+          ".mouny"
+        ]
+      }
+    }
+  ],
+  "share_target": {
+    "action": "/My-Mouny/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+mymouny",
+      "url": "/My-Mouny/?action=%s"
+    }
+  ],
+  "handle_links": "preferred",
+  "widgets": [
+    {
+      "name": "my Mouny",
+      "short_name": "Mouny",
+      "description": "رصيدك وحساباتك السريعة",
+      "tag": "mouny-widget",
+      "template": "widget-template",
+      "ms_ac_template": "widgets/balance.json",
+      "data": "widgets/balance-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/My-Mouny/screenshots/screenshot-mobile.png",
+          "sizes": "390x844",
+          "label": "Widget preview"
+        }
+      ]
+    }
+  ],
   "icons": [
     {
-      "src": "/Zaker-MB/icons/icon-192.png",
+      "src": "/My-Mouny/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Zaker-MB/icons/icon-512.png",
+      "src": "/My-Mouny/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Zaker-MB/icons/icon-maskable.png",
+      "src": "/My-Mouny/icons/icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -39,18 +113,18 @@
   ],
   "screenshots": [
     {
-      "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
+      "src": "/My-Mouny/screenshots/screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق ذاكر على الهاتف المحمول"
+      "label": "واجهة تطبيق my Mouny على الهاتف المحمول"
     },
     {
-      "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
+      "src": "/My-Mouny/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تحكم تطبيق ذاكر على الكمبيوتر والتابلت"
+      "label": "لوحة تحكم my Mouny على الكمبيوتر والتابلت"
     }
   ],
   "shortcuts": [
@@ -58,10 +132,10 @@
       "name": "سجّل شراء",
       "short_name": "شراء",
       "description": "تسجيل عملية شراء وخصم فوري",
-      "url": "/Zaker-MB/",
+      "url": "/My-Mouny/",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -69,11 +143,11 @@
     {
       "name": "سجّل دخل",
       "short_name": "دخل",
-      "description": "تسجيل إيداع دخل جديد",
-      "url": "/Zaker-MB/",
+      "description": "تسجيل إيراد مالي جديد",
+      "url": "/My-Mouny/",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -81,11 +155,11 @@
     {
       "name": "دفتر الحسابات",
       "short_name": "الدفتر",
-      "description": "عرض الحركات والمعاملات المالية",
-      "url": "/Zaker-MB/",
+      "description": "عرض ما لك وما عليك وسجل المعاملات",
+      "url": "/My-Mouny/",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]

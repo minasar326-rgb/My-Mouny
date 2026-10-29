@@ -19,6 +19,7 @@ import { checkLockout } from "@/lib/storage/idb";
 import { useModalBackHandler, useRootBackHandler } from "@/lib/use-back-handler";
 import { LANGUAGES, t, type Language } from "@/lib/i18n";
 import { convertArabicDigits } from "@/lib/ledger/model";
+import { DeveloperFooter } from "./developer-footer";
 
 function getVaultDisplayName(name?: string, lang: Language = "ar"): string {
   if (
@@ -481,6 +482,10 @@ export function VaultAuthScreen() {
             </button>
           </form>
         )}
+      </div>
+
+      <div className="w-full max-w-md mt-2">
+        <DeveloperFooter />
       </div>
 
       {showExitToast && (

@@ -6,7 +6,7 @@ const gitPath = "git";
 const root = process.cwd();
 const distDir = path.join(root, "dist");
 
-console.log("Pushing pre-built static assets from dist/ to gh-pages branch of Zaker-MB...");
+console.log("Pushing pre-built static assets from dist/ to gh-pages branch...");
 
 if (!fs.existsSync(distDir)) {
   throw new Error("dist directory does not exist! Run npm run export:gh-pages first.");
@@ -20,9 +20,19 @@ if (fs.existsSync(distGit)) {
 
 execSync(`"${gitPath}" init`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" add -A`, { cwd: distDir, stdio: "inherit" });
-execSync(`"${gitPath}" commit -m "deploy: static GitHub Pages build for Zaker-MB"`, { cwd: distDir, stdio: "inherit" });
+execSync(`"${gitPath}" commit -m "deploy: static GitHub Pages build for my Mouny with developer footer"`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" branch -M gh-pages`, { cwd: distDir, stdio: "inherit" });
-execSync(`"${gitPath}" remote add origin https://github.com/minasar326-rgb/Zaker-MB.git`, { cwd: distDir, stdio: "inherit" });
+
+console.log("Pushing to My-Mouny gh-pages...");
+execSync(`"${gitPath}" remote add origin https://github.com/minasar326-rgb/My-Mouny.git`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" push -f origin gh-pages`, { cwd: distDir, stdio: "inherit" });
 
-console.log("Successfully pushed to Zaker-MB gh-pages branch!");
+try {
+  console.log("Pushing mirror to Zaker-MB gh-pages...");
+  execSync(`"${gitPath}" remote set-url origin https://github.com/minasar326-rgb/Zaker-MB.git`, { cwd: distDir, stdio: "inherit" });
+  execSync(`"${gitPath}" push -f origin gh-pages`, { cwd: distDir, stdio: "inherit" });
+} catch (e) {
+  console.warn("Mirror push to Zaker-MB skipped:", e.message);
+}
+
+console.log("Successfully pushed to gh-pages branches!");
