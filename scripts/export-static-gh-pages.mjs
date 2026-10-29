@@ -101,8 +101,24 @@ html = html.replace(/<meta name="twitter:card"[^>]*>/g, '');
 html = html.replace(/<meta property="og:title"[^>]*>/g, '');
 html = html.replace(/<link rel="apple-touch-icon" href="[^"]*__grok[^"]*">/g, '');
 
-// Remove X-Frame-Options meta tag (only allowed in HTTP headers, not meta)
+// Remove X-Frame-Options meta tag (only allowed in HTTP headers, not meta tags)
 html = html.replace(/<meta http-equiv="X-Frame-Options"[^>]*>/gi, '');
+
+// Verify actual CSS and JS filenames in dist/assets
+const assetsDir = path.join(distDir, "assets");
+if (fs.existsSync(assetsDir)) {
+  const assetFiles = fs.readdirSync(assetsDir);
+  const actualCss = assetFiles.find((f) => f.startsWith("styles-") && f.endsWith(".css"));
+  const actualJs = assetFiles.find((f) => f.startsWith("index-") && f.endsWith(".js"));
+
+  if (actualCss) {
+    html = html.replace(/(?:\/My-Mouny)?\/assets\/styles-[A-Za-z0-9_-]+\.css/g, `/My-Mouny/assets/${actualCss}`);
+  }
+  if (actualJs) {
+    html = html.replace(/(?:\/My-Mouny)?\/assets\/index-[A-Za-z0-9_-]+\.js/g, `/My-Mouny/assets/${actualJs}`);
+  }
+  html = html.replaceAll('/My-Mouny/My-Mouny/', '/My-Mouny/');
+}
 
 // 5. Write index.html, 404.html, and .nojekyll
 fs.writeFileSync(path.join(distDir, "index.html"), html, "utf8");
@@ -110,7 +126,6 @@ fs.writeFileSync(path.join(distDir, "404.html"), html, "utf8");
 fs.writeFileSync(path.join(distDir, ".nojekyll"), "");
 
 // 6. Patch JS asset bundles in dist/assets so runtime stylesheet & dynamic imports use /My-Mouny/
-const assetsDir = path.join(distDir, "assets");
 if (fs.existsSync(assetsDir)) {
   const assetFiles = fs.readdirSync(assetsDir);
   for (const file of assetFiles) {
@@ -162,10 +177,47 @@ if (fs.existsSync(manifestPath)) {
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), "utf8");
 }
 
-// 8. Update sw.js in dist with correct precache URLs
+// 8. Update sw.js in dist with correct precache URLs and cache invalidation
 const swPath = path.join(distDir, "sw.js");
 if (fs.existsSync(swPath)) {
   let swContent = fs.readFileSync(swPath, "utf8");
+
+  const staticAssetFiles = fs.existsSync(assetsDir)
+    ? fs.readdirSync(assetsDir).map((f) => `/My-Mouny/assets/${f}`)
+    : [];
+
+  const precacheList = [
+    "/My-Mouny/",
+    "/My-Mouny/index.html",
+    "/My-Mouny/manifest.json",
+    "/My-Mouny/favicon.png",
+    "/My-Mouny/favicon.svg",
+    "/My-Mouny/apple-touch-icon.png",
+    "/My-Mouny/icons/icon-192.png",
+    "/My-Mouny/icons/icon-512.png",
+    "/My-Mouny/icons/icon-maskable.png",
+    "/My-Mouny/screenshots/screenshot-mobile.png",
+    "/My-Mouny/screenshots/screenshot-desktop.png",
+    ...staticAssetFiles,
+  ];
+
+  // Update PRECACHE_URLS
+  swContent = swContent.replace(
+    /const PRECACHE_URLS = \[[^\]]*\];/s,
+    `const PRECACHE_URLS = ${JSON.stringify(precacheList, null, 2)};`
+  );
+
+  // Bump Cache Name with timestamp to invalidate any stale browser SW cache
+  const timestamp = Date.now();
+  swContent = swContent.replace(
+    /const CACHE_NAME = "[^"]*";/,
+    `const CACHE_NAME = "mymouny-pages-v${timestamp}";`
+  );
+
+  // Replace navigation matching logic for GitHub Pages
+  swContent = swContent.replaceAll('cache.match("/")', '(await cache.match("/My-Mouny/", { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }))');
+  swContent = swContent.replaceAll('cache.put("/", copy)', 'cache.put("/My-Mouny/", copy)');
+
   swContent = fixPaths(swContent);
   fs.writeFileSync(swPath, swContent, "utf8");
 }

@@ -20,8 +20,12 @@ function RootShell() {
         });
       } else {
         window.addEventListener("load", () => {
+          const base =
+            typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
+              ? "/My-Mouny/"
+              : "/";
           navigator.serviceWorker
-            .register("/sw.js")
+            .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
               console.log("[SW] Registered successfully:", reg.scope);
               reg.update().catch(() => {});
