@@ -14,20 +14,6 @@ android {
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        resValue "string", "appName", "Zaker-m"
-        resValue "string", "hostName", "minasar326-rgb.github.io"
-        resValue "string", "defaultUrl", "https://minasar326-rgb.github.io/Zaker-m/"
-        resValue "string", "assetStatements", """
-            [{
-                "relation": ["delegate_permission/common.handle_all_urls"],
-                "target": {
-                    "namespace": "android_app",
-                    "package_name": "com.minasar.zakerm",
-                    "sha256_cert_fingerprints": ["30:7D:F8:78:33:9A:C3:63:73:C0:7E:DC:02:69:B6:54:33:2E:2D:E8:13:B9:AA:A0:8A:DF:42:04:1E:51:75:E7"]
-                }
-            }]
-        """
     }
 
     signingConfigs {

@@ -11,10 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LauncherActivity">
 
-        <meta-data
-            android:name="asset_statements"
-            android:value="@string/assetStatements" />
-
         <activity
             android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
             android:exported="true"
