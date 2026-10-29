@@ -1,28 +1,35 @@
-// ذاكر - High-Performance Offline-First Service Worker
-const CACHE_NAME = "zaker-offline-cache-v2026";
+// my Mouny - High-Performance Offline-First Service Worker
+const CACHE_NAME = "mymouny-offline-cache-v2026";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
-const OFFLINE_URL = "/Zaker-MB/offline.html";
 
-// الأصول الأساسية التي يتم تخزينها فوراً عند التثبيت
+// Determine base scope dynamically (e.g. /My-Mouny/ or /Zaker-MB/)
+const SCOPE_BASE = (self.registration && self.registration.scope)
+  ? new URL(self.registration.scope).pathname
+  : "/My-Mouny/";
+const cleanBase = SCOPE_BASE.endsWith("/") ? SCOPE_BASE : SCOPE_BASE + "/";
+
+const OFFLINE_URL = `${cleanBase}offline.html`;
+
+// Core offline assets precached on install
 const PRECACHE_ASSETS = [
-  "/Zaker-MB/",
-  "/Zaker-MB/index.html",
-  "/Zaker-MB/?source=pwa",
-  "/Zaker-MB/manifest.json",
-  "/Zaker-MB/offline.html",
-  "/Zaker-MB/favicon.png",
-  "/Zaker-MB/favicon.svg",
-  "/Zaker-MB/favicon.ico",
-  "/Zaker-MB/apple-touch-icon.png",
-  "/Zaker-MB/privacy.html",
-  "/Zaker-MB/icons/icon-192.png",
-  "/Zaker-MB/icons/icon-512.png",
-  "/Zaker-MB/icons/icon-maskable.png",
-  "/Zaker-MB/screenshots/screenshot-mobile.png",
-  "/Zaker-MB/screenshots/screenshot-desktop.png",
-  "/Zaker-MB/widgets/balance.json",
-  "/Zaker-MB/widgets/balance-data.json"
+  cleanBase,
+  `${cleanBase}index.html`,
+  `${cleanBase}?source=pwa`,
+  `${cleanBase}manifest.json`,
+  `${cleanBase}offline.html`,
+  `${cleanBase}favicon.png`,
+  `${cleanBase}favicon.svg`,
+  `${cleanBase}favicon.ico`,
+  `${cleanBase}apple-touch-icon.png`,
+  `${cleanBase}privacy.html`,
+  `${cleanBase}icons/icon-192.png`,
+  `${cleanBase}icons/icon-512.png`,
+  `${cleanBase}icons/icon-maskable.png`,
+  `${cleanBase}screenshots/screenshot-mobile.png`,
+  `${cleanBase}screenshots/screenshot-desktop.png`,
+  `${cleanBase}widgets/balance.json`,
+  `${cleanBase}widgets/balance-data.json`
 ];
 
 // 1. تثبيت الـ Service Worker وحفظ الأصول الأساسية في الكاش فوراً
@@ -30,7 +37,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
-      console.log("[ذاكر SW] Pre-caching core offline assets...");
+      console.log("[my Mouny SW] Pre-caching core offline assets for scope:", cleanBase);
       for (const asset of PRECACHE_ASSETS) {
         try {
           const res = await fetch(asset, { cache: "reload" });
@@ -38,7 +45,7 @@ self.addEventListener("install", (event) => {
             await cache.put(asset, res);
           }
         } catch (err) {
-          console.warn("[ذاكر SW] Precache skip:", asset, err);
+          console.warn("[my Mouny SW] Precache skip:", asset, err);
         }
       }
     })
@@ -52,7 +59,7 @@ self.addEventListener("activate", (event) => {
       Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME && key !== CACHE) {
-            console.log("[ذاكر SW] Deleting obsolete cache:", key);
+            console.log("[my Mouny SW] Deleting obsolete cache:", key);
             return caches.delete(key);
           }
         })
@@ -79,8 +86,8 @@ self.addEventListener("fetch", (event) => {
           const networkResp = await fetch(req);
           if (networkResp && networkResp.status === 200) {
             cache.put(req, networkResp.clone());
-            cache.put("/Zaker-MB/", networkResp.clone());
-            cache.put("/Zaker-MB/index.html", networkResp.clone());
+            cache.put(cleanBase, networkResp.clone());
+            cache.put(`${cleanBase}index.html`, networkResp.clone());
             return networkResp;
           }
         } catch (_) {
@@ -90,8 +97,8 @@ self.addEventListener("fetch", (event) => {
         // استرجاع واجهة التطبيق فوراً من الكاش لتعمل بدون نت
         const cachedApp =
           (await cache.match(req, { ignoreSearch: true })) ||
-          (await cache.match("/Zaker-MB/", { ignoreSearch: true })) ||
-          (await cache.match("/Zaker-MB/index.html", { ignoreSearch: true })) ||
+          (await cache.match(cleanBase, { ignoreSearch: true })) ||
+          (await cache.match(`${cleanBase}index.html`, { ignoreSearch: true })) ||
           (await cache.match(OFFLINE_URL, { ignoreSearch: true })) ||
           (await cache.match("offline.html", { ignoreSearch: true }));
 
@@ -105,7 +112,7 @@ self.addEventListener("fetch", (event) => {
         if (pwaCached) return pwaCached;
 
         return new Response(
-          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ذاكر أوفلاين</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>ذاكر</h1><p>التطبيق يعمل بوضع الأوفلاين التام - بياناتك محفوظة محلياً</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
+          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>my Mouny أوفلاين</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>my Mouny</h1><p>التطبيق يعمل بوضع الأوفلاين التام - بياناتك محفوظة محلياً</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
           { headers: { "Content-Type": "text/html; charset=utf-8" } }
         );
       })()

@@ -6,12 +6,10 @@ const gitPath = "git";
 const root = process.cwd();
 const distDir = path.join(root, "dist");
 
-let originUrl = "https://github.com/minasar326-rgb/Zaker-MB.git";
-try {
-  originUrl = execSync(`"${gitPath}" remote get-url origin`, { encoding: "utf8" }).trim();
-} catch {}
-
-console.log(`Pushing pre-built static assets from dist/ to gh-pages branch of ${originUrl}...`);
+const remotes = [
+  "https://github.com/minasar326-rgb/My-Mouny.git",
+  "https://github.com/minasar326-rgb/Zaker-MB.git",
+];
 
 if (!fs.existsSync(distDir)) {
   throw new Error("dist directory does not exist! Run npm run export:gh-pages first.");
@@ -25,11 +23,21 @@ if (fs.existsSync(distGit)) {
 
 execSync(`"${gitPath}" init`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" add -A`, { cwd: distDir, stdio: "inherit" });
-execSync(`"${gitPath}" commit -m "deploy: static GitHub Pages build for Zaker-MB 100% offline and persistent"`, { cwd: distDir, stdio: "inherit" });
+execSync(`"${gitPath}" commit -m "deploy: static GitHub Pages build for my Mouny 100% offline and persistent"`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" branch -M gh-pages`, { cwd: distDir, stdio: "inherit" });
 
-console.log(`Pushing directly to ${originUrl} gh-pages...`);
-execSync(`"${gitPath}" remote add origin ${originUrl}`, { cwd: distDir, stdio: "inherit" });
-execSync(`"${gitPath}" push -f origin gh-pages`, { cwd: distDir, stdio: "inherit" });
+for (const remoteUrl of remotes) {
+  try {
+    console.log(`Pushing directly to ${remoteUrl} gh-pages...`);
+    try {
+      execSync(`"${gitPath}" remote remove current`, { cwd: distDir, stdio: "ignore" });
+    } catch {}
+    execSync(`"${gitPath}" remote add current ${remoteUrl}`, { cwd: distDir, stdio: "inherit" });
+    execSync(`"${gitPath}" push -f current gh-pages`, { cwd: distDir, stdio: "inherit" });
+    console.log(`Successfully pushed to ${remoteUrl} gh-pages!`);
+  } catch (err) {
+    console.error(`Warning: Failed to push to ${remoteUrl}:`, err.message);
+  }
+}
 
-console.log("Successfully pushed to gh-pages branch!");
+console.log("All deployments to gh-pages completed!");

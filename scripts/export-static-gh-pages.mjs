@@ -5,8 +5,8 @@ import { execSync } from "node:child_process";
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const REPO_NAME = "Zaker-MB";
-const REPO_BASE = "/Zaker-MB/";
+const REPO_NAME = "My-Mouny";
+const REPO_BASE = "/My-Mouny/";
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
 
@@ -50,10 +50,11 @@ let html = await res.text();
 // 4. Adapt paths for GitHub Pages subpath
 function fixPaths(str) {
   let s = str;
-  // Convert any previous /My-Mouny/ or /Zaker-m/ to new REPO_BASE
-  s = s.replaceAll('/My-Mouny/', REPO_BASE);
+  // Convert any previous /Zaker-MB/, /Zaker-m/, /zaker/, or /My-Mouny/ to new REPO_BASE
+  s = s.replaceAll('/Zaker-MB/', REPO_BASE);
   s = s.replaceAll('/Zaker-m/', REPO_BASE);
   s = s.replaceAll('/zaker/', REPO_BASE);
+  s = s.replaceAll('/My-Mouny/', REPO_BASE);
 
   // Replace in HTML attributes
   s = s.replaceAll('href="/assets/', `href="${REPO_BASE}assets/`);
@@ -180,11 +181,11 @@ if (!html.includes('navigator.serviceWorker.register')) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('${REPO_BASE}sw.js', { scope: '${REPO_BASE}' })
           .then(function(r) {
-            console.log('[ذاكر PWA] ServiceWorker registered with scope:', r.scope);
+            console.log('[my Mouny PWA] ServiceWorker registered with scope:', r.scope);
             if ('sync' in r && r.sync) { r.sync.register('sync-ledger').catch(function(){}); }
             if ('periodicSync' in r && r.periodicSync) { r.periodicSync.register('daily-balance-check', { minInterval: 24 * 60 * 60 * 1000 }).catch(function(){}); }
           })
-          .catch(function(e) { console.warn('[ذاكر PWA] ServiceWorker registration warning:', e); });
+          .catch(function(e) { console.warn('[my Mouny PWA] ServiceWorker registration warning:', e); });
       });
       if (navigator.storage && navigator.storage.persist) {
         navigator.storage.persist().catch(function(){});
@@ -233,8 +234,8 @@ if (fs.existsSync(assetsDir)) {
 const sourceManifestPath = path.join(root, "public", "manifest.json");
 const manifestPath = path.join(distDir, "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
-  manifest.name = "ذاكر - تطبيق إدارة المصاريف والخزنة";
-  manifest.short_name = "ذاكر";
+  manifest.name = "my Mouny";
+  manifest.short_name = "my Mouny";
   manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
   manifest.start_url = `${REPO_BASE}?source=pwa`;
   manifest.scope = REPO_BASE;
@@ -352,7 +353,7 @@ if (fs.existsSync(swPath)) {
   const timestamp = Date.now();
   swContent = swContent.replace(
     /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "zaker-cache-v${timestamp}";`
+    `const CACHE_NAME = "mymouny-cache-v${timestamp}";`
   );
 
   swContent = fixPaths(swContent);

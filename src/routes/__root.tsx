@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ledger/home";
 import { useLedger } from "@/lib/ledger/store";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "ذاكر";
+const APP_NAME = "my Mouny";
 
 function RootShell() {
   useEffect(() => {
@@ -21,15 +21,15 @@ function RootShell() {
       } else {
         const registerSW = () => {
           const base =
-            typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
-              ? "/Zaker-MB/"
-              : (typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
-                ? "/My-Mouny/"
+            typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
+              ? "/My-Mouny/"
+              : (typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
+                ? "/Zaker-MB/"
                 : "/");
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
-              console.log("[ذاكر SW] Registered successfully:", reg.scope);
+              console.log("[my Mouny SW] Registered successfully:", reg.scope);
               reg.update().catch(() => {});
               // تسجيل Background Sync إذا كان مدعوماً
               if ("sync" in reg && typeof (reg as any).sync?.register === "function") {
@@ -83,12 +83,7 @@ function RootComponent() {
     if (typeof window !== "undefined") {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-      document.title =
-        lang === "ar"
-          ? "ذاكر - تطبيق إدارة المصاريف والخزنة"
-          : lang === "el"
-            ? "Zaker - Διαχείριση Εξόδων"
-            : "Zaker - Expense & Vault Manager";
+      document.title = APP_NAME;
     }
   }, [lang]);
 
@@ -130,11 +125,11 @@ function RootComponent() {
                       });
                     }
                   } else {
-                    var swBase = location.pathname.startsWith('/Zaker-MB')
-                      ? '/Zaker-MB/'
-                      : (location.pathname.startsWith('/My-Mouny') ? '/My-Mouny/' : '/');
+                    var swBase = location.pathname.startsWith('/My-Mouny')
+                      ? '/My-Mouny/'
+                      : (location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/');
                     navigator.serviceWorker.register(swBase + 'sw.js', { scope: swBase }).then(function(reg) {
-                      console.log('[ذاكر SW] Head SW registered:', reg.scope);
+                      console.log('[my Mouny SW] Head SW registered:', reg.scope);
                       if ('sync' in reg && reg.sync) {
                         reg.sync.register('sync-ledger').catch(function(){});
                       }
