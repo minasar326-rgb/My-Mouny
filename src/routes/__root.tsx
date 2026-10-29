@@ -23,8 +23,6 @@ function RootShell() {
           const base =
             typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
               ? "/My-Mouny/"
-              : typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
-              ? "/Zaker-MB/"
               : "/";
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
@@ -125,7 +123,7 @@ function RootComponent() {
                       });
                     }
                   } else {
-                    var swBase = location.pathname.startsWith('/My-Mouny') ? '/My-Mouny/' : (location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/');
+                    var swBase = location.pathname.startsWith('/My-Mouny') ? '/My-Mouny/' : '/';
                     navigator.serviceWorker.register(swBase + 'sw.js', { scope: swBase }).then(function(reg) {
                       console.log('[my Mouny SW] Head SW registered:', reg.scope);
                       if ('sync' in reg && reg.sync) {

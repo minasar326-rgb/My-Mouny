@@ -1,6 +1,6 @@
 // my Mouny - High-Performance Offline-First Service Worker
 
-const CACHE_NAME = "mymouny-cache-v1793272327379";
+const CACHE_NAME = "mymouny-cache-v1793272453833";
 const OFFLINE_URL = "/My-Mouny/offline.html";
 
 // الأصول الأساسية التي يتم تخزينها فوراً عند التثبيت
@@ -19,8 +19,8 @@ const PRECACHE_ASSETS = [
   "/My-Mouny/screenshots/screenshot-desktop.png",
   "/My-Mouny/widgets/balance.json",
   "/My-Mouny/widgets/balance-data.json",
-  "/My-Mouny/assets/index-OJlyiiLV.js",
-  "/My-Mouny/assets/routes-C9IxaHj4.js",
+  "/My-Mouny/assets/index-BR6dgX3N.js",
+  "/My-Mouny/assets/routes-27sgB4IG.js",
   "/My-Mouny/assets/styles-DX88isJf.css"
 ];
 
