@@ -140,7 +140,11 @@ const immediateSwScript = `
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('${REPO_BASE}sw.js', { scope: '${REPO_BASE}' })
-        .then(function(r) { console.log('[PWA] ServiceWorker registered with scope:', r.scope); })
+        .then(function(r) {
+          console.log('[PWA] ServiceWorker registered with scope:', r.scope);
+          if ('sync' in r && r.sync) { r.sync.register('sync-ledger').catch(function(){}); }
+          if ('periodicSync' in r && r.periodicSync) { r.periodicSync.register('daily-balance-check', { minInterval: 24 * 60 * 60 * 1000 }).catch(function(){}); }
+        })
         .catch(function(e) { console.warn('[PWA] ServiceWorker registration warning:', e); });
     }
   </script>
@@ -236,6 +240,12 @@ const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
         : undefined,
     }));
   }
+  if (manifest.note_taking) {
+    manifest.note_taking.new_note_url = `${REPO_BASE}?action=new_note`;
+  }
+  if (manifest.tab_strip && manifest.tab_strip.new_tab_button) {
+    manifest.tab_strip.new_tab_button.url = REPO_BASE;
+  }
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), "utf8");
 
 // 8. Update sw.js in dist with correct precache URLs and cache invalidation
@@ -274,7 +284,7 @@ if (fs.existsSync(swPath)) {
   const timestamp = Date.now();
   swContent = swContent.replace(
     /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "zaker-mb-v${timestamp}";`
+    `const CACHE_NAME = "mymouny-v${timestamp}";`
   );
 
   // Replace navigation matching logic for GitHub Pages

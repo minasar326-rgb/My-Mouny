@@ -647,7 +647,7 @@ function Ledger() {
     currentVault.name === "Το Ταμείο μου (my Mouny)" ||
     currentVault.name === "Μάι Μούνι (My Mouny)";
   const displayedVaultName = isDefaultVault
-    ? t.appName
+    ? t("appName")
     : currentVault.name;
 
   return (

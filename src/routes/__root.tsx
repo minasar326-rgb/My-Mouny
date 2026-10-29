@@ -21,22 +21,34 @@ function RootShell() {
       } else {
         const registerSW = () => {
           const base =
-            typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
+            typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
+              ? "/My-Mouny/"
+              : typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
               ? "/Zaker-MB/"
               : "/";
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
-              console.log("[ذاكر SW] Registered successfully:", reg.scope);
+              console.log("[my Mouny SW] Registered successfully:", reg.scope);
               reg.update().catch(() => {});
+              // تسجيل Background Sync إذا كان مدعوماً
+              if ("sync" in reg && typeof (reg as any).sync?.register === "function") {
+                (reg as any).sync.register("sync-ledger").catch(() => {});
+              }
+              // تسجيل Periodic Sync إذا كان مدعوماً
+              if ("periodicSync" in reg && typeof (reg as any).periodicSync?.register === "function") {
+                (reg as any).periodicSync
+                  .register("daily-balance-check", { minInterval: 24 * 60 * 60 * 1000 })
+                  .catch(() => {});
+              }
             })
-            .catch((err) => console.warn("[ذاكر SW] Registration error:", err));
+            .catch((err) => console.warn("[my Mouny SW] Registration error:", err));
 
           // تفعيل التخزين الدائم غير القابل للمسح (Persistent Storage) لحفظ كافة الحسابات والخزائن محلياً
           if (typeof navigator !== "undefined" && navigator.storage && navigator.storage.persist) {
             navigator.storage.persist().then((granted) => {
               if (granted) {
-                console.log("[ذاكر] تم تفعيل التخزين الدائم المحلي 100% (Persistent Storage Active)");
+                console.log("[my Mouny] تم تفعيل التخزين الدائم المحلي 100% (Persistent Storage Active)");
               }
             }).catch(() => {});
           }
@@ -113,11 +125,17 @@ function RootComponent() {
                       });
                     }
                   } else {
-                    var swBase = location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/';
+                    var swBase = location.pathname.startsWith('/My-Mouny') ? '/My-Mouny/' : (location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/');
                     navigator.serviceWorker.register(swBase + 'sw.js', { scope: swBase }).then(function(reg) {
-                      console.log('[ذاكر SW] Head SW registered:', reg.scope);
+                      console.log('[my Mouny SW] Head SW registered:', reg.scope);
+                      if ('sync' in reg && reg.sync) {
+                        reg.sync.register('sync-ledger').catch(function(){});
+                      }
+                      if ('periodicSync' in reg && reg.periodicSync) {
+                        reg.periodicSync.register('daily-balance-check', { minInterval: 24 * 60 * 60 * 1000 }).catch(function(){});
+                      }
                     }).catch(function(err) {
-                      console.warn('[ذاكر SW] Head SW register error:', err);
+                      console.warn('[my Mouny SW] Head SW register error:', err);
                     });
                   }
                 }
