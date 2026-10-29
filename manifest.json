@@ -1,14 +1,14 @@
 {
-  "id": "https://minasar326-rgb.github.io/My-Mouny/",
+  "id": "https://minasar326-rgb.github.io/Zaker-MB/",
   "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
   "short_name": "ذاكر",
-  "description": "ذاكر: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.",
-  "start_url": "/My-Mouny/?source=pwa",
-  "scope": "/My-Mouny/",
+  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.",
+  "start_url": "/Zaker-MB/?source=pwa",
+  "scope": "/Zaker-MB/",
   "display": "standalone",
   "display_override": [
-    "tabbed",
     "window-controls-overlay",
+    "tabbed",
     "standalone",
     "minimal-ui"
   ],
@@ -25,18 +25,6 @@
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "prefer_related_applications": false,
-  "related_applications": [
-    {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.minasar.zakerm",
-      "id": "com.minasar.zakerm"
-    },
-    {
-      "platform": "windows",
-      "url": "https://www.microsoft.com/store/apps/9NBLGGH4NNS1",
-      "id": "9NBLGGH4NNS1"
-    }
-  ],
   "launch_handler": {
     "client_mode": [
       "navigate-existing",
@@ -53,35 +41,46 @@
       ]
     },
     "new_tab_button": {
-      "url": "/My-Mouny/"
+      "url": "/Zaker-MB/"
     }
   },
   "note_taking": {
-    "new_note_url": "/My-Mouny/?action=new_note"
+    "new_note_url": "/Zaker-MB/?action=new_note"
   },
   "scope_extensions": [
     {
       "origin": "https://minasar326-rgb.github.io"
     }
   ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=io.github.minasar326_rgb.mymouny",
+      "id": "io.github.minasar326_rgb.mymouny"
+    },
+    {
+      "platform": "windows",
+      "url": "https://www.microsoft.com/store/apps/9NBLGGH4NNS1",
+      "id": "9NBLGGH4NNS1"
+    }
+  ],
   "file_handlers": [
     {
-      "action": "/My-Mouny/",
-      "name": "نسخة احتياطية لتطبيق ذاكر",
+      "action": "/Zaker-MB/",
+      "name": "نسخة احتياطية لتطبيق my Mouny",
       "accept": {
         "application/json": [
           ".json"
         ],
-        "application/x-zaker": [
-          ".zaker"
+        "application/x-mymouny": [
+          ".mouny"
         ]
       }
     }
   ],
   "share_target": {
-    "action": "/My-Mouny/",
+    "action": "/Zaker-MB/",
     "method": "GET",
-    "enctype": "application/x-www-form-urlencoded",
     "params": {
       "title": "title",
       "text": "text",
@@ -90,45 +89,45 @@
   },
   "protocol_handlers": [
     {
-      "protocol": "web+zaker",
-      "url": "/My-Mouny/?action=%s"
+      "protocol": "web+mymouny",
+      "url": "/Zaker-MB/?action=%s"
     }
   ],
   "handle_links": "preferred",
   "widgets": [
     {
-      "name": "ذاكر - رصيد الخزنة",
-      "short_name": "ذاكر",
+      "name": "my Mouny - رصيد الخزنة",
+      "short_name": "my Mouny",
       "description": "عرض رصيد الخزنة ومصاريف الشهر بضغطة واحدة",
-      "tag": "zaker-widget",
+      "tag": "mymouny-widget",
       "template": "widget-template",
-      "ms_ac_template": "/My-Mouny/widgets/balance.json",
-      "data": "/My-Mouny/widgets/balance-data.json",
+      "ms_ac_template": "/Zaker-MB/widgets/balance.json",
+      "data": "/Zaker-MB/widgets/balance-data.json",
       "type": "application/json",
       "screenshots": [
         {
-          "src": "/My-Mouny/screenshots/screenshot-mobile.png",
+          "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
           "sizes": "390x844",
-          "label": "معاينة ودجت ذاكر"
+          "label": "معاينة ودجت my Mouny"
         }
       ]
     }
   ],
   "icons": [
     {
-      "src": "/My-Mouny/icons/icon-192.png",
+      "src": "/Zaker-MB/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/My-Mouny/icons/icon-512.png",
+      "src": "/Zaker-MB/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/My-Mouny/icons/icon-maskable.png",
+      "src": "/Zaker-MB/icons/icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -136,18 +135,18 @@
   ],
   "screenshots": [
     {
-      "src": "/My-Mouny/screenshots/screenshot-mobile.png",
+      "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق ذاكر على الهاتف المحمول"
+      "label": "واجهة تطبيق my Mouny على الهاتف المحمول"
     },
     {
-      "src": "/My-Mouny/screenshots/screenshot-desktop.png",
+      "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تحكم ذاكر على الكمبيوتر والتابلت"
+      "label": "لوحة تحكم my Mouny على الكمبيوتر والتابلت"
     }
   ],
   "shortcuts": [
@@ -155,10 +154,10 @@
       "name": "سجّل شراء ومصروف",
       "short_name": "مصروف",
       "description": "تسجيل عملية شراء وخصم فوري",
-      "url": "/My-Mouny/",
+      "url": "/Zaker-MB/",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -167,10 +166,10 @@
       "name": "سجّل إيراد ودخل",
       "short_name": "دخل",
       "description": "تسجيل إيراد مالي جديد",
-      "url": "/My-Mouny/",
+      "url": "/Zaker-MB/",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -179,10 +178,10 @@
       "name": "دفتر الحسابات",
       "short_name": "الدفتر",
       "description": "عرض ما لك وما عليك وسجل المعاملات",
-      "url": "/My-Mouny/",
+      "url": "/Zaker-MB/",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]

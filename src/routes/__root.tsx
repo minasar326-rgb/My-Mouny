@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ledger/home";
 import { useLedger } from "@/lib/ledger/store";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "my Mouny";
+const APP_NAME = "ذاكر";
 
 function RootShell() {
   useEffect(() => {
@@ -21,13 +21,15 @@ function RootShell() {
       } else {
         const registerSW = () => {
           const base =
-            typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
-              ? "/My-Mouny/"
-              : "/";
+            typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
+              ? "/Zaker-MB/"
+              : (typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
+                ? "/My-Mouny/"
+                : "/");
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
-              console.log("[my Mouny SW] Registered successfully:", reg.scope);
+              console.log("[ذاكر SW] Registered successfully:", reg.scope);
               reg.update().catch(() => {});
               // تسجيل Background Sync إذا كان مدعوماً
               if ("sync" in reg && typeof (reg as any).sync?.register === "function") {
@@ -40,13 +42,13 @@ function RootShell() {
                   .catch(() => {});
               }
             })
-            .catch((err) => console.warn("[my Mouny SW] Registration error:", err));
+            .catch((err) => console.warn("[ذاكر SW] Registration error:", err));
 
           // تفعيل التخزين الدائم غير القابل للمسح (Persistent Storage) لحفظ كافة الحسابات والخزائن محلياً
           if (typeof navigator !== "undefined" && navigator.storage && navigator.storage.persist) {
             navigator.storage.persist().then((granted) => {
               if (granted) {
-                console.log("[my Mouny] تم تفعيل التخزين الدائم المحلي 100% (Persistent Storage Active)");
+                console.log("[ذاكر] تم تفعيل التخزين الدائم المحلي 100% (Persistent Storage Active)");
               }
             }).catch(() => {});
           }
@@ -81,7 +83,12 @@ function RootComponent() {
     if (typeof window !== "undefined") {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-      document.title = lang === "ar" ? "my Mouny" : (lang === "el" ? "my Mouny" : "my Mouny"); // : (lang === "el" ? "Zaker - Διαχείριση Εξόδων" : "Zaker - Expense & Vault Manager");
+      document.title =
+        lang === "ar"
+          ? "ذاكر - تطبيق إدارة المصاريف والخزنة"
+          : lang === "el"
+            ? "Zaker - Διαχείριση Εξόδων"
+            : "Zaker - Expense & Vault Manager";
     }
   }, [lang]);
 
@@ -123,9 +130,11 @@ function RootComponent() {
                       });
                     }
                   } else {
-                    var swBase = location.pathname.startsWith('/My-Mouny') ? '/My-Mouny/' : '/';
+                    var swBase = location.pathname.startsWith('/Zaker-MB')
+                      ? '/Zaker-MB/'
+                      : (location.pathname.startsWith('/My-Mouny') ? '/My-Mouny/' : '/');
                     navigator.serviceWorker.register(swBase + 'sw.js', { scope: swBase }).then(function(reg) {
-                      console.log('[my Mouny SW] Head SW registered:', reg.scope);
+                      console.log('[ذاكر SW] Head SW registered:', reg.scope);
                       if ('sync' in reg && reg.sync) {
                         reg.sync.register('sync-ledger').catch(function(){});
                       }
@@ -133,7 +142,7 @@ function RootComponent() {
                         reg.periodicSync.register('daily-balance-check', { minInterval: 24 * 60 * 60 * 1000 }).catch(function(){});
                       }
                     }).catch(function(err) {
-                      console.warn('[my Mouny SW] Head SW register error:', err);
+                      console.warn('[ذاكر SW] Head SW register error:', err);
                     });
                   }
                 }
@@ -159,11 +168,12 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
       },
       { title: APP_NAME },
-      { name: "theme-color", content: "#1c1a17" },
+      { name: "theme-color", content: "#0284c7" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "my Mouny" },
+      { name: "apple-mobile-web-app-title", content: APP_NAME },
+      { name: "application-name", content: APP_NAME },
       {
         name: "description",
         content: "my Mouny: خزنتك المالية الذكية والمشفرة محلياً - أوفلاين 100% دون خوادم.",

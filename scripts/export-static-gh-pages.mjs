@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execSync } from "node:child_process";
 
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const repoFromGit = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split("/")[1] : null;
-const REPO_NAME = process.env.REPO_NAME || repoFromGit || "My-Mouny";
-const REPO_BASE = `/${REPO_NAME}/`;
+const REPO_NAME = "Zaker-MB";
+const REPO_BASE = "/Zaker-MB/";
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
 
@@ -92,7 +92,7 @@ function fixPaths(str) {
 
   s = s.replaceAll('/Zaker-MB/', REPO_BASE);
   s = s.replaceAll('/Zaker-m/', REPO_BASE);
-  s = s.replaceAll('/Zaker-MB', REPO_NAME);
+  s = s.replaceAll('/Zaker-MB', REPO_BASE.slice(0, -1));
   s = s.replaceAll("location.pathname.startsWith('/Zaker-MB')", `location.pathname.startsWith('${REPO_BASE.slice(0, -1)}')`);
   s = s.replaceAll("'/Zaker-MB/'", `'${REPO_BASE}'`);
   s = s.replaceAll('"/Zaker-MB/"', `"${REPO_BASE}"`);
@@ -115,13 +115,22 @@ html = html.replace(/<link rel="apple-touch-icon" href="[^"]*__grok[^"]*">/g, ''
 // Remove X-Frame-Options meta tag (only allowed in HTTP headers, not meta tags)
 html = html.replace(/<meta http-equiv="X-Frame-Options"[^>]*>/gi, '');
 
+// Strictly ensure app title and mobile install name is "my Mouny"
+html = html.replace(/<title>[^<]*<\/title>/gi, '<title>my Mouny</title>');
+html = html.replace(/<meta[^>]*apple-mobile-web-app-title[^>]*>/gi, '<meta name="apple-mobile-web-app-title" content="my Mouny">');
+html = html.replace(/<meta[^>]*application-name[^>]*>/gi, '<meta name="application-name" content="my Mouny">');
+
 // Verify actual CSS and JS filenames in dist/assets
 const assetsDir = path.join(distDir, "assets");
+let actualCss = "";
+let actualJs = "";
+let actualRoutes = "";
+
 if (fs.existsSync(assetsDir)) {
   const assetFiles = fs.readdirSync(assetsDir);
-  const actualCss = assetFiles.find((f) => f.startsWith("styles-") && f.endsWith(".css"));
-  const actualJs = assetFiles.find((f) => f.startsWith("index-") && f.endsWith(".js"));
-  const actualRoutes = assetFiles.find((f) => f.startsWith("routes-") && f.endsWith(".js"));
+  actualCss = assetFiles.find((f) => f.startsWith("styles-") && f.endsWith(".css")) || "";
+  actualJs = assetFiles.find((f) => f.startsWith("index-") && f.endsWith(".js")) || "";
+  actualRoutes = assetFiles.find((f) => f.startsWith("routes-") && f.endsWith(".js")) || "";
 
   if (actualCss) {
     html = html.replace(/(?:\/[A-Za-z0-9_-]+)?\/assets\/styles-[A-Za-z0-9_-]+\.css/g, `${REPO_BASE}assets/${actualCss}`);
@@ -135,6 +144,30 @@ if (fs.existsSync(assetsDir)) {
   html = html.replaceAll(`${REPO_BASE}${REPO_NAME}/`, REPO_BASE);
 }
 
+// Ensure correct Title
+html = html.replace(/<title>.*?<\/title>/gi, `<title>my Mouny</title>`);
+
+// Ensure CSS stylesheet link is present in <head>
+if (actualCss && !html.includes(actualCss)) {
+  const cssLinks = `
+  <link rel="stylesheet" href="${REPO_BASE}assets/${actualCss}" data-precedence="default" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" data-precedence="default" />
+  <meta name="theme-color" content="#0284c7" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="my Mouny" />
+  <meta name="application-name" content="my Mouny" />
+  <meta name="description" content="my Mouny: خزنتك المالية الذكية والمشفرة محلياً - أوفلاين 100% دون خوادم." />
+  <link rel="icon" type="image/png" href="${REPO_BASE}favicon.png" />
+  <link rel="icon" type="image/svg+xml" href="${REPO_BASE}favicon.svg" />
+  <link rel="apple-touch-icon" href="${REPO_BASE}apple-touch-icon.png" />
+  <link rel="modulepreload" href="${REPO_BASE}assets/${actualJs}" />
+  ${actualRoutes ? `<link rel="modulepreload" href="${REPO_BASE}assets/${actualRoutes}" />` : ''}
+</head>`;
+  html = html.replace('</head>', cssLinks);
+}
+
 // Ensure canonical manifest link and immediate Service Worker registration in <head>
 if (!html.includes('<link rel="manifest"')) {
   html = html.replace('</head>', `  <link rel="manifest" href="${REPO_BASE}manifest.json">\n</head>`);
@@ -144,17 +177,38 @@ if (!html.includes('navigator.serviceWorker.register')) {
   const immediateSwScript = `
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('${REPO_BASE}sw.js', { scope: '${REPO_BASE}' })
-        .then(function(r) {
-          console.log('[PWA] ServiceWorker registered with scope:', r.scope);
-          if ('sync' in r && r.sync) { r.sync.register('sync-ledger').catch(function(){}); }
-          if ('periodicSync' in r && r.periodicSync) { r.periodicSync.register('daily-balance-check', { minInterval: 24 * 60 * 60 * 1000 }).catch(function(){}); }
-        })
-        .catch(function(e) { console.warn('[PWA] ServiceWorker registration warning:', e); });
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('${REPO_BASE}sw.js', { scope: '${REPO_BASE}' })
+          .then(function(r) {
+            console.log('[ذاكر PWA] ServiceWorker registered with scope:', r.scope);
+            if ('sync' in r && r.sync) { r.sync.register('sync-ledger').catch(function(){}); }
+            if ('periodicSync' in r && r.periodicSync) { r.periodicSync.register('daily-balance-check', { minInterval: 24 * 60 * 60 * 1000 }).catch(function(){}); }
+          })
+          .catch(function(e) { console.warn('[ذاكر PWA] ServiceWorker registration warning:', e); });
+      });
+      if (navigator.storage && navigator.storage.persist) {
+        navigator.storage.persist().catch(function(){});
+      }
     }
   </script>
 </head>`;
   html = html.replace('</head>', immediateSwScript);
+}
+
+// Ensure client bundle scripts and TanStack stream are present in <body>
+if (actualJs && !html.includes('<script type="module"')) {
+  const hydrationBody = `
+<!--$--><!--$--><main class="mx-auto w-full max-w-5xl px-4 py-5 sm:px-6 sm:py-8 animate-pulse"><div class="mb-5 flex items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-4"><div class="flex items-center gap-3"><div class="size-10 rounded-xl bg-line/60"></div><div><div class="h-4 w-28 bg-line/80 rounded mb-1.5"></div><div class="h-3 w-48 bg-line/50 rounded"></div></div></div><div class="h-8 w-24 bg-line/60 rounded-xl"></div></div><div class="mb-6 h-12 rounded-2xl border border-line bg-surface p-1.5 flex gap-2"><div class="h-full flex-1 bg-accent/20 rounded-xl"></div><div class="h-full flex-1 bg-line/30 rounded-xl"></div><div class="h-full flex-1 bg-line/30 rounded-xl"></div></div><div class="rounded-2xl border border-line bg-surface p-5 mb-4"><div class="h-3 w-32 bg-line/60 rounded mb-2"></div><div class="h-10 w-44 bg-line/80 rounded mb-2"></div><div class="h-3 w-40 bg-line/50 rounded"></div></div><div class="grid grid-cols-2 gap-3 mb-4"><div class="h-28 rounded-2xl border border-line bg-surface p-4"></div><div class="h-28 rounded-2xl border border-line bg-surface p-4"></div></div></main><!--/$--><!--/$-->
+<script data-tsr-stream-part="">(self.$R=self.$R||{})["tsr"]=[];self.$_TSR={h(){this.hydrated=!0,this.c()},e(){this.streamEnded=!0,this.c()},c(){this.hydrated&&this.streamEnded&&(delete self.$_TSR,delete self.$R.tsr)},p(e){this.initialized?e():this.buffer.push(e)},buffer:[]};$_TSR.router=($R=>$R[0]={manifest:$R[1]={routes:$R[2]={__root__:$R[3]={preloads:$R[4]=["${REPO_BASE}assets/${actualJs}"],scripts:$R[5]=[$R[6]={attrs:$R[7]={type:"module",async:!0,src:"${REPO_BASE}assets/${actualJs}"}}]},"/":$R[8]={preloads:$R[9]=["${REPO_BASE}assets/${actualRoutes}"]}}},matches:$R[10]=[$R[11]={i:"__root__ ",u:${Date.now()},s:"success",ssr:!0},$R[12]={i:"  ",u:${Date.now()},s:"success",ssr:!0}]})($R["tsr"]);$_TSR.e();{let s=document.currentScript,p;while((p=s.previousElementSibling)&&p.hasAttribute('data-tsr-stream-part'))p.remove();s.remove()}</script>
+<script type="module" async="" src="${REPO_BASE}assets/${actualJs}"></script>`;
+
+  if (html.includes('<div id="root"></div>')) {
+    html = html.replace('<div id="root"></div>', `<div id="root"></div>\n${hydrationBody}`);
+  } else if (html.includes('</body>')) {
+    html = html.replace('</body>', `${hydrationBody}\n</body>`);
+  } else {
+    html += hydrationBody;
+  }
 }
 
 // 5. Write index.html, 404.html, and .nojekyll
@@ -179,6 +233,8 @@ if (fs.existsSync(assetsDir)) {
 const sourceManifestPath = path.join(root, "public", "manifest.json");
 const manifestPath = path.join(distDir, "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
+  manifest.name = "ذاكر - تطبيق إدارة المصاريف والخزنة";
+  manifest.short_name = "ذاكر";
   manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
   manifest.start_url = `${REPO_BASE}?source=pwa`;
   manifest.scope = REPO_BASE;
@@ -296,7 +352,7 @@ if (fs.existsSync(swPath)) {
   const timestamp = Date.now();
   swContent = swContent.replace(
     /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "mymouny-cache-v${timestamp}";`
+    `const CACHE_NAME = "zaker-cache-v${timestamp}";`
   );
 
   swContent = fixPaths(swContent);
@@ -320,7 +376,7 @@ if (fs.existsSync(sourceWidgetsDir)) {
 }
 
 // 9. Mirror static entry files to repository root for dual-mode deployment (branch root or gh-pages)
-const rootFilesToSync = ["404.html", "manifest.json", "sw.js", ".nojekyll", "offline.html"];
+const rootFilesToSync = ["404.html", "manifest.json", "sw.js", ".nojekyll", "offline.html", "index.html"];
 for (const file of rootFilesToSync) {
   const src = path.join(distDir, file);
   const dest = path.join(root, file);
