@@ -742,6 +742,41 @@ export async function deleteVault(vaultId: string): Promise<void> {
 }
 
 /**
+ * Delete a vault permanently after verifying its PIN.
+ * Fails if it is the only remaining vault or if the PIN does not match.
+ */
+export async function deleteVaultWithPin(vaultId: string, pin?: string): Promise<void> {
+  const vaults = await listVaults();
+  if (vaults.length <= 1) {
+    throw new Error("لا يمكن حذف الخزنة الوحيدة المتبقية في التطبيق");
+  }
+
+  const record = await getVaultRecord(vaultId);
+  if (!record) {
+    throw new Error("الخزنة غير موجودة");
+  }
+
+  // If vault has a PIN, verify it strictly
+  if (record.hasPin) {
+    if (!pin) {
+      throw new Error("يرجى إدخال كلمة مرور (PIN) الخزنة لتأكيد الحذف");
+    }
+    const { valid } = await verifyPinWithIterationDetection(
+      pin,
+      record.salt,
+      record.pinHash,
+      record.iterations || DEFAULT_PBKDF2_ITERATIONS
+    );
+    if (!valid) {
+      throw new Error("كلمة المرور غير صحيحة! لا يمكن حذف الخزنة إلا بكلمة المرور الخاصة بها.");
+    }
+  }
+
+  // PIN is valid or vault had no PIN -> delete vault and clean storage
+  await deleteVault(vaultId);
+}
+
+/**
  * Export vault backup.
  */
 export async function exportVaultBackup(vaultId: string, key?: CryptoKey): Promise<VaultBackup> {

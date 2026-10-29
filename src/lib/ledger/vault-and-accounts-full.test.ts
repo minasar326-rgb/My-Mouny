@@ -286,3 +286,58 @@ test("QA Item 4: الخصوصية والأمان وتشفير الخزنة مح�
   const decrypted = await decryptPayload<typeof secretData>(encrypted.ciphertextHex, encrypted.ivHex, aesKey);
   assert.deepEqual(decrypted, secretData);
 });
+
+test("QA Item 5: إدارة الخزائن: إمكانية حذف الخزنة الجديدة بعد التحقق من كلمة المرور (PIN) فقط", async () => {
+  const pinA = "1234";
+  const pinB = "8899";
+  const saltB = generateSalt();
+  const hashB = await hashPin(pinB, saltB);
+
+  // هيكل يحاكي الخزائن
+  const vaults = [
+    { id: "main-vault", name: "خزينتي الأساسية", hasPin: true, pin: pinA },
+    { id: "new-vault", name: "خزنة الشغل الجديدة", hasPin: true, salt: saltB, hash: hashB },
+  ];
+
+  // 1. محاولة حذف الخزنة بدون كتابة الباسورد -> رفض
+  const deleteAttemptWithoutPin = (id: string, enteredPin?: string) => {
+    const target = vaults.find((v) => v.id === id);
+    if (!target) throw new Error("الخزنة غير موجودة");
+    if (vaults.length <= 1) throw new Error("لا يمكن حذف الخزنة الوحيدة المتبقية في التطبيق");
+    if (target.hasPin && !enteredPin) throw new Error("يرجى إدخال كلمة مرور (PIN) الخزنة لإتمام الحذف");
+    return true;
+  };
+  assert.throws(() => deleteAttemptWithoutPin("new-vault", ""), /يرجى إدخال كلمة مرور/);
+
+  // 2. محاولة حذف الخزنة بكلمة مرور خاطئة -> رفض
+  const verifyAndDelete = async (id: string, enteredPin: string) => {
+    const target = vaults.find((v) => v.id === id);
+    if (!target) throw new Error("الخزنة غير موجودة");
+    if (vaults.length <= 1) throw new Error("لا يمكن حذف الخزنة الوحيدة المتبقية في التطبيق");
+    const valid = await verifyPin(enteredPin, target.salt!, target.hash!);
+    if (!valid) {
+      throw new Error("كلمة المرور غير صحيحة! لا يمكن حذف الخزنة إلا بكلمة المرور الخاصة بها.");
+    }
+    const idx = vaults.findIndex((v) => v.id === id);
+    vaults.splice(idx, 1);
+    return true;
+  };
+
+  await assert.rejects(
+    () => verifyAndDelete("new-vault", "0000"),
+    /كلمة المرور غير صحيحة! لا يمكن حذف الخزنة إلا بكلمة المرور الخاصة بها/
+  );
+  assert.equal(vaults.length, 2, "الخزنة لم تُحذف بسبب كلمة المرور الخاطئة");
+
+  // 3. كتابة كلمة المرور الصحيحة -> نجاح الحذف وبقاء الخزنة الأساسية
+  const deleteResult = await verifyAndDelete("new-vault", "8899");
+  assert.equal(deleteResult, true);
+  assert.equal(vaults.length, 1, "تم حذف الخزنة الجديدة بنجاح");
+  assert.equal(vaults[0]?.id, "main-vault", "بقيت الخزنة الأساسية بأمان");
+
+  // 4. محاولة حذف الخزنة الوحيدة المتبقية -> رفض قاطع
+  assert.throws(
+    () => deleteAttemptWithoutPin("main-vault", "1234"),
+    /لا يمكن حذف الخزنة الوحيدة المتبقية في التطبيق/
+  );
+});

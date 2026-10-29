@@ -6,6 +6,7 @@ import {
   clearVaultTransactions,
   createVault as idbCreateVault,
   deleteVault as idbDeleteVault,
+  deleteVaultWithPin,
   exportVaultBackup,
   getActiveVaultSession,
   getOrCreateDefaultVault,
@@ -50,6 +51,8 @@ export type LedgerState = {
   setPinForCurrentVault: (pin: string) => Promise<Result>;
   removePinForCurrentVault: (currentPin: string) => Promise<Result>;
   deleteCurrentVault: () => Promise<Result>;
+  deleteVaultWithVerification: (vaultId: string, pin?: string) => Promise<Result>;
+  switchVault: (vaultId: string) => Promise<Result>;
   exportBackup: () => Promise<string>;
   importBackup: (backupText: string, pin?: string) => Promise<Result>;
 
@@ -418,6 +421,102 @@ export const useLedger = create<LedgerState>((set, get) => ({
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err instanceof Error ? err.message : "فشل حذف الخزنة" };
+    }
+  },
+
+  deleteVaultWithVerification: async (vaultId: string, pin?: string) => {
+    try {
+      await deleteVaultWithPin(vaultId, pin);
+      const updatedVaults = await listVaults();
+      const wasCurrent = get().currentVault?.id === vaultId;
+
+      if (wasCurrent) {
+        // Pick the first remaining vault
+        const target = updatedVaults[0];
+        if (target) {
+          if (!target.hasPin) {
+            const txs = await loadVaultTransactions(target.id, undefined).catch(() => []);
+            saveWarmSnapshot(target, true, txs);
+            set({
+              vaults: updatedVaults,
+              currentVault: target,
+              activeCryptoKey: null,
+              isUnlocked: true,
+              txs,
+              started: true,
+            });
+          } else {
+            saveWarmSnapshot(target, false, []);
+            set({
+              vaults: updatedVaults,
+              currentVault: target,
+              activeCryptoKey: null,
+              isUnlocked: false,
+              txs: [],
+              started: true,
+            });
+          }
+        } else {
+          const defaultVault = await getOrCreateDefaultVault().catch(() => ({
+            id: "default-vault",
+            name: "خزينتي الأساسية",
+            hasPin: false,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          }));
+          set({
+            vaults: [defaultVault],
+            currentVault: defaultVault,
+            activeCryptoKey: null,
+            isUnlocked: true,
+            txs: [],
+            started: true,
+          });
+        }
+      } else {
+        set({ vaults: updatedVaults });
+      }
+
+      return { ok: true };
+    } catch (err) {
+      return {
+        ok: false,
+        error: err instanceof Error ? err.message : "فشل حذف الخزنة",
+      };
+    }
+  },
+
+  switchVault: async (vaultId: string) => {
+    const vaults = get().vaults;
+    const target = vaults.find((v) => v.id === vaultId);
+    if (!target) return { ok: false, error: "الخزنة غير موجودة" };
+
+    if (!target.hasPin) {
+      try {
+        const txs = await loadVaultTransactions(target.id, undefined);
+        saveWarmSnapshot(target, true, txs);
+        set({
+          currentVault: target,
+          activeCryptoKey: null,
+          isUnlocked: true,
+          txs,
+          started: true,
+        });
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, error: "فشل فتح الخزنة" };
+      }
+    } else {
+      // Protected vault requires unlock
+      saveWarmSnapshot(target, false, []);
+      set({
+        currentVault: target,
+        activeCryptoKey: null,
+        isUnlocked: false,
+        txs: [],
+        started: true,
+      });
+      return { ok: true };
     }
   },
 

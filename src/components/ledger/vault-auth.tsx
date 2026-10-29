@@ -13,6 +13,7 @@ import {
   ArrowRight,
   ShieldAlert,
   Globe,
+  Trash2,
 } from "lucide-react";
 import { useLedger } from "@/lib/ledger/store";
 import { checkLockout } from "@/lib/storage/idb";
@@ -21,7 +22,7 @@ import { LANGUAGES, t, type Language } from "@/lib/i18n";
 import { convertArabicDigits } from "@/lib/ledger/model";
 import { DeveloperFooter } from "./developer-footer";
 
-function getVaultDisplayName(name?: string, lang: Language = "ar"): string {
+export function getVaultDisplayName(name?: string, lang: Language = "ar"): string {
   if (
     !name ||
     name === "خزينتي الرئيسية" ||
@@ -61,6 +62,15 @@ export function VaultAuthScreen() {
   const [selectedVaultId, setSelectedVaultId] = useState<string>(
     vaults[0]?.id || ""
   );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  useEffect(() => {
+    if (vaults.length > 0 && !vaults.some((v) => v.id === selectedVaultId)) {
+      setSelectedVaultId(vaults[0]?.id || "");
+    }
+  }, [vaults, selectedVaultId]);
+
+  const selectedVault = vaults.find((v) => v.id === selectedVaultId) || vaults[0];
 
   // Form states
   const [pin, setPin] = useState("");
@@ -273,6 +283,19 @@ export function VaultAuthScreen() {
                     </option>
                   ))}
                 </select>
+                <div className="flex justify-between items-center mt-2 px-1">
+                  <span className="text-xs text-muted">
+                    {vaults.length} {lang === "ar" ? "خزائن محفوظة" : lang === "el" ? "ταμεία" : "vaults saved"}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowDeleteModal(true)}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-rose-400 hover:text-rose-300 transition-colors"
+                  >
+                    <Trash2 className="size-3.5" />
+                    <span>{t("deleteVaultBtn", lang)}</span>
+                  </button>
+                </div>
               </div>
             )}
 
@@ -478,6 +501,21 @@ export function VaultAuthScreen() {
       <div className="w-full max-w-md mt-2">
         <DeveloperFooter />
       </div>
+
+      {showDeleteModal && selectedVault && (
+        <DeleteVaultModal
+          vaultId={selectedVault.id}
+          vaultName={getVaultDisplayName(selectedVault.name, lang)}
+          hasPin={Boolean(selectedVault.hasPin)}
+          onClose={() => setShowDeleteModal(false)}
+          onDeleted={() => {
+            const remaining = vaults.filter((v) => v.id !== selectedVault.id);
+            if (remaining[0]) {
+              setSelectedVaultId(remaining[0].id);
+            }
+          }}
+        />
+      )}
 
       {showExitToast && (
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl bg-ink px-4 py-2 text-xs font-semibold text-surface shadow-lg">
@@ -838,6 +876,157 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
             </button>
           </form>
         )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Modal to securely delete a vault after strictly verifying its password/PIN.
+ */
+export function DeleteVaultModal({
+  vaultId,
+  vaultName,
+  hasPin,
+  onClose,
+  onDeleted,
+}: {
+  vaultId: string;
+  vaultName: string;
+  hasPin: boolean;
+  onClose: () => void;
+  onDeleted?: () => void;
+}) {
+  const deleteVaultWithVerification = useLedger((s) => s.deleteVaultWithVerification);
+  const lang = useLedger((s) => s.lang);
+
+  const [pin, setPin] = useState("");
+  const [showPin, setShowPin] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleDelete = async (e: FormEvent) => {
+    e.preventDefault();
+    if (loading) return;
+    setError(null);
+
+    if (hasPin && !pin) {
+      setError(t("deleteVaultPrompt", lang));
+      return;
+    }
+
+    setLoading(true);
+    const res = await deleteVaultWithVerification(vaultId, hasPin ? pin : undefined);
+    setLoading(false);
+
+    if (res.ok) {
+      setSuccess(true);
+      setTimeout(() => {
+        onDeleted?.();
+        onClose();
+      }, 900);
+    } else {
+      setError(res.error);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-md">
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="bento-card w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden border border-rose-500/30"
+      >
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <span className="pill-badge bg-rose-500/15 text-rose-300 border border-rose-500/30">
+            <Trash2 className="size-4 text-rose-400" />
+            <span className="text-sm font-bold">{t("deleteVaultTitle", lang)}</span>
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex items-center gap-1 rounded-xl border border-white/10 bg-surface-alt/40 px-2.5 py-1 text-xs font-bold text-muted hover:text-ink hover:bg-surface-alt transition-all"
+          >
+            <ArrowRight className="size-3.5 rtl:rotate-0 ltr:rotate-180" />
+            <span>{t("btnCancel", lang)}</span>
+          </button>
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-rose-500/25 bg-rose-500/10 p-4">
+          <div className="flex items-start gap-3">
+            <ShieldAlert className="size-5 shrink-0 text-rose-400 mt-0.5" />
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-rose-300">
+                {t("deleteVaultBtn", lang)}: <span className="underline font-black">{vaultName}</span>
+              </p>
+              <p className="text-xs text-rose-200/80 leading-relaxed">
+                {t("deleteVaultWarning", lang)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {error && (
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-rose-500/40 bg-rose-500/20 p-3.5 text-xs font-bold text-rose-300">
+            <AlertCircle className="size-4 shrink-0 text-rose-400" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-500/15 p-3.5 text-xs font-bold text-emerald-300">
+            <ShieldCheck className="size-4 shrink-0 text-emerald-400" />
+            <span>{t("deleteVaultSuccess", lang)}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleDelete} className="mt-4 space-y-4">
+          {hasPin && (
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-ink">
+                {t("deleteVaultPrompt", lang)}
+              </label>
+              <div className="relative">
+                <input
+                  type={showPin ? "text" : "password"}
+                  value={pin}
+                  onChange={(e) => setPin(convertArabicDigits(e.target.value))}
+                  placeholder={t("enterPinPlaceholder", lang)}
+                  autoFocus
+                  required
+                  className="w-full rounded-2xl border border-white/10 bg-surface/80 px-4 py-3 pl-11 text-base text-ink outline-none transition focus:border-rose-500 rtl:pl-11 rtl:pr-4 ltr:pr-11 ltr:pl-4"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPin(!showPin)}
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-ink rtl:left-3.5 rtl:right-auto ltr:right-3.5 ltr:left-auto"
+                >
+                  {showPin ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-2 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loading}
+              className="flex-1 rounded-2xl border border-white/10 bg-surface px-4 py-3 text-xs font-bold text-muted hover:text-ink hover:bg-surface-alt transition-all"
+            >
+              {t("btnCancel", lang)}
+            </button>
+            <button
+              type="submit"
+              disabled={loading || (hasPin && !pin)}
+              className="btn-3d flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 via-rose-700 to-red-700 px-4 py-3 text-xs font-black text-white shadow-lg shadow-rose-600/30 hover:opacity-95 transition-all disabled:opacity-50"
+            >
+              <Trash2 className="size-4" />
+              <span>{loading ? "..." : t("confirmDeleteVault", lang)}</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

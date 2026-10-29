@@ -54,7 +54,7 @@ import {
   type Currency,
 } from "@/lib/ledger/model";
 import { openingAdjust, useLedger, type Draft } from "@/lib/ledger/store";
-import { VaultAuthScreen, BackupModal, SetPinModal } from "./vault-auth";
+import { VaultAuthScreen, BackupModal, SetPinModal, DeleteVaultModal, getVaultDisplayName } from "./vault-auth";
 import { DeveloperFooter } from "./developer-footer";
 import { useModalBackHandler, useRootBackHandler } from "@/lib/use-back-handler";
 import {
@@ -470,6 +470,8 @@ export function Skeleton() {
 
 function Ledger() {
   const currentVault = useLedger((state) => state.currentVault);
+  const vaults = useLedger((state) => state.vaults);
+  const switchVault = useLedger((state) => state.switchVault);
   const lock = useLedger((state) => state.lock);
   const txs = useLedger((state) => state.txs);
   const started = useLedger((state) => state.started);
@@ -487,6 +489,7 @@ function Ledger() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showSetPinModal, setShowSetPinModal] = useState(false);
+  const [showDeleteVaultModal, setShowDeleteVaultModal] = useState(false);
 
   // Search, filter, and sort state for Tab 2 (Ledger)
   const [ledgerSearch, setLedgerSearch] = useState("");
@@ -575,6 +578,9 @@ function Ledger() {
 
   // Android / browser back button: 1 single step back closes set PIN modal (returns to main screen!)
   useModalBackHandler(showSetPinModal, () => setShowSetPinModal(false));
+
+  // Android / browser back button: 1 single step back closes delete vault modal
+  useModalBackHandler(showDeleteVaultModal, () => setShowDeleteVaultModal(false));
 
   const { isInstallable, installApp, isOnline, showInstallGuide, setShowInstallGuide } = usePwa();
 
@@ -833,6 +839,34 @@ function Ledger() {
             <FolderArchive className="size-3.5 text-amber-400" />
             <span>{t("backup", lang)}</span>
           </button>
+
+          {/* Multiple vaults: Switcher and Delete Vault button */}
+          {vaults.length > 1 && (
+            <>
+              <select
+                value={currentVault?.id}
+                onChange={(e) => switchVault(e.target.value)}
+                className="h-9 rounded-xl border border-white/10 bg-surface px-2.5 text-xs font-bold text-ink outline-none focus:border-amber-400"
+                title={t("switchVault", lang)}
+              >
+                {vaults.map((v) => (
+                  <option key={v.id} value={v.id}>
+                    {getVaultDisplayName(v.name, lang)} {v.hasPin ? "🔒" : "🔓"}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                onClick={() => setShowDeleteVaultModal(true)}
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 text-xs font-semibold text-rose-400 hover:border-rose-500 hover:bg-rose-500/20 transition-all shadow-xs"
+                title={t("deleteVaultBtn", lang)}
+              >
+                <Trash2 className="size-3.5" />
+                <span>{t("deleteVaultBtn", lang)}</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -1487,6 +1521,15 @@ function Ledger() {
       {showSetPinModal && <SetPinModal onClose={() => setShowSetPinModal(false)} />}
 
       {showInstallGuide && <InstallGuideModal onClose={() => setShowInstallGuide(false)} />}
+
+      {showDeleteVaultModal && currentVault && (
+        <DeleteVaultModal
+          vaultId={currentVault.id}
+          vaultName={displayedVaultName}
+          hasPin={Boolean(currentVault.hasPin)}
+          onClose={() => setShowDeleteVaultModal(false)}
+        />
+      )}
 
       {sheet && (
         <SheetDialog title={sheetTitle(sheet, lang)} onClose={() => setSheet(null)}>
