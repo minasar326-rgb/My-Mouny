@@ -1,10 +1,10 @@
 {
-  "id": "https://minasar326-rgb.github.io/Zaker-MB/",
+  "id": "https://minasar326-rgb.github.io/My-Mouny/",
   "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
   "short_name": "ذاكر",
   "description": "ذاكر: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.",
-  "start_url": "/Zaker-MB/?source=pwa",
-  "scope": "/Zaker-MB/",
+  "start_url": "/My-Mouny/?source=pwa",
+  "scope": "/My-Mouny/",
   "display": "standalone",
   "display_override": [
     "tabbed",
@@ -53,11 +53,11 @@
       ]
     },
     "new_tab_button": {
-      "url": "/Zaker-MB/"
+      "url": "/My-Mouny/"
     }
   },
   "note_taking": {
-    "new_note_url": "/Zaker-MB/?action=new_note"
+    "new_note_url": "/My-Mouny/?action=new_note"
   },
   "scope_extensions": [
     {
@@ -66,7 +66,7 @@
   ],
   "file_handlers": [
     {
-      "action": "/Zaker-MB/",
+      "action": "/My-Mouny/",
       "name": "نسخة احتياطية لتطبيق ذاكر",
       "accept": {
         "application/json": [
@@ -79,7 +79,7 @@
     }
   ],
   "share_target": {
-    "action": "/Zaker-MB/",
+    "action": "/My-Mouny/",
     "method": "GET",
     "enctype": "application/x-www-form-urlencoded",
     "params": {
@@ -91,7 +91,7 @@
   "protocol_handlers": [
     {
       "protocol": "web+zaker",
-      "url": "/Zaker-MB/?action=%s"
+      "url": "/My-Mouny/?action=%s"
     }
   ],
   "handle_links": "preferred",
@@ -102,12 +102,12 @@
       "description": "عرض رصيد الخزنة ومصاريف الشهر بضغطة واحدة",
       "tag": "zaker-widget",
       "template": "widget-template",
-      "ms_ac_template": "/Zaker-MB/widgets/balance.json",
-      "data": "/Zaker-MB/widgets/balance-data.json",
+      "ms_ac_template": "/My-Mouny/widgets/balance.json",
+      "data": "/My-Mouny/widgets/balance-data.json",
       "type": "application/json",
       "screenshots": [
         {
-          "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
+          "src": "/My-Mouny/screenshots/screenshot-mobile.png",
           "sizes": "390x844",
           "label": "معاينة ودجت ذاكر"
         }
@@ -116,19 +116,19 @@
   ],
   "icons": [
     {
-      "src": "/Zaker-MB/icons/icon-192.png",
+      "src": "/My-Mouny/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Zaker-MB/icons/icon-512.png",
+      "src": "/My-Mouny/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Zaker-MB/icons/icon-maskable.png",
+      "src": "/My-Mouny/icons/icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -136,14 +136,14 @@
   ],
   "screenshots": [
     {
-      "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
+      "src": "/My-Mouny/screenshots/screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "واجهة تطبيق ذاكر على الهاتف المحمول"
     },
     {
-      "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
+      "src": "/My-Mouny/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
@@ -155,10 +155,10 @@
       "name": "سجّل شراء ومصروف",
       "short_name": "مصروف",
       "description": "تسجيل عملية شراء وخصم فوري",
-      "url": "/Zaker-MB/",
+      "url": "/My-Mouny/",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -167,10 +167,10 @@
       "name": "سجّل إيراد ودخل",
       "short_name": "دخل",
       "description": "تسجيل إيراد مالي جديد",
-      "url": "/Zaker-MB/",
+      "url": "/My-Mouny/",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -179,10 +179,10 @@
       "name": "دفتر الحسابات",
       "short_name": "الدفتر",
       "description": "عرض ما لك وما عليك وسجل المعاملات",
-      "url": "/Zaker-MB/",
+      "url": "/My-Mouny/",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]

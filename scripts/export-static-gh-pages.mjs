@@ -140,7 +140,8 @@ if (!html.includes('<link rel="manifest"')) {
   html = html.replace('</head>', `  <link rel="manifest" href="${REPO_BASE}manifest.json">\n</head>`);
 }
 
-const immediateSwScript = `
+if (!html.includes('navigator.serviceWorker.register')) {
+  const immediateSwScript = `
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('${REPO_BASE}sw.js', { scope: '${REPO_BASE}' })
@@ -153,7 +154,8 @@ const immediateSwScript = `
     }
   </script>
 </head>`;
-html = html.replace('</head>', immediateSwScript);
+  html = html.replace('</head>', immediateSwScript);
+}
 
 // 5. Write index.html, 404.html, and .nojekyll
 fs.writeFileSync(path.join(distDir, "index.html"), html, "utf8");
@@ -177,6 +179,7 @@ if (fs.existsSync(assetsDir)) {
 const sourceManifestPath = path.join(root, "public", "manifest.json");
 const manifestPath = path.join(distDir, "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
+  manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
   manifest.start_url = `${REPO_BASE}?source=pwa`;
   manifest.scope = REPO_BASE;
   if (Array.isArray(manifest.icons)) {
@@ -317,7 +320,7 @@ if (fs.existsSync(sourceWidgetsDir)) {
 }
 
 // 9. Mirror static entry files to repository root for dual-mode deployment (branch root or gh-pages)
-const rootFilesToSync = ["index.html", "404.html", "manifest.json", "sw.js", ".nojekyll", "offline.html"];
+const rootFilesToSync = ["404.html", "manifest.json", "sw.js", ".nojekyll", "offline.html"];
 for (const file of rootFilesToSync) {
   const src = path.join(distDir, file);
   const dest = path.join(root, file);
