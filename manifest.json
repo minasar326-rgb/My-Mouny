@@ -1,18 +1,17 @@
 {
-  "id": "https://minasar326-rgb.github.io/My-Mouny/",
-  "name": "my Mouny - الخزنة والمحفظة المالية الذكية",
-  "short_name": "my Mouny",
-  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.",
+  "id": "https://minasar326-rgb.github.io/Zaker-MB/",
+  "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
+  "short_name": "ذاكر",
+  "description": "ذاكر: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100%.",
   "start_url": "/Zaker-MB/?source=pwa",
   "scope": "/Zaker-MB/",
   "display": "standalone",
   "display_override": [
     "window-controls-overlay",
-    "tabbed",
     "standalone",
     "minimal-ui"
   ],
-  "orientation": "any",
+  "orientation": "portrait",
   "background_color": "#0f172a",
   "theme_color": "#0284c7",
   "dir": "rtl",
@@ -20,8 +19,7 @@
   "categories": [
     "finance",
     "productivity",
-    "utilities",
-    "business"
+    "utilities"
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "prefer_related_applications": false,
@@ -34,46 +32,16 @@
   "edge_side_panel": {
     "preferred_width": 480
   },
-  "tab_strip": {
-    "home_tab": {
-      "scope_patterns": [
-        "*"
-      ]
-    },
-    "new_tab_button": {
-      "url": "/Zaker-MB/"
-    }
-  },
-  "note_taking": {
-    "new_note_url": "/Zaker-MB/?action=new_note"
-  },
-  "scope_extensions": [
-    {
-      "origin": "https://minasar326-rgb.github.io"
-    }
-  ],
-  "related_applications": [
-    {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=io.github.minasar326_rgb.mymouny",
-      "id": "io.github.minasar326_rgb.mymouny"
-    },
-    {
-      "platform": "windows",
-      "url": "https://www.microsoft.com/store/apps/9NBLGGH4NNS1",
-      "id": "9NBLGGH4NNS1"
-    }
-  ],
   "file_handlers": [
     {
       "action": "/Zaker-MB/",
-      "name": "نسخة احتياطية لتطبيق my Mouny",
+      "name": "نسخة احتياطية لتطبيق ذاكر",
       "accept": {
         "application/json": [
           ".json"
         ],
-        "application/x-mymouny": [
-          ".mouny"
+        "application/x-zaker": [
+          ".zaker"
         ]
       }
     }
@@ -89,17 +57,17 @@
   },
   "protocol_handlers": [
     {
-      "protocol": "web+mymouny",
+      "protocol": "web+zaker",
       "url": "/Zaker-MB/?action=%s"
     }
   ],
   "handle_links": "preferred",
   "widgets": [
     {
-      "name": "my Mouny - رصيد الخزنة",
-      "short_name": "my Mouny",
+      "name": "ذاكر - رصيد الخزنة",
+      "short_name": "ذاكر",
       "description": "عرض رصيد الخزنة ومصاريف الشهر بضغطة واحدة",
-      "tag": "mymouny-widget",
+      "tag": "zaker-widget",
       "template": "widget-template",
       "ms_ac_template": "widgets/balance.json",
       "data": "widgets/balance-data.json",
@@ -108,7 +76,7 @@
         {
           "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
           "sizes": "390x844",
-          "label": "معاينة ودجت my Mouny"
+          "label": "معاينة ودجت ذاكر"
         }
       ]
     }
@@ -139,14 +107,14 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق my Mouny على الهاتف المحمول"
+      "label": "واجهة تطبيق ذاكر على الهاتف المحمول"
     },
     {
       "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تحكم my Mouny على الكمبيوتر والتابلت"
+      "label": "لوحة تحكم ذاكر على الكمبيوتر والتابلت"
     }
   ],
   "shortcuts": [
