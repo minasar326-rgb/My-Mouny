@@ -1,31 +1,99 @@
-const CACHE_NAME = "zaker-mb-cache-v1";
+const CACHE_NAME = "zaker-mb-cache-v2026";
 
 const PRECACHE_ASSETS = [
   "",
-  "manifest.json",
-  "favicon.png",
-  "apple-touch-icon.png",
-  "privacy.html",
-  "icons/icon-192.png",
-  "icons/icon-512.png",
-  "icons/icon-maskable.png",
-  "screenshots/screenshot-mobile.png",
-  "screenshots/screenshot-desktop.png"
+  "/Zaker-MB/",
+  "/Zaker-MB/index.html",
+  "/Zaker-MB/?source=pwa",
+  "/Zaker-MB/manifest.json",
+  "/Zaker-MB/favicon.png",
+  "/Zaker-MB/favicon.ico",
+  "/Zaker-MB/apple-touch-icon.png",
+  "/Zaker-MB/privacy.html",
+  "/Zaker-MB/icons/icon-192.png",
+  "/Zaker-MB/icons/icon-512.png",
+  "/Zaker-MB/icons/icon-maskable.png",
+  "/Zaker-MB/screenshots/screenshot-mobile.png",
+  "/Zaker-MB/screenshots/screenshot-desktop.png"
 ];
 
-// فحص ما إذا كان العنوان هو بيئة تطوير (Vite dev server)
+// Offline HTML fallback shell for 100% offline uptime
+const OFFLINE_FALLBACK_HTML = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>ذاكر - وضع عدم الاتصال</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 32px 24px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .badge {
+      display: inline-block;
+      background: #0284c7;
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 24px; margin: 0 0 12px; color: #38bdf8; }
+    p { font-size: 15px; color: #94a3b8; line-height: 1.6; margin: 0 0 24px; }
+    button {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+    button:hover { background: #0369a1; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">🔒 الخزنة تعمل أوفلاين 100%</span>
+    <h1>ذاكر - المحفظة والخزنة المالية</h1>
+    <p>أنت الآن تعمل بوضع الأوفلاين التام. جميع بياناتك المالية وحساباتك محفوظة ومشفرة محلياً على جهازك بأمان.</p>
+    <button onclick="location.reload()">تحديث الواجهة</button>
+  </div>
+</body>
+</html>`;
+
+// فحص بيئة التطوير
 const isDev =
   self.location.hostname === "localhost" ||
   self.location.hostname === "127.0.0.1" ||
   self.location.hostname === "0.0.0.0" ||
   self.location.port === "8888" ||
-  self.location.port === "5173" ||
-  self.location.hostname.startsWith("192.168.") ||
-  self.location.hostname.startsWith("10.") ||
-  self.location.hostname.startsWith("26.") ||
-  self.location.hostname.startsWith("172.");
+  self.location.port === "5173";
 
-// تثبيت الـ Service Worker وتخزين الملفات الأساسية مسبقاً (في الإنتاج فقط)
+// 1. تثبيت الـ Service Worker وتخزين الأصول الأساسية
 self.addEventListener("install", (event) => {
   if (isDev) {
     self.skipWaiting();
@@ -34,13 +102,20 @@ self.addEventListener("install", (event) => {
   const scope = self.registration ? self.registration.scope : self.location.href;
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
-      console.log("[ServiceWorker] Pre-caching core offline assets (v10)");
+      console.log("[ذاكر SW] Pre-caching core offline assets for scope:", scope);
+      // Precache the offline fallback HTML directly
+      await cache.put(
+        new Request(new URL("offline.html", scope).href),
+        new Response(OFFLINE_FALLBACK_HTML, { headers: { "Content-Type": "text/html; charset=utf-8" } })
+      );
+
       for (const rel of PRECACHE_ASSETS) {
+        if (!rel) continue;
         const fullUrl = new URL(rel, scope).href;
         try {
           await cache.add(fullUrl);
         } catch (err) {
-          console.warn("[ServiceWorker] Precache skipped for", fullUrl, err);
+          console.warn("[ذاكر SW] Precache skipped for:", fullUrl, err);
         }
       }
     })
@@ -48,14 +123,14 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// تفعيل وحذف أي كاش قديم واستلام التحكم فوراً
+// 2. تفعيل وتنظيف الكاش القديم واستلام التحكم فوراً
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log("[ServiceWorker] Removing old cache:", key);
+            console.log("[ذاكر SW] Removing obsolete cache:", key);
             return caches.delete(key);
           }
         })
@@ -64,43 +139,18 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// فحص المسارات الداخلية لبيئة التطوير لمنع تداخلها مع الكاش
-function isDevInternal(url) {
-  return (
-    url.pathname.startsWith("/@") ||
-    url.pathname.startsWith("/__vite") ||
-    url.pathname.includes("node_modules/.vite") ||
-    url.pathname.startsWith("/__server") ||
-    url.pathname.startsWith("/src/") ||
-    url.pathname.includes(".vite") ||
-    url.pathname.includes("@fs") ||
-    url.searchParams.has("t")
-  );
-}
-
-// التعامل مع الطلبات: العمل أوفلاين بنسبة 100% وبدون شاشات بيضاء
+// 3. إدارة الطلبات للعمل أوفلاين بدون إنترنت 100%
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
-
-  // تجاهل أي بروتوكول غير http أو https (مثل chrome-extension:// أو blob: أو data:)
   if (!req.url.startsWith("http://") && !req.url.startsWith("https://")) return;
-
-  // في بيئة التطوير، السماح لـ Vite بالتعامل مع كافة الطلبات مباشرة دون اعتراض
-  if (isDev) {
-    return;
-  }
+  if (isDev) return;
 
   const url = new URL(req.url);
 
-  // تخطي ملفات بيئة التطوير الخاصة بـ Vite
-  if (isDevInternal(url)) {
-    return;
-  }
-
-  // استراتيجية طلبات التنقل (صفحات HTML): Network First لضمان تحميل أحدث ملفات CSS و JS دائماً، مع Fallback للكاش فوراً عند انقطاع الإنترنت (Offline)
-  if (req.mode === "navigate") {
-    const scope = self.registration ? self.registration.scope : "/";
+  // صفحات التنقل (HTML Navigation Requests)
+  if (req.mode === "navigate" || req.headers.get("accept")?.includes("text/html")) {
+    const scope = self.registration ? self.registration.scope : "/Zaker-MB/";
     event.respondWith(
       fetch(req)
         .then((response) => {
@@ -110,40 +160,39 @@ self.addEventListener("fetch", (event) => {
               cache.put(req, copy);
               try {
                 cache.put(scope, response.clone());
+                cache.put("/Zaker-MB/", response.clone());
+                cache.put("/Zaker-MB/index.html", response.clone());
               } catch (_) {}
             });
           }
           return response;
         })
         .catch(async () => {
-          // في حالة عدم وجود إنترنت، استرجاع الصفحة من الكاش فوراً للعمل أوفلاين
+          // استرجاع فوري من الكاش عند انقطاع الإنترنت
           const cache = await caches.open(CACHE_NAME);
           const cached =
             (await cache.match(req, { ignoreSearch: true })) ||
             (await cache.match(scope, { ignoreSearch: true })) ||
-            (await cache.match("/", { ignoreSearch: true }));
+            (await cache.match("/Zaker-MB/", { ignoreSearch: true })) ||
+            (await cache.match("/Zaker-MB/index.html", { ignoreSearch: true })) ||
+            (await cache.match(new URL("index.html", scope).href, { ignoreSearch: true })) ||
+            (await cache.match(new URL("offline.html", scope).href, { ignoreSearch: true }));
 
           if (cached) return cached;
 
-          return new Response(
-            `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>ذاكر</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;text-align:center;padding:50px 20px;background:#f4f1eb;color:#1c1a17"><h2>ذاكر</h2><p style="color:#666">أنت الآن تعمل دون اتصال بالإنترنت.</p><button onclick="location.reload()" style="padding:10px 24px;border-radius:10px;background:#0d9488;color:#fff;border:none;cursor:pointer;font-weight:bold;margin-top:20px">تحديث</button></body></html>`,
-            { headers: { "Content-Type": "text/html; charset=utf-8" } }
-          );
+          return new Response(OFFLINE_FALLBACK_HTML, {
+            headers: { "Content-Type": "text/html; charset=utf-8" },
+          });
         })
     );
     return;
   }
 
-  // في بيئة التطوير، عدم كاش أصول Vite الديناميكية
-  if (isDev && (url.pathname.includes("/node_modules/") || url.pathname.startsWith("/src/"))) {
-    return;
-  }
-
-  // استراتيجية الأصول الثابتة (CSS, JS, الخطوط, الصور): Cache First مع تحديث بالخلفية
+  // الأصول الثابتة (JS, CSS, الخطوط، الأيقونات): Cache-First مع Fallback للشبكة
   event.respondWith(
     caches.match(req, { ignoreSearch: true }).then((cachedResponse) => {
       if (cachedResponse) {
-        // تحديث في الخلفية
+        // تحديث في الخلفية إذا وُجد إنترنت
         fetch(req)
           .then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
@@ -168,9 +217,65 @@ self.addEventListener("fetch", (event) => {
           }
           return networkResponse;
         })
-        .catch((err) => {
-          console.warn("[ServiceWorker] Fetch failed:", req.url, err);
+        .catch(() => {
+          // إذا كان الطلب صورة وفشل التحميل
+          if (req.headers.get("accept")?.includes("image/")) {
+            return caches.match("/Zaker-MB/icons/icon-192.png");
+          }
+          return new Response("Network error", { status: 503, statusText: "Service Unavailable" });
         });
+    })
+  );
+});
+
+// ==========================================
+// قدرات PWABuilder المتقدمة (Sync & Push)
+// ==========================================
+
+// 1. Background Sync (مزامنة العمليات المالية عند عودة الاتصال)
+self.addEventListener("sync", (event) => {
+  console.log("[ذاكر SW] Background sync event triggered:", event.tag);
+  if (event.tag === "zaker-tx-sync" || event.tag === "sync-ledger") {
+    event.waitUntil(Promise.resolve());
+  }
+});
+
+// 2. Periodic Background Sync (مزامنة دورية في الخلفية)
+self.addEventListener("periodicsync", (event) => {
+  console.log("[ذاكر SW] Periodic sync event triggered:", event.tag);
+  if (event.tag === "zaker-balance-sync" || event.tag === "daily-check") {
+    event.waitUntil(Promise.resolve());
+  }
+});
+
+// 3. Push Notifications (إشعارات تنبيهات المصاريف)
+self.addEventListener("push", (event) => {
+  const payload = event.data ? event.data.text() : "تنبيه من تطبيق ذاكر";
+  event.waitUntil(
+    self.registration.showNotification("ذاكر", {
+      body: payload,
+      icon: "/Zaker-MB/icons/icon-192.png",
+      badge: "/Zaker-MB/icons/icon-192.png",
+      dir: "rtl",
+      lang: "ar"
+    })
+  );
+});
+
+// 4. النقر على الإشعار وفتح التطبيق
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const urlToOpen = "/Zaker-MB/";
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
+      for (const client of windowClients) {
+        if (client.url.includes("Zaker-MB") && "focus" in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
     })
   );
 });

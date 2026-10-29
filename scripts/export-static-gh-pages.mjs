@@ -5,7 +5,7 @@ const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
 const repoFromGit = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split("/")[1] : null;
-const REPO_NAME = process.env.REPO_NAME || repoFromGit || "Zaker-MB";
+const REPO_NAME = process.env.REPO_NAME || repoFromGit || "My-Mouny";
 const REPO_BASE = `/${REPO_NAME}/`;
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
@@ -240,6 +240,8 @@ const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
 
 // 8. Update sw.js in dist with correct precache URLs and cache invalidation
 const swPath = path.join(distDir, "sw.js");
+const sourceSwPath = path.join(root, "public", "sw.js");
+fs.copyFileSync(sourceSwPath, swPath);
 if (fs.existsSync(swPath)) {
   let swContent = fs.readFileSync(swPath, "utf8");
 
@@ -262,22 +264,25 @@ if (fs.existsSync(swPath)) {
     ...staticAssetFiles,
   ];
 
-  // Update PRECACHE_URLS
+  // Update PRECACHE_ASSETS
   swContent = swContent.replace(
-    /const PRECACHE_URLS = \[[^\]]*\];/s,
-    `const PRECACHE_URLS = ${JSON.stringify(precacheList, null, 2)};`
+    /const PRECACHE_ASSETS = \[[^\]]*\];/s,
+    `const PRECACHE_ASSETS = ${JSON.stringify(precacheList, null, 2)};`
   );
 
   // Bump Cache Name with timestamp to invalidate any stale browser SW cache
   const timestamp = Date.now();
   swContent = swContent.replace(
     /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "zakerm-pages-v${timestamp}";`
+    `const CACHE_NAME = "zaker-mb-v${timestamp}";`
   );
 
   // Replace navigation matching logic for GitHub Pages
   swContent = swContent.replaceAll('cache.match("/")', `(await cache.match("${REPO_BASE}", { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }))`);
   swContent = swContent.replaceAll('cache.put("/", copy)', `cache.put("${REPO_BASE}", copy)`);
+
+  // In production static export, SW must always be active (never treated as dev server)
+  swContent = swContent.replace(/const isDev =[^;]+;/s, "const isDev = false;");
 
   swContent = fixPaths(swContent);
   fs.writeFileSync(swPath, swContent, "utf8");

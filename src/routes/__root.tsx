@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ledger/home";
 import { useLedger } from "@/lib/ledger/store";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "ذاكر";
+const APP_NAME = "my Mouny";
 
 function RootShell() {
   useEffect(() => {
@@ -27,10 +27,19 @@ function RootShell() {
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
-              console.log("[SW] Registered successfully:", reg.scope);
+              console.log("[ذاكر SW] Registered successfully:", reg.scope);
               reg.update().catch(() => {});
             })
-            .catch((err) => console.warn("[SW] Registration error:", err));
+            .catch((err) => console.warn("[ذاكر SW] Registration error:", err));
+
+          // تفعيل التخزين الدائم غير القابل للمسح (Persistent Storage) لحفظ كافة الحسابات والخزائن محلياً
+          if (typeof navigator !== "undefined" && navigator.storage && navigator.storage.persist) {
+            navigator.storage.persist().then((granted) => {
+              if (granted) {
+                console.log("[ذاكر] تم تفعيل التخزين الدائم المحلي 100% (Persistent Storage Active)");
+              }
+            }).catch(() => {});
+          }
         };
 
         if (document.readyState === "complete" || document.readyState === "interactive") {
@@ -62,7 +71,7 @@ function RootComponent() {
     if (typeof window !== "undefined") {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-      document.title = lang === "ar" ? "ذاكر - تطبيق إدارة المصاريف والخزنة" : (lang === "el" ? "Zaker - Διαχείριση Εξόδων" : "Zaker - Expense & Vault Manager");
+      document.title = lang === "ar" ? "my Mouny" : (lang === "el" ? "my Mouny" : "my Mouny"); // : (lang === "el" ? "Zaker - Διαχείριση Εξόδων" : "Zaker - Expense & Vault Manager");
     }
   }, [lang]);
 
@@ -91,7 +100,7 @@ function RootComponent() {
                 }, true);
 
                 if ('serviceWorker' in navigator) {
-                  var isDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.port === '8888';
+                  var isDevHost = location.port === '8080' || location.port === '8888' || location.port === '5173';
                   if (isDevHost) {
                     navigator.serviceWorker.getRegistrations().then(function(regs) {
                       for (var i = 0; i < regs.length; i++) { regs[i].unregister(); }
@@ -106,9 +115,9 @@ function RootComponent() {
                   } else {
                     var swBase = location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/';
                     navigator.serviceWorker.register(swBase + 'sw.js', { scope: swBase }).then(function(reg) {
-                      console.log('[ذاكر] Head SW registered:', reg.scope);
+                      console.log('[ذاكر SW] Head SW registered:', reg.scope);
                     }).catch(function(err) {
-                      console.warn('[ذاكر] Head SW register error:', err);
+                      console.warn('[ذاكر SW] Head SW register error:', err);
                     });
                   }
                 }
@@ -138,10 +147,10 @@ export const Route = createRootRoute({
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "ذاكر" },
+      { name: "apple-mobile-web-app-title", content: "my Mouny" },
       {
         name: "description",
-        content: "ذاكر: تطبيق إدارة المصاريف والخزنة الذكية والمشفرة محلياً - أوفلاين 100% دون خوادم.",
+        content: "my Mouny: خزنتك المالية الذكية والمشفرة محلياً - أوفلاين 100% دون خوادم.",
       },
       {
         httpEquiv: "Content-Security-Policy",

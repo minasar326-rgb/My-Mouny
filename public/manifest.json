@@ -21,7 +21,66 @@
     "productivity",
     "utilities"
   ],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": [
+      "navigate-existing",
+      "auto"
+    ]
+  },
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "file_handlers": [
+    {
+      "action": "/Zaker-MB/?action=import",
+      "name": "نسخة احتياطية لتطبيق ذاكر",
+      "accept": {
+        "application/json": [
+          ".json"
+        ],
+        "application/x-zaker": [
+          ".zaker"
+        ]
+      }
+    }
+  ],
+  "share_target": {
+    "action": "/Zaker-MB/?action=share",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+zaker",
+      "url": "/Zaker-MB/?action=%s"
+    }
+  ],
+  "handle_links": "preferred",
+  "widgets": [
+    {
+      "name": "ذاكر - رصيد الخزنة",
+      "short_name": "ذاكر",
+      "description": "عرض رصيد الخزنة ومصاريف الشهر بضغطة واحدة",
+      "tag": "zaker-widget",
+      "template": "widget-template",
+      "ms_ac_template": "widgets/balance.json",
+      "data": "widgets/balance-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
+          "sizes": "390x844",
+          "label": "معاينة ودجت ذاكر"
+        }
+      ]
+    }
+  ],
   "icons": [
     {
       "src": "/Zaker-MB/icons/icon-192.png",

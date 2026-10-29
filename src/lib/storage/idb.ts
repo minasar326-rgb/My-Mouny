@@ -267,7 +267,7 @@ export async function getOrCreateDefaultVault(): Promise<VaultMeta> {
   const id = crypto.randomUUID();
   const defaultVault: VaultRecord = {
     id,
-    name: "ذاكر",
+    name: "my Mouny",
     hasPin: false,
     pinHash: "",
     salt: generateSalt(32),
@@ -352,16 +352,32 @@ export async function createVault(name: string, pin?: string): Promise<{ meta: V
 /**
  * Set or change PIN for an existing vault, re-encrypting all transactions with AES-256-GCM.
  */
-export async function setVaultPin(vaultId: string, newPin: string, oldKey?: CryptoKey): Promise<CryptoKey> {
+export async function setVaultPin(
+  vaultId: string,
+  newPin: string,
+  oldKey?: CryptoKey,
+  fallbackTxs?: Tx[]
+): Promise<CryptoKey> {
   if (!newPin || newPin.length < 4) {
     throw new Error("يجب أن يتكون رمز المرور من 4 خانات على الأقل");
   }
 
-  const record = await getVaultRecord(vaultId);
+  let record = await getVaultRecord(vaultId);
+  if (!record) {
+    // If vault record not found by ID (e.g. default-vault alias), check available vaults
+    const vaults = await listVaults();
+    if (vaults.length > 0) {
+      record = await getVaultRecord(vaults[0].id);
+      vaultId = vaults[0].id;
+    }
+  }
   if (!record) throw new Error("الخزنة غير موجودة");
 
   // Load existing transactions using old key
-  const txs = await loadVaultTransactions(vaultId, oldKey);
+  let txs = await loadVaultTransactions(vaultId, oldKey);
+  if (txs.length === 0 && fallbackTxs && fallbackTxs.length > 0) {
+    txs = fallbackTxs;
+  }
 
   const newSalt = generateSalt(32);
   const newPinHash = await hashPin(newPin, newSalt, DEFAULT_PBKDF2_ITERATIONS);
@@ -595,58 +611,72 @@ export async function saveVaultTransactions(
   txs: Tx[],
   key?: CryptoKey
 ): Promise<void> {
-  const db = await openDb();
-  const tx = db.transaction(["transactions", "vaults"], "readwrite");
-  const txStore = tx.objectStore("transactions");
-  const index = txStore.index("by_vault");
-
-  // First clear existing items for this vault
-  const existing = await reqToPromise<StoredTx[]>(index.getAll(vaultId));
-  for (const item of existing) {
-    txStore.delete(item.id);
-  }
-
-  // Encrypt and store each item
+  // 1. Prepare and pre-encrypt ALL items in memory BEFORE touching IndexedDB!
+  const itemsToStore: StoredTx[] = [];
   for (const item of txs) {
     const { id, at, ...payload } = item;
     if (key) {
       const { ciphertextHex, ivHex } = await encryptPayload(payload, key);
-      const storedItem: StoredTx = {
+      itemsToStore.push({
         id,
         vaultId,
         at,
         isEncrypted: true,
         ciphertextHex,
         ivHex,
-      };
-      txStore.put(storedItem);
+      });
     } else {
-      const storedItem: StoredTx = {
+      itemsToStore.push({
         id,
         vaultId,
         at,
         isEncrypted: false,
         raw: payload,
-      };
-      txStore.put(storedItem);
+      });
     }
   }
 
-  // Update vault record timestamp and cryptographic integrity hash
-  const vaultStore = tx.objectStore("vaults");
-  const vault = await reqToPromise<VaultRecord | undefined>(vaultStore.get(vaultId));
-  if (vault) {
-    vault.updatedAt = Date.now();
-    vault.integrityHash = await calculateLedgerChecksum(txs);
-    vaultStore.put(vault);
-  }
+  const checksum = await calculateLedgerChecksum(txs);
 
-  await new Promise<void>((resolve, reject) => {
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
+  // 2. Open IndexedDB and run existing IDs lookup FIRST
+  const db = await openDb();
+  const existingIds = await new Promise<string[]>((resolve, reject) => {
+    const readTx = db.transaction("transactions", "readonly");
+    const index = readTx.objectStore("transactions").index("by_vault");
+    const req = index.getAllKeys(vaultId);
+    req.onsuccess = () => resolve(((req.result as any[]) || []).map(String));
+    req.onerror = () => reject(req.error);
   });
 
-  // Redundant Emergency Mirror Snapshot in localStorage (Never-Lost Guarantee)
+  // 3. Now open write transaction and perform atomic deletes & puts synchronously!
+  const writeTx = db.transaction(["transactions", "vaults"], "readwrite");
+  const txStore = writeTx.objectStore("transactions");
+  for (const id of existingIds) {
+    txStore.delete(id);
+  }
+  for (const item of itemsToStore) {
+    txStore.put(item);
+  }
+
+  // Update vault timestamp and integrity
+  const vaultStore = writeTx.objectStore("vaults");
+  const vReq = vaultStore.get(vaultId);
+  vReq.onsuccess = () => {
+    const vault = vReq.result as VaultRecord | undefined;
+    if (vault) {
+      vault.updatedAt = Date.now();
+      vault.integrityHash = checksum;
+      vaultStore.put(vault);
+    }
+  };
+
+  await new Promise<void>((resolve, reject) => {
+    writeTx.oncomplete = () => resolve();
+    writeTx.onerror = () => reject(writeTx.error);
+    writeTx.onabort = () => reject(writeTx.error || new Error("IDB write transaction aborted"));
+  });
+
+  // 4. Redundant Emergency Mirror Snapshot in localStorage (Never-Lost Guarantee)
   try {
     if (typeof localStorage !== "undefined") {
       const mirrorPayload = {

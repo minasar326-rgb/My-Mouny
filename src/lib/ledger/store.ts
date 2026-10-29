@@ -89,7 +89,7 @@ function getWarmSnapshot(): {
   }
 
   try {
-    const raw = localStorage.getItem("khazinti_warm_cache");
+    const raw = localStorage.getItem("zaker_warm_cache") || localStorage.getItem("khazinti_warm_cache");
     if (!raw) {
       return {
         isInitialized: false,
@@ -141,7 +141,7 @@ function saveWarmSnapshot(vault: VaultMeta | null, isUnlocked: boolean, txs: Tx[
       txs: vault.hasPin ? [] : txs,
       timestamp: Date.now(),
     };
-    localStorage.setItem("khazinti_warm_cache", JSON.stringify(cacheData));
+    localStorage.setItem("zaker_warm_cache", JSON.stringify(cacheData));
   } catch {
     // Ignore quota issues
   }
@@ -265,36 +265,12 @@ export const useLedger = create<LedgerState>((set, get) => ({
         });
       })();
 
-      await Promise.race([
-        initPromise,
-        new Promise((resolve) => setTimeout(resolve, 2000)),
-      ]);
-
-      // If still not initialized after 2 seconds, force fallback so user is NEVER stuck on loading!
-      if (!get().isInitialized) {
-        console.warn("[useLedger] initSession took >2s, forcing fallback initialized state");
-        const fallbackVault: VaultMeta = {
-          id: "default-vault",
-          name: "my Mouny",
-          hasPin: false,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-        };
-        set({
-          isInitialized: true,
-          isUnlocked: true,
-          vaults: [fallbackVault],
-          currentVault: fallbackVault,
-          activeCryptoKey: null,
-          txs: [],
-          started: false,
-        });
-      }
+      await initPromise;
     } catch (err) {
       console.error("[useLedger] Failed to init session:", err);
       const fallbackVault: VaultMeta = {
         id: "default-vault",
-        name: "ذاكر",
+        name: "my Mouny",
         hasPin: false,
         createdAt: Date.now(),
         updatedAt: Date.now(),
@@ -316,7 +292,7 @@ export const useLedger = create<LedgerState>((set, get) => ({
     // Find first vault without a PIN, or create one
     let target = vaults.find((v) => !v.hasPin);
     if (!target) {
-      const res = await idbCreateVault("ذاكر", undefined);
+      const res = await idbCreateVault("my Mouny", undefined);
       target = res.meta;
     }
     const txs = await loadVaultTransactions(target.id, undefined);
@@ -388,14 +364,18 @@ export const useLedger = create<LedgerState>((set, get) => ({
     const current = get().currentVault;
     if (!current) return { ok: false, error: "لا توجد خزنة نشطة" };
     try {
-      const newKey = await setVaultPin(current.id, pin, get().activeCryptoKey || undefined);
+      const currentTxs = get().txs;
+      const newKey = await setVaultPin(current.id, pin, get().activeCryptoKey || undefined, currentTxs);
       const vaults = await listVaults();
       const updatedMeta = vaults.find((v) => v.id === current.id) || current;
       set({
         currentVault: updatedMeta,
         activeCryptoKey: newKey,
         vaults,
+        txs: currentTxs,
+        started: currentTxs.length > 0,
       });
+      saveWarmSnapshot(updatedMeta, true, currentTxs);
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err instanceof Error ? err.message : "فشل تعيين رمز المرور" };

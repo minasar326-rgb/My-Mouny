@@ -221,7 +221,7 @@ function InstallGuideModal({ onClose }: { onClose: () => void }) {
             <div>
               <h2 className="text-base font-bold text-ink leading-tight">
                 {lang === "ar"
-                  ? "تثبيت ذاكر كـ تطبيق"
+                  ? "تثبيت my Mouny كـ تطبيق"
                   : lang === "el"
                   ? "Εγκατάσταση Zaker"
                   : "Install Zaker as an App"}
@@ -374,7 +374,7 @@ function InstallGuideModal({ onClose }: { onClose: () => void }) {
                 </span>
                 <p className="font-semibold text-accent">
                   {lang === "ar"
-                    ? "ستجد أيقونة تثبيت صغيرة على شكل كمبيوتر وسهم لأسفل أو زر «تثبيت ذاكر»."
+                    ? "ستجد أيقونة تثبيت صغيرة على شكل كمبيوتر وسهم لأسفل أو زر «تثبيت my Mouny»."
                     : "Click the small install icon (computer with down arrow) or 'Install Zaker'."}
                 </p>
               </div>
@@ -384,7 +384,7 @@ function InstallGuideModal({ onClose }: { onClose: () => void }) {
                 </span>
                 <p>
                   {lang === "ar"
-                    ? "أو من قائمة المتصفح (⋮) اختر «حفظ ومشاركة» -> «تثبيت ذاكر»، وسيفتح التطبيق فوراً كبرنامج مستقل على سطح المكتب!"
+                    ? "أو من قائمة المتصفح (⋮) اختر «حفظ ومشاركة» -> «تثبيت my Mouny»، وسيفتح التطبيق فوراً كبرنامج مستقل على سطح المكتب!"
                     : "Or from browser menu (⋮) choose 'Save and share' -> 'Install Zaker' to launch as a standalone desktop app!"}
                 </p>
               </div>
