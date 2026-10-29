@@ -3,9 +3,6 @@ name: Build Android App (Google Play AAB & APK)
 on:
   push:
     branches: ["main"]
-    paths:
-      - "android/**"
-      - ".github/workflows/build-android.yml"
   workflow_dispatch:
 
 permissions:
@@ -25,29 +22,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Verify Android SDK Environment
+      - name: Verify Release Keystore
         run: |
-          echo "ANDROID_HOME: $ANDROID_HOME"
-          echo "ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT"
-
-      - name: Generate Production Keystore
-        run: |
-          mkdir -p android/app
-          if [ ! -f "android/app/release.keystore" ]; then
-            keytool -genkeypair -v \
-              -keystore android/app/release.keystore \
-              -alias zakerm \
-              -keyalg RSA \
-              -keysize 2048 \
-              -validity 10000 \
-              -storepass zakerm2026 \
-              -keypass zakerm2026 \
-              -dname "CN=Zaker-m, OU=Mobile, O=Zaker, L=Cairo, ST=Cairo, C=EG"
-          fi
-
-          SHA256=$(keytool -list -v -keystore android/app/release.keystore -alias zakerm -storepass zakerm2026 | grep "SHA256:" | head -n 1 | awk '{print $2}')
-          echo "KEYSTORE_SHA256=$SHA256" >> $GITHUB_ENV
-          echo "Release Keystore SHA-256: $SHA256"
+          keytool -list -v -keystore android/app/release.keystore -alias zakerm -storepass zakerm2026
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -60,42 +37,42 @@ jobs:
           KEY_PASSWORD: zakerm2026
         run: |
           chmod +x gradlew
-          ./gradlew bundleRelease assembleRelease --stacktrace
+          ./gradlew bundleRelease assembleRelease --stacktrace --no-daemon 2>&1 | tee build.log || (cat build.log >> $GITHUB_STEP_SUMMARY && exit 1)
 
       - name: Upload Android App Bundle (For Google Play Store)
         uses: actions/upload-artifact@v4
         with:
-          name: Zaker-m-GooglePlay-AAB
+          name: Zaker-MB-GooglePlay-AAB
           path: android/app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload Release APK (For Direct Phone Installation)
         uses: actions/upload-artifact@v4
         with:
-          name: Zaker-m-Release-APK
+          name: Zaker-MB-Release-APK
           path: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload Keystore Backup
         uses: actions/upload-artifact@v4
         with:
-          name: Zaker-m-Signing-Keystore
+          name: Zaker-MB-Signing-Keystore
           path: android/app/release.keystore
 
       - name: Create GitHub Release with Downloads
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
-          name: "Zaker-m Android Release v1.0.0"
-          tag_name: "v1.0.0"
+          name: "Zaker-MB Android Release"
           draft: false
           prerelease: false
           body: |
-            ### 📱 تطبيق Zaker-m للأندرويد وجوجل بلاي
+            ### 📱 تطبيق Zaker-MB للأندرويد ومتجر جوجل بلاي
 
-            - **ملف الرفع لجوجل بلاي (Google Play Console):** `app-release.aab`
-            - **ملف التثبيت المباشر على الهاتف (APK):** `app-release.apk`
-            - **شهادة التوقيع الرقمية (Keystore):** `release.keystore`
-              - Alias: `zakerm`
-              - Password: `zakerm2026`
+            - **ملف النشر على Google Play Console:** `app-release.aab` (Android App Bundle)
+            - **ملف التثبيت المباشر على الهاتف:** `app-release.apk`
+            - **شهادة التوقيع الرقمية:** `release.keystore`
+              - **Alias:** `zakerm`
+              - **Password:** `zakerm2026`
+              - **SHA-256 Fingerprint:** `D0:68:7E:C5:02:0B:74:DE:19:56:9A:86:54:EC:65:8A:A0:77:D1:22:3A:B3:0A:36:24:7A:62:1C:D2:35:C1:13`
           files: |
             android/app/build/outputs/bundle/release/app-release.aab
             android/app/build/outputs/apk/release/app-release.apk
