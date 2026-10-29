@@ -262,6 +262,7 @@ if (fs.existsSync(swPath)) {
   const precacheList = [
     REPO_BASE,
     `${REPO_BASE}index.html`,
+    `${REPO_BASE}offline.html`,
     `${REPO_BASE}manifest.json`,
     `${REPO_BASE}favicon.png`,
     `${REPO_BASE}favicon.svg`,
@@ -280,26 +281,19 @@ if (fs.existsSync(swPath)) {
     `const PRECACHE_ASSETS = ${JSON.stringify(precacheList, null, 2)};`
   );
 
-  // Bump Cache Name with timestamp to invalidate any stale browser SW cache
-  const timestamp = Date.now();
-  swContent = swContent.replace(
-    /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "mymouny-v${timestamp}";`
-  );
-
-  // Replace navigation matching logic for GitHub Pages
-  swContent = swContent.replaceAll('cache.match("/")', `(await cache.match("${REPO_BASE}", { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }))`);
-  swContent = swContent.replaceAll('cache.put("/", copy)', `cache.put("${REPO_BASE}", copy)`);
-
-  // In production static export, SW must always be active (never treated as dev server)
-  swContent = swContent.replace(/const isDev =[^;]+;/s, "const isDev = false;");
-
   swContent = fixPaths(swContent);
   fs.writeFileSync(swPath, swContent, "utf8");
 }
 
+// Copy offline.html to dist
+const sourceOfflineHtml = path.join(root, "public", "offline.html");
+const distOfflineHtml = path.join(distDir, "offline.html");
+if (fs.existsSync(sourceOfflineHtml)) {
+  fs.copyFileSync(sourceOfflineHtml, distOfflineHtml);
+}
+
 // 9. Mirror static entry files to repository root for dual-mode deployment (branch root or gh-pages)
-const rootFilesToSync = ["index.html", "404.html", "manifest.json", "sw.js", ".nojekyll"];
+const rootFilesToSync = ["index.html", "404.html", "manifest.json", "sw.js", ".nojekyll", "offline.html"];
 for (const file of rootFilesToSync) {
   const src = path.join(distDir, file);
   const dest = path.join(root, file);
