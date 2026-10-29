@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production and Build Outputs
+dist/
+.output/
+.vercel/
+.tanstack/
+.nitro/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# IDE and OS files
+.DS_Store
+Thumbs.db
+*.local
+.vscode/
+.idea/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Android / Capacitor build cache
+android/app/build/
+android/.gradle/
+android/build/
+android/captures/

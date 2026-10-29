@@ -1,0 +1,9 @@
+{
+  "appId": "com.khazinti.finance",
+  "appName": "خزينتي",
+  "webDir": ".vercel/output/static",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}
