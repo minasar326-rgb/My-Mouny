@@ -233,7 +233,7 @@ self.addEventListener("notificationclick", (event) => {
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
       for (const client of windowClients) {
-        if (client.url.includes("Zaker-MB") && "focus" in client) {
+        if ((client.url.includes("My-Mouny") || client.url.includes("Zaker-MB")) && "focus" in client) {
           return client.focus();
         }
       }
@@ -242,4 +242,11 @@ self.addEventListener("notificationclick", (event) => {
       }
     })
   );
+});
+
+// 5. التحديث الفوري المباشر عبر رسائل النافذة
+self.addEventListener("message", (event) => {
+  if (event.data && (event.data.type === "SKIP_WAITING" || event.data === "skipWaiting")) {
+    self.skipWaiting();
+  }
 });

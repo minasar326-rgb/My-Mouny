@@ -26,11 +26,29 @@ function RootShell() {
               : (typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
                 ? "/Zaker-MB/"
                 : "/");
+          let refreshing = false;
+          navigator.serviceWorker.addEventListener("controllerchange", () => {
+            if (!refreshing) {
+              refreshing = true;
+              window.location.reload();
+            }
+          });
+
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
               console.log("[my Mouny SW] Registered successfully:", reg.scope);
               reg.update().catch(() => {});
+              reg.addEventListener("updatefound", () => {
+                const newWorker = reg.installing;
+                if (newWorker) {
+                  newWorker.addEventListener("statechange", () => {
+                    if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                      newWorker.postMessage({ type: "SKIP_WAITING" });
+                    }
+                  });
+                }
+              });
               // تسجيل Background Sync إذا كان مدعوماً
               if ("sync" in reg && typeof (reg as any).sync?.register === "function") {
                 (reg as any).sync.register("sync-ledger").catch(() => {});
@@ -125,11 +143,30 @@ function RootComponent() {
                       });
                     }
                   } else {
+                    var refreshing = false;
+                    navigator.serviceWorker.addEventListener('controllerchange', function() {
+                      if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                      }
+                    });
+
                     var swBase = location.pathname.startsWith('/My-Mouny')
                       ? '/My-Mouny/'
                       : (location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/');
                     navigator.serviceWorker.register(swBase + 'sw.js', { scope: swBase }).then(function(reg) {
                       console.log('[my Mouny SW] Head SW registered:', reg.scope);
+                      reg.update().catch(function(){});
+                      reg.addEventListener('updatefound', function() {
+                        var newWorker = reg.installing;
+                        if (newWorker) {
+                          newWorker.addEventListener('statechange', function() {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                              newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            }
+                          });
+                        }
+                      });
                       if ('sync' in reg && reg.sync) {
                         reg.sync.register('sync-ledger').catch(function(){});
                       }

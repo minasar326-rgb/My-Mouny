@@ -1,5 +1,5 @@
 // my Mouny - High-Performance Offline-First Service Worker
-const CACHE_NAME = "mymouny-cache-v1793312610726";
+const CACHE_NAME = "mymouny-cache-v1793312881501";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
@@ -27,8 +27,8 @@ const PRECACHE_ASSETS = [
   "/My-Mouny/screenshots/screenshot-desktop.png",
   "/My-Mouny/widgets/balance.json",
   "/My-Mouny/widgets/balance-data.json",
-  "/My-Mouny/assets/index-CS2VgoXC.js",
-  "/My-Mouny/assets/routes-D_0jhDFY.js",
+  "/My-Mouny/assets/index-slLCXy2W.js",
+  "/My-Mouny/assets/routes-em2g77Fa.js",
   "/My-Mouny/assets/styles-CvM1BU6K.css"
 ];
 
@@ -233,7 +233,7 @@ self.addEventListener("notificationclick", (event) => {
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
       for (const client of windowClients) {
-        if (client.url.includes("Zaker-MB") && "focus" in client) {
+        if ((client.url.includes("My-Mouny") || client.url.includes("Zaker-MB")) && "focus" in client) {
           return client.focus();
         }
       }
@@ -242,4 +242,11 @@ self.addEventListener("notificationclick", (event) => {
       }
     })
   );
+});
+
+// 5. التحديث الفوري المباشر عبر رسائل النافذة
+self.addEventListener("message", (event) => {
+  if (event.data && (event.data.type === "SKIP_WAITING" || event.data === "skipWaiting")) {
+    self.skipWaiting();
+  }
 });
