@@ -1,5 +1,5 @@
 // my Mouny - High-Performance Offline-First Service Worker
-const CACHE_NAME = "mymouny-cache-v1793311622896";
+const CACHE_NAME = "mymouny-cache-v1793311741237";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
@@ -27,9 +27,9 @@ const PRECACHE_ASSETS = [
   "/Zaker-MB/screenshots/screenshot-desktop.png",
   "/Zaker-MB/widgets/balance.json",
   "/Zaker-MB/widgets/balance-data.json",
-  "/Zaker-MB/assets/index-CnYyen_t.js",
-  "/Zaker-MB/assets/routes-DL8zxFGQ.js",
-  "/Zaker-MB/assets/styles-B-eU-nGh.css"
+  "/Zaker-MB/assets/index-DA0Pfrzm.js",
+  "/Zaker-MB/assets/routes-DhknFkiK.js",
+  "/Zaker-MB/assets/styles-CvM1BU6K.css"
 ];
 
 // 1. تثبيت الـ Service Worker وحفظ الأصول الأساسية وصفحة الأوفلاين في الكاش فوراً

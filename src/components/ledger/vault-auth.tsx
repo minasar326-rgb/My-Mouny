@@ -213,13 +213,13 @@ export function VaultAuthScreen() {
       </div>
 
       <div className="bento-card rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden border border-white/10">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 size-48 rounded-full bg-gradient-to-br from-cyan-500/15 to-blue-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 size-48 rounded-full bg-gradient-to-br from-amber-500/20 to-yellow-500/5 blur-3xl pointer-events-none" />
         <header className="text-center relative">
-          <div className="mx-auto mb-3.5 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 text-cyan-400 border border-cyan-500/30 shadow-md">
+          <div className="mx-auto mb-3.5 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500/25 to-yellow-400/20 text-amber-400 border border-amber-500/40 shadow-md">
             <Lock className="size-7" />
           </div>
           <div className="inline-block mb-1">
-            <span className="pill-badge bg-surface-alt/70 text-cyan-300 border border-white/10 text-xs">
+            <span className="pill-badge bg-surface-alt/70 text-amber-300 border border-white/10 text-xs">
               {t("appName", lang)}
             </span>
           </div>
@@ -265,7 +265,7 @@ export function VaultAuthScreen() {
                 <select
                   value={selectedVaultId}
                   onChange={(e) => setSelectedVaultId(e.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-surface/80 px-4 py-2.5 text-sm text-ink outline-none focus:border-cyan-400"
+                  className="w-full rounded-2xl border border-white/10 bg-surface/80 px-4 py-2.5 text-sm text-ink outline-none focus:border-amber-400"
                 >
                   {vaults.map((v) => (
                     <option key={v.id} value={v.id}>
@@ -288,7 +288,7 @@ export function VaultAuthScreen() {
                   placeholder={t("enterPinPlaceholder", lang)}
                   autoFocus
                   disabled={lockoutSec > 0}
-                  className="w-full rounded-2xl border border-white/10 bg-surface/80 px-4 py-3 pl-11 text-base text-ink outline-none transition focus:border-cyan-400 disabled:opacity-50 rtl:pl-11 rtl:pr-4 ltr:pr-11 ltr:pl-4"
+                  className="w-full rounded-2xl border border-white/10 bg-surface/80 px-4 py-3 pl-11 text-base text-ink outline-none transition focus:border-amber-400 disabled:opacity-50 rtl:pl-11 rtl:pr-4 ltr:pr-11 ltr:pl-4"
                 />
                 <button
                   type="button"
@@ -303,7 +303,7 @@ export function VaultAuthScreen() {
             <button
               type="submit"
               disabled={loading || !pin || lockoutSec > 0}
-              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 px-4 text-base font-bold text-white shadow-lg shadow-cyan-600/20 transition-all hover:opacity-95 disabled:opacity-50"
+              className="btn-3d inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-4 text-base font-black text-slate-950 shadow-lg shadow-amber-500/25 transition-all hover:opacity-95 disabled:opacity-50"
             >
               <KeyRound className="size-4" />
               <span>{loading ? t("verifyingPin", lang) : t("openVaultBtn", lang)}</span>
@@ -551,8 +551,8 @@ export function SetPinModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
       <div role="dialog" aria-modal="true" className="bento-card w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden border border-white/10">
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <span className="pill-badge bg-gradient-to-r from-cyan-500/15 to-blue-500/15 text-cyan-300 border border-cyan-500/25">
-            <Lock className="size-4 text-cyan-400" />
+          <span className="pill-badge bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 border border-amber-500/35">
+            <Lock className="size-4 text-amber-400" />
             <span className="text-sm">{currentVault?.hasPin ? t("editVaultSecurityTitle", lang) : t("setVaultSecurityTitle", lang)}</span>
           </span>
           <button
@@ -715,8 +715,8 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
       <div role="dialog" aria-modal="true" className="bento-card w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden border border-white/10">
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <span className="pill-badge bg-gradient-to-r from-violet-500/15 to-purple-500/15 text-violet-300 border border-violet-500/25">
-            <FolderArchive className="size-4 text-violet-400" />
+          <span className="pill-badge bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/35">
+            <FolderArchive className="size-4 text-amber-400" />
             <span className="text-sm">{t("backupAndRestoreTitle", lang)}</span>
           </span>
           <button
@@ -733,7 +733,7 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={() => setTab("export")}
             className={`flex-1 rounded-xl py-2 text-xs font-bold transition-all ${
-              tab === "export" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm" : "text-muted hover:text-ink"
+              tab === "export" ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black shadow-sm" : "text-muted hover:text-ink"
             }`}
           >
             {t("exportBackupTab", lang)}
@@ -742,7 +742,7 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={() => setTab("import")}
             className={`flex-1 rounded-xl py-2 text-xs font-bold transition-all ${
-              tab === "import" ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-sm" : "text-muted hover:text-ink"
+              tab === "import" ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold shadow-sm" : "text-muted hover:text-ink"
             }`}
           >
             {t("importBackupTab", lang)}
