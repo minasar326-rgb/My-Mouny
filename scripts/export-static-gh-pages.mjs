@@ -4,7 +4,8 @@ import path from "node:path";
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const REPO_NAME = "My-Mouny";
+const repoFromGit = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split("/")[1] : null;
+const REPO_NAME = process.env.REPO_NAME || repoFromGit || "My-Mouny";
 const REPO_BASE = `/${REPO_NAME}/`;
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
@@ -52,6 +53,7 @@ function fixPaths(str) {
   // Convert any previous /My-Mouny/ or /Zaker-m/ to new REPO_BASE
   s = s.replaceAll('/My-Mouny/', REPO_BASE);
   s = s.replaceAll('/Zaker-m/', REPO_BASE);
+  s = s.replaceAll('/zaker/', REPO_BASE);
 
   // Replace in HTML attributes
   s = s.replaceAll('href="/assets/', `href="${REPO_BASE}assets/`);
@@ -148,7 +150,7 @@ if (fs.existsSync(manifestPath)) {
   manifest.scope = REPO_BASE;
   if (Array.isArray(manifest.icons)) {
     manifest.icons = manifest.icons.map((ic) => {
-      const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m)\//, "/");
+      const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
       return {
         ...ic,
         src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
@@ -157,7 +159,7 @@ if (fs.existsSync(manifestPath)) {
   }
   if (Array.isArray(manifest.screenshots)) {
     manifest.screenshots = manifest.screenshots.map((sc) => {
-      const cleanSrc = sc.src.replace(/^\/(?:My-Mouny|Zaker-m)\//, "/");
+      const cleanSrc = sc.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
       return {
         ...sc,
         src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
@@ -170,7 +172,7 @@ if (fs.existsSync(manifestPath)) {
       url: REPO_BASE,
       icons: Array.isArray(sh.icons)
         ? sh.icons.map((ic) => {
-            const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m)\//, "/");
+            const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
             return {
               ...ic,
               src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,

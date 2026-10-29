@@ -1,8 +1,8 @@
 {
-  "id": "com.mymouny.app",
-  "name": "My Mouny",
-  "short_name": "My Mouny",
-  "description": "My Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً.",
+  "id": "com.minasar.zakerm",
+  "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
+  "short_name": "ذاكر",
+  "description": "ذاكر: تطبيق إدارة المصاريف والحسابات والخزنة مشفر محلياً ويعمل بالكامل دون إنترنت.",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
