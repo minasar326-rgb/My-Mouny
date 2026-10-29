@@ -1,10 +1,10 @@
 {
-  "id": "https://minasar326-rgb.github.io/My-Mouny/",
-  "name": "my Mouny",
-  "short_name": "my Mouny",
-  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.",
-  "start_url": "/My-Mouny/?source=pwa",
-  "scope": "/My-Mouny/",
+  "id": "https://minasar326-rgb.github.io/Zaker-MB/",
+  "name": "ذاكر - تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية",
+  "short_name": "ذاكر",
+  "description": "ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت.",
+  "start_url": "/Zaker-MB/?source=pwa",
+  "scope": "/Zaker-MB/",
   "display": "standalone",
   "display_override": [
     "window-controls-overlay",
@@ -18,10 +18,9 @@
   "dir": "rtl",
   "lang": "ar",
   "categories": [
-    "finance",
+    "education",
     "productivity",
-    "utilities",
-    "business"
+    "utilities"
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "prefer_related_applications": false,
@@ -41,11 +40,11 @@
       ]
     },
     "new_tab_button": {
-      "url": "/My-Mouny/"
+      "url": "/Zaker-MB/"
     }
   },
   "note_taking": {
-    "new_note_url": "/My-Mouny/?action=new_note"
+    "new_note_url": "/Zaker-MB/?action=new_note"
   },
   "scope_extensions": [
     {
@@ -55,8 +54,8 @@
   "related_applications": [
     {
       "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=io.github.minasar326_rgb.mymouny",
-      "id": "io.github.minasar326_rgb.mymouny"
+      "url": "https://play.google.com/store/apps/details?id=com.minasar.zakerm",
+      "id": "com.minasar.zakerm"
     },
     {
       "platform": "windows",
@@ -66,20 +65,20 @@
   ],
   "file_handlers": [
     {
-      "action": "/My-Mouny/?action=import",
-      "name": "نسخة احتياطية لتطبيق my Mouny",
+      "action": "/Zaker-MB/?action=import",
+      "name": "ملفات وملاحظات المذاكرة لتطبيق ذاكر",
       "accept": {
         "application/json": [
           ".json"
         ],
-        "application/x-mymouny": [
-          ".mouny"
+        "application/x-zaker": [
+          ".zaker"
         ]
       }
     }
   ],
   "share_target": {
-    "action": "/My-Mouny/?action=share",
+    "action": "/Zaker-MB/?action=share",
     "method": "GET",
     "params": {
       "title": "title",
@@ -89,45 +88,45 @@
   },
   "protocol_handlers": [
     {
-      "protocol": "web+mymouny",
-      "url": "/My-Mouny/?action=%s"
+      "protocol": "web+zaker",
+      "url": "/Zaker-MB/?action=%s"
     }
   ],
   "handle_links": "preferred",
   "widgets": [
     {
-      "name": "my Mouny - رصيد الخزنة",
-      "short_name": "my Mouny",
-      "description": "عرض رصيد الخزنة ومصاريف الشهر بضغطة واحدة",
-      "tag": "mymouny-widget",
+      "name": "ذاكر - جدول المذاكرة اليومي",
+      "short_name": "جدول ذاكر",
+      "description": "عرض جدول المذاكرة والمهام اليومية وتنظيم اليوم الدراسي بضغطة واحدة",
+      "tag": "zaker-widget",
       "template": "widget-template",
       "ms_ac_template": "widgets/balance.json",
       "data": "widgets/balance-data.json",
       "type": "application/json",
       "screenshots": [
         {
-          "src": "/My-Mouny/screenshots/screenshot-mobile.png",
+          "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
           "sizes": "390x844",
-          "label": "معاينة ودجت my Mouny"
+          "label": "معاينة ودجت ذاكر"
         }
       ]
     }
   ],
   "icons": [
     {
-      "src": "/My-Mouny/icons/icon-192.png",
+      "src": "/Zaker-MB/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/My-Mouny/icons/icon-512.png",
+      "src": "/Zaker-MB/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/My-Mouny/icons/icon-maskable.png",
+      "src": "/Zaker-MB/icons/icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -135,53 +134,53 @@
   ],
   "screenshots": [
     {
-      "src": "/My-Mouny/screenshots/screenshot-mobile.png",
+      "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق my Mouny على الهاتف المحمول"
+      "label": "واجهة تطبيق ذاكر لتنظيم المذاكرة على الهاتف المحمول"
     },
     {
-      "src": "/My-Mouny/screenshots/screenshot-desktop.png",
+      "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تحكم my Mouny على الكمبيوتر والتابلت"
+      "label": "لوحة تنظيم اليوم الدراسي وجدول المهام اليومية في ذاكر"
     }
   ],
   "shortcuts": [
     {
-      "name": "سجّل شراء ومصروف",
-      "short_name": "مصروف",
-      "description": "تسجيل عملية شراء وخصم فوري",
-      "url": "/My-Mouny/",
+      "name": "جدول المذاكرة اليومي",
+      "short_name": "جدول المذاكرة",
+      "description": "عرض جدول الحصص والمهام الدراسية لليوم",
+      "url": "/Zaker-MB/?action=schedule",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
     },
     {
-      "name": "سجّل إيراد ودخل",
-      "short_name": "دخل",
-      "description": "تسجيل إيراد مالي جديد",
-      "url": "/My-Mouny/",
+      "name": "إضافة مهمة دراسية جديدة",
+      "short_name": "مهمة جديدة",
+      "description": "تسجيل واجب مدرسي أو مراجعة يومية",
+      "url": "/Zaker-MB/?action=new_task",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
     },
     {
-      "name": "دفتر الحسابات",
-      "short_name": "الدفتر",
-      "description": "عرض ما لك وما عليك وسجل المعاملات",
-      "url": "/My-Mouny/",
+      "name": "مؤقت التركيز والمذاكرة",
+      "short_name": "مؤقت المذاكرة",
+      "description": "بدء جلسة مذاكرة بومودورو للتركيز العالي",
+      "url": "/Zaker-MB/?action=timer",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]

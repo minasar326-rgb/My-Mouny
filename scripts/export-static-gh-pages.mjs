@@ -146,9 +146,10 @@ if (fs.existsSync(assetsDir)) {
 }
 
 // Ensure correct Title and Brand Meta
-html = html.replace(/<title>.*?<\/title>/gi, `<title>ذاكر - تطبيق إدارة المصاريف والخزنة</title>`);
+html = html.replace(/<title>.*?<\/title>/gi, `<title>ذاكر - تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية</title>`);
 html = html.replace(/content="my Mouny"/gi, `content="ذاكر"`);
-html = html.replace(/my Mouny: خزنتك المالية الذكية والمشفرة محلياً/gi, `ذاكر: تطبيق إدارة المصاريف والخزنة الذكية والمشفرة محلياً`);
+html = html.replace(/content="[^"]*(?:خزنتك|المصاريف|الأموال|الحسابات)[^"]*"/gi, `content="ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت."`);
+html = html.replace(/my Mouny: [^"<]*/gi, `ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت.`);
 
 // Ensure CSS stylesheet link is present in <head>
 if (actualCss && !html.includes(actualCss)) {
@@ -159,9 +160,9 @@ if (actualCss && !html.includes(actualCss)) {
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="my Mouny" />
-  <meta name="application-name" content="my Mouny" />
-  <meta name="description" content="my Mouny: خزنتك المالية الذكية والمشفرة محلياً - أوفلاين 100% دون خوادم." />
+  <meta name="apple-mobile-web-app-title" content="ذاكر" />
+  <meta name="application-name" content="ذاكر" />
+  <meta name="description" content="ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت." />
   <link rel="icon" type="image/png" href="${REPO_BASE}favicon.png" />
   <link rel="icon" type="image/svg+xml" href="${REPO_BASE}favicon.svg" />
   <link rel="apple-touch-icon" href="${REPO_BASE}apple-touch-icon.png" />
@@ -236,11 +237,13 @@ if (fs.existsSync(assetsDir)) {
 const sourceManifestPath = path.join(root, "public", "manifest.json");
 const manifestPath = path.join(distDir, "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
-  manifest.name = "ذاكر - تطبيق إدارة المصاريف والخزنة";
-  manifest.short_name = "ذاكر";
-  manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
-  manifest.start_url = `${REPO_BASE}?source=pwa`;
-  manifest.scope = REPO_BASE;
+manifest.name = "ذاكر - تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية";
+manifest.short_name = "ذاكر";
+manifest.description = "ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت.";
+manifest.categories = ["education", "productivity", "utilities"];
+manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
+manifest.start_url = `${REPO_BASE}?source=pwa`;
+manifest.scope = REPO_BASE;
   if (Array.isArray(manifest.icons)) {
     manifest.icons = manifest.icons.map((ic) => {
       const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");

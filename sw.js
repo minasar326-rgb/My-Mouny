@@ -1,5 +1,5 @@
 // my Mouny - High-Performance Offline-First Service Worker
-const CACHE_NAME = "zaker-cache-v1793274559878";
+const CACHE_NAME = "zaker-cache-v1793275066037";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
@@ -27,8 +27,8 @@ const PRECACHE_ASSETS = [
   "/Zaker-MB/screenshots/screenshot-desktop.png",
   "/Zaker-MB/widgets/balance.json",
   "/Zaker-MB/widgets/balance-data.json",
-  "/Zaker-MB/assets/index-D-VBRcvp.js",
-  "/Zaker-MB/assets/routes-u1dX_8lk.js",
+  "/Zaker-MB/assets/index-e-YHKDBa.js",
+  "/Zaker-MB/assets/routes-BPE0nlIj.js",
   "/Zaker-MB/assets/styles-DX88isJf.css"
 ];
 
@@ -112,7 +112,7 @@ self.addEventListener("fetch", (event) => {
         if (pwaCached) return pwaCached;
 
         return new Response(
-          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>my Mouny أوفلاين</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>my Mouny</h1><p>التطبيق يعمل بوضع الأوفلاين التام - بياناتك محفوظة محلياً</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
+          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ذاكر - جدول المذاكرة أوفلاين</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>ذاكر</h1><p>تطبيق تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية يعمل أوفلاين 100%</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
           { headers: { "Content-Type": "text/html; charset=utf-8" } }
         );
       })()
@@ -190,9 +190,9 @@ self.addEventListener("periodicsync", (event) => {
   }
 });
 
-// 3. Push Notifications (إشعارات تنبيهات المصاريف)
+// 3. Push Notifications (إشعارات مواعيد وجداول المذاكرة)
 self.addEventListener("push", (event) => {
-  const payload = event.data ? event.data.text() : "تنبيه جديد من ذاكر";
+  const payload = event.data ? event.data.text() : "حان وقت المذاكرة - تنبيه من تطبيق ذاكر";
   event.waitUntil(
     self.registration.showNotification("ذاكر", {
       body: payload,

@@ -1,8 +1,8 @@
 {
   "id": "https://minasar326-rgb.github.io/Zaker-MB/",
-  "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
+  "name": "ذاكر - تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية",
   "short_name": "ذاكر",
-  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.",
+  "description": "ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت.",
   "start_url": "/Zaker-MB/?source=pwa",
   "scope": "/Zaker-MB/",
   "display": "standalone",
@@ -18,10 +18,9 @@
   "dir": "rtl",
   "lang": "ar",
   "categories": [
-    "finance",
+    "education",
     "productivity",
-    "utilities",
-    "business"
+    "utilities"
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "prefer_related_applications": false,
@@ -55,8 +54,8 @@
   "related_applications": [
     {
       "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=io.github.minasar326_rgb.mymouny",
-      "id": "io.github.minasar326_rgb.mymouny"
+      "url": "https://play.google.com/store/apps/details?id=com.minasar.zakerm",
+      "id": "com.minasar.zakerm"
     },
     {
       "platform": "windows",
@@ -67,13 +66,13 @@
   "file_handlers": [
     {
       "action": "/Zaker-MB/",
-      "name": "نسخة احتياطية لتطبيق my Mouny",
+      "name": "ملفات وملاحظات المذاكرة لتطبيق ذاكر",
       "accept": {
         "application/json": [
           ".json"
         ],
-        "application/x-mymouny": [
-          ".mouny"
+        "application/x-zaker": [
+          ".zaker"
         ]
       }
     }
@@ -89,17 +88,17 @@
   },
   "protocol_handlers": [
     {
-      "protocol": "web+mymouny",
+      "protocol": "web+zaker",
       "url": "/Zaker-MB/?action=%s"
     }
   ],
   "handle_links": "preferred",
   "widgets": [
     {
-      "name": "my Mouny - رصيد الخزنة",
-      "short_name": "my Mouny",
-      "description": "عرض رصيد الخزنة ومصاريف الشهر بضغطة واحدة",
-      "tag": "mymouny-widget",
+      "name": "ذاكر - جدول المذاكرة اليومي",
+      "short_name": "جدول ذاكر",
+      "description": "عرض جدول المذاكرة والمهام اليومية وتنظيم اليوم الدراسي بضغطة واحدة",
+      "tag": "zaker-widget",
       "template": "widget-template",
       "ms_ac_template": "/Zaker-MB/widgets/balance.json",
       "data": "/Zaker-MB/widgets/balance-data.json",
@@ -108,7 +107,7 @@
         {
           "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
           "sizes": "390x844",
-          "label": "معاينة ودجت my Mouny"
+          "label": "معاينة ودجت ذاكر"
         }
       ]
     }
@@ -139,21 +138,21 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق my Mouny على الهاتف المحمول"
+      "label": "واجهة تطبيق ذاكر لتنظيم المذاكرة على الهاتف المحمول"
     },
     {
       "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تحكم my Mouny على الكمبيوتر والتابلت"
+      "label": "لوحة تنظيم اليوم الدراسي وجدول المهام اليومية في ذاكر"
     }
   ],
   "shortcuts": [
     {
-      "name": "سجّل شراء ومصروف",
-      "short_name": "مصروف",
-      "description": "تسجيل عملية شراء وخصم فوري",
+      "name": "جدول المذاكرة اليومي",
+      "short_name": "جدول المذاكرة",
+      "description": "عرض جدول الحصص والمهام الدراسية لليوم",
       "url": "/Zaker-MB/",
       "icons": [
         {
@@ -163,9 +162,9 @@
       ]
     },
     {
-      "name": "سجّل إيراد ودخل",
-      "short_name": "دخل",
-      "description": "تسجيل إيراد مالي جديد",
+      "name": "إضافة مهمة دراسية جديدة",
+      "short_name": "مهمة جديدة",
+      "description": "تسجيل واجب مدرسي أو مراجعة يومية",
       "url": "/Zaker-MB/",
       "icons": [
         {
@@ -175,9 +174,9 @@
       ]
     },
     {
-      "name": "دفتر الحسابات",
-      "short_name": "الدفتر",
-      "description": "عرض ما لك وما عليك وسجل المعاملات",
+      "name": "مؤقت التركيز والمذاكرة",
+      "short_name": "مؤقت المذاكرة",
+      "description": "بدء جلسة مذاكرة بومودورو للتركيز العالي",
       "url": "/Zaker-MB/",
       "icons": [
         {
