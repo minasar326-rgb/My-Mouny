@@ -4,9 +4,10 @@ import path from "node:path";
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const REPO_BASE = "/My-Mouny/";
+const REPO_NAME = "Zaker-m";
+const REPO_BASE = `/${REPO_NAME}/`;
 
-console.log("Exporting production build for GitHub Pages into:", distDir);
+console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
 
 // 1. Clean and recreate dist
 if (fs.existsSync(distDir)) {
@@ -45,49 +46,49 @@ if (res.status !== 200) {
 
 let html = await res.text();
 
-// 4. Adapt paths for GitHub Pages subpath /My-Mouny/
+// 4. Adapt paths for GitHub Pages subpath
 function fixPaths(str) {
   let s = str;
-  // Clean potential duplicate prefixes first
-  s = s.replaceAll('/My-Mouny/My-Mouny/', '/My-Mouny/');
+  // Convert any previous /My-Mouny/ to new REPO_BASE
+  s = s.replaceAll('/My-Mouny/', REPO_BASE);
 
   // Replace in HTML attributes
-  s = s.replaceAll('href="/assets/', 'href="/My-Mouny/assets/');
-  s = s.replaceAll('src="/assets/', 'src="/My-Mouny/assets/');
-  s = s.replaceAll('href="/icons/', 'href="/My-Mouny/icons/');
-  s = s.replaceAll('src="/icons/', 'src="/My-Mouny/icons/');
-  s = s.replaceAll('href="/favicon.', 'href="/My-Mouny/favicon.');
-  s = s.replaceAll('href="/apple-touch-icon', 'href="/My-Mouny/apple-touch-icon');
-  s = s.replaceAll('href="/manifest.json"', 'href="/My-Mouny/manifest.json"');
+  s = s.replaceAll('href="/assets/', `href="${REPO_BASE}assets/`);
+  s = s.replaceAll('src="/assets/', `src="${REPO_BASE}assets/`);
+  s = s.replaceAll('href="/icons/', `href="${REPO_BASE}icons/`);
+  s = s.replaceAll('src="/icons/', `src="${REPO_BASE}icons/`);
+  s = s.replaceAll('href="/favicon.', `href="${REPO_BASE}favicon.`);
+  s = s.replaceAll('href="/apple-touch-icon', `href="${REPO_BASE}apple-touch-icon`);
+  s = s.replaceAll('href="/manifest.json"', `href="${REPO_BASE}manifest.json"`);
 
   // Replace inside JS backticks, double quotes, and single quotes
-  s = s.replaceAll('`/assets/', '`/My-Mouny/assets/');
-  s = s.replaceAll('"/assets/', '"/My-Mouny/assets/');
-  s = s.replaceAll("'/assets/", "'/My-Mouny/assets/");
+  s = s.replaceAll('`/assets/', `\`${REPO_BASE}assets/`);
+  s = s.replaceAll('"/assets/', `"${REPO_BASE}assets/`);
+  s = s.replaceAll("'/assets/", `'${REPO_BASE}assets/`);
 
-  s = s.replaceAll('`/icons/', '`/My-Mouny/icons/');
-  s = s.replaceAll('"/icons/', '"/My-Mouny/icons/');
-  s = s.replaceAll("'/icons/", "'/My-Mouny/icons/");
+  s = s.replaceAll('`/icons/', `\`${REPO_BASE}icons/`);
+  s = s.replaceAll('"/icons/', `"${REPO_BASE}icons/`);
+  s = s.replaceAll("'/icons/", `'${REPO_BASE}icons/`);
 
-  s = s.replaceAll('`/screenshots/', '`/My-Mouny/screenshots/');
-  s = s.replaceAll('"/screenshots/', '"/My-Mouny/screenshots/');
-  s = s.replaceAll("'/screenshots/", "'/My-Mouny/screenshots/");
+  s = s.replaceAll('`/screenshots/', `\`${REPO_BASE}screenshots/`);
+  s = s.replaceAll('"/screenshots/', `"${REPO_BASE}screenshots/`);
+  s = s.replaceAll("'/screenshots/", `'${REPO_BASE}screenshots/`);
 
-  s = s.replaceAll('`/favicon.', '`/My-Mouny/favicon.');
-  s = s.replaceAll('"/favicon.', '"/My-Mouny/favicon.');
-  s = s.replaceAll("'/favicon.", "'/My-Mouny/favicon.");
+  s = s.replaceAll('`/favicon.', `\`${REPO_BASE}favicon.`);
+  s = s.replaceAll('"/favicon.', `"${REPO_BASE}favicon.`);
+  s = s.replaceAll("'/favicon.", `'${REPO_BASE}favicon.`);
 
-  s = s.replaceAll('`/apple-touch-icon', '`/My-Mouny/apple-touch-icon');
-  s = s.replaceAll('"/apple-touch-icon', '"/My-Mouny/apple-touch-icon');
+  s = s.replaceAll('`/apple-touch-icon', `\`${REPO_BASE}apple-touch-icon`);
+  s = s.replaceAll('"/apple-touch-icon', `"${REPO_BASE}apple-touch-icon`);
 
-  s = s.replaceAll('`/manifest.json`', '`/My-Mouny/manifest.json`');
-  s = s.replaceAll('"/manifest.json"', '"/My-Mouny/manifest.json"');
+  s = s.replaceAll('`/manifest.json`', `\`${REPO_BASE}manifest.json\``);
+  s = s.replaceAll('"/manifest.json"', `"${REPO_BASE}manifest.json"`);
 
-  s = s.replaceAll('`/sw.js`', '`/My-Mouny/sw.js`');
-  s = s.replaceAll('"/sw.js"', '"/My-Mouny/sw.js"');
+  s = s.replaceAll('`/sw.js`', `\`${REPO_BASE}sw.js\``);
+  s = s.replaceAll('"/sw.js"', `"${REPO_BASE}sw.js"`);
 
   // Idempotently clean any double prefix
-  s = s.replaceAll('/My-Mouny/My-Mouny/', '/My-Mouny/');
+  s = s.replaceAll(`${REPO_BASE}${REPO_NAME}/`, REPO_BASE);
   return s;
 }
 
@@ -95,7 +96,7 @@ html = fixPaths(html);
 
 // Clean up platform-specific dynamic middleware artifacts not present on static GitHub Pages
 html = html.replace(/<link rel="manifest" href="\/__grok\/manifest\.webmanifest">/g, '');
-html = html.replace(/<link rel="manifest" href="\/My-Mouny\/__grok\/manifest\.webmanifest">/g, '');
+html = html.replace(new RegExp(`<link rel="manifest" href="${REPO_BASE}__grok\\/manifest\\.webmanifest">`, 'g'), '');
 html = html.replace(/<script src="https:\/\/grok\.com\/grok-app-builder\/extensions\.js"[^>]*><\/script>/g, '');
 html = html.replace(/<meta name="twitter:card"[^>]*>/g, '');
 html = html.replace(/<meta property="og:title"[^>]*>/g, '');
@@ -112,12 +113,12 @@ if (fs.existsSync(assetsDir)) {
   const actualJs = assetFiles.find((f) => f.startsWith("index-") && f.endsWith(".js"));
 
   if (actualCss) {
-    html = html.replace(/(?:\/My-Mouny)?\/assets\/styles-[A-Za-z0-9_-]+\.css/g, `/My-Mouny/assets/${actualCss}`);
+    html = html.replace(/(?:\/[A-Za-z0-9_-]+)?\/assets\/styles-[A-Za-z0-9_-]+\.css/g, `${REPO_BASE}assets/${actualCss}`);
   }
   if (actualJs) {
-    html = html.replace(/(?:\/My-Mouny)?\/assets\/index-[A-Za-z0-9_-]+\.js/g, `/My-Mouny/assets/${actualJs}`);
+    html = html.replace(/(?:\/[A-Za-z0-9_-]+)?\/assets\/index-[A-Za-z0-9_-]+\.js/g, `${REPO_BASE}assets/${actualJs}`);
   }
-  html = html.replaceAll('/My-Mouny/My-Mouny/', '/My-Mouny/');
+  html = html.replaceAll(`${REPO_BASE}${REPO_NAME}/`, REPO_BASE);
 }
 
 // 5. Write index.html, 404.html, and .nojekyll
@@ -125,7 +126,7 @@ fs.writeFileSync(path.join(distDir, "index.html"), html, "utf8");
 fs.writeFileSync(path.join(distDir, "404.html"), html, "utf8");
 fs.writeFileSync(path.join(distDir, ".nojekyll"), "");
 
-// 6. Patch JS asset bundles in dist/assets so runtime stylesheet & dynamic imports use /My-Mouny/
+// 6. Patch JS asset bundles in dist/assets so runtime stylesheet & dynamic imports use REPO_BASE
 if (fs.existsSync(assetsDir)) {
   const assetFiles = fs.readdirSync(assetsDir);
   for (const file of assetFiles) {
@@ -138,39 +139,42 @@ if (fs.existsSync(assetsDir)) {
   }
 }
 
-// 7. Update manifest.json inside dist with correct /My-Mouny/ paths
+// 7. Update manifest.json inside dist with correct paths
 const manifestPath = path.join(distDir, "manifest.json");
 if (fs.existsSync(manifestPath)) {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  manifest.start_url = "/My-Mouny/?source=pwa";
-  manifest.scope = "/My-Mouny/";
+  manifest.start_url = `${REPO_BASE}?source=pwa`;
+  manifest.scope = REPO_BASE;
   if (Array.isArray(manifest.icons)) {
-    manifest.icons = manifest.icons.map((ic) => ({
-      ...ic,
-      src: ic.src.startsWith("/My-Mouny/")
-        ? ic.src
-        : `/My-Mouny${ic.src.startsWith("/") ? "" : "/"}${ic.src}`,
-    }));
+    manifest.icons = manifest.icons.map((ic) => {
+      const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m)\//, "/");
+      return {
+        ...ic,
+        src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
+      };
+    });
   }
   if (Array.isArray(manifest.screenshots)) {
-    manifest.screenshots = manifest.screenshots.map((sc) => ({
-      ...sc,
-      src: sc.src.startsWith("/My-Mouny/")
-        ? sc.src
-        : `/My-Mouny${sc.src.startsWith("/") ? "" : "/"}${sc.src}`,
-    }));
+    manifest.screenshots = manifest.screenshots.map((sc) => {
+      const cleanSrc = sc.src.replace(/^\/(?:My-Mouny|Zaker-m)\//, "/");
+      return {
+        ...sc,
+        src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
+      };
+    });
   }
   if (Array.isArray(manifest.shortcuts)) {
     manifest.shortcuts = manifest.shortcuts.map((sh) => ({
       ...sh,
-      url: "/My-Mouny/",
+      url: REPO_BASE,
       icons: Array.isArray(sh.icons)
-        ? sh.icons.map((ic) => ({
-            ...ic,
-            src: ic.src.startsWith("/My-Mouny/")
-              ? ic.src
-              : `/My-Mouny${ic.src.startsWith("/") ? "" : "/"}${ic.src}`,
-          }))
+        ? sh.icons.map((ic) => {
+            const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m)\//, "/");
+            return {
+              ...ic,
+              src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
+            };
+          })
         : undefined,
     }));
   }
@@ -183,21 +187,21 @@ if (fs.existsSync(swPath)) {
   let swContent = fs.readFileSync(swPath, "utf8");
 
   const staticAssetFiles = fs.existsSync(assetsDir)
-    ? fs.readdirSync(assetsDir).map((f) => `/My-Mouny/assets/${f}`)
+    ? fs.readdirSync(assetsDir).map((f) => `${REPO_BASE}assets/${f}`)
     : [];
 
   const precacheList = [
-    "/My-Mouny/",
-    "/My-Mouny/index.html",
-    "/My-Mouny/manifest.json",
-    "/My-Mouny/favicon.png",
-    "/My-Mouny/favicon.svg",
-    "/My-Mouny/apple-touch-icon.png",
-    "/My-Mouny/icons/icon-192.png",
-    "/My-Mouny/icons/icon-512.png",
-    "/My-Mouny/icons/icon-maskable.png",
-    "/My-Mouny/screenshots/screenshot-mobile.png",
-    "/My-Mouny/screenshots/screenshot-desktop.png",
+    REPO_BASE,
+    `${REPO_BASE}index.html`,
+    `${REPO_BASE}manifest.json`,
+    `${REPO_BASE}favicon.png`,
+    `${REPO_BASE}favicon.svg`,
+    `${REPO_BASE}apple-touch-icon.png`,
+    `${REPO_BASE}icons/icon-192.png`,
+    `${REPO_BASE}icons/icon-512.png`,
+    `${REPO_BASE}icons/icon-maskable.png`,
+    `${REPO_BASE}screenshots/screenshot-mobile.png`,
+    `${REPO_BASE}screenshots/screenshot-desktop.png`,
     ...staticAssetFiles,
   ];
 
@@ -211,15 +215,15 @@ if (fs.existsSync(swPath)) {
   const timestamp = Date.now();
   swContent = swContent.replace(
     /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "mymouny-pages-v${timestamp}";`
+    `const CACHE_NAME = "zakerm-pages-v${timestamp}";`
   );
 
   // Replace navigation matching logic for GitHub Pages
-  swContent = swContent.replaceAll('cache.match("/")', '(await cache.match("/My-Mouny/", { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }))');
-  swContent = swContent.replaceAll('cache.put("/", copy)', 'cache.put("/My-Mouny/", copy)');
+  swContent = swContent.replaceAll('cache.match("/")', `(await cache.match("${REPO_BASE}", { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }))`);
+  swContent = swContent.replaceAll('cache.put("/", copy)', `cache.put("${REPO_BASE}", copy)`);
 
   swContent = fixPaths(swContent);
   fs.writeFileSync(swPath, swContent, "utf8");
 }
 
-console.log("GitHub Pages static export completed successfully with all asset paths mapped to /My-Mouny/!");
+console.log(`GitHub Pages static export completed successfully with all asset paths mapped to ${REPO_BASE}!`);
