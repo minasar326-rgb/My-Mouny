@@ -213,7 +213,7 @@ export const useLedger = create<LedgerState>((set, get) => ({
         if (vaults.length === 0) {
           const defaultVault = await getOrCreateDefaultVault().catch(() => ({
             id: "default-vault",
-            name: "خزينتي الرئيسية",
+            name: "My Mouny",
             hasPin: false,
             createdAt: Date.now(),
             updatedAt: Date.now(),
@@ -275,7 +275,7 @@ export const useLedger = create<LedgerState>((set, get) => ({
         console.warn("[useLedger] initSession took >2s, forcing fallback initialized state");
         const fallbackVault: VaultMeta = {
           id: "default-vault",
-          name: "خزينتي الرئيسية",
+          name: "My Mouny",
           hasPin: false,
           createdAt: Date.now(),
           updatedAt: Date.now(),
@@ -294,7 +294,7 @@ export const useLedger = create<LedgerState>((set, get) => ({
       console.error("[useLedger] Failed to init session:", err);
       const fallbackVault: VaultMeta = {
         id: "default-vault",
-        name: "خزينتي الرئيسية",
+        name: "My Mouny",
         hasPin: false,
         createdAt: Date.now(),
         updatedAt: Date.now(),
@@ -316,7 +316,7 @@ export const useLedger = create<LedgerState>((set, get) => ({
     // Find first vault without a PIN, or create one
     let target = vaults.find((v) => !v.hasPin);
     if (!target) {
-      const res = await idbCreateVault("خزينتي المفتوحة", undefined);
+      const res = await idbCreateVault("My Mouny", undefined);
       target = res.meta;
     }
     const txs = await loadVaultTransactions(target.id, undefined);

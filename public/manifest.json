@@ -39,14 +39,14 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق خزينتي على الهاتف المحمول"
+      "label": "واجهة تطبيق My Mouny على الهاتف المحمول"
     },
     {
       "src": "/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تحكم خزينتي على الكمبيوتر والتابلت"
+      "label": "لوحة تحكم My Mouny على الكمبيوتر والتابلت"
     }
   ],
   "shortcuts": [

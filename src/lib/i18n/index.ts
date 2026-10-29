@@ -186,7 +186,7 @@ export const translations = {
 
     // Exit Toast & Footer
     pressBackAgainToExit: "اضغط رجوع مرة أخرى للخروج من التطبيق",
-    footerCopyright: "خزينتي © 2026",
+    footerCopyright: "My Mouny © 2026",
     footerPrivacy: "سياسة الخصوصية والأمان",
     footerSecurity: "تشفير محلي عسكري AES-256 · أوفلاين 100% بدون خوادم",
 
@@ -224,7 +224,7 @@ export const translations = {
     createNewVaultBtn: "إنشاء خزنة جديدة على هذا الجهاز",
     importVaultFromBackupBtn: "استيراد خزنة من نسخة احتياطية (.json)",
     vaultNameLabel: "اسم الخزنة",
-    vaultNamePlaceholder: "مثال: خزينتي الشخصية، مصاريف البيت",
+    vaultNamePlaceholder: "مثال: خزنة My Mouny، مصاريف البيت",
     vaultPinOptionalLabel: "رمز المرور (PIN أو كلمة سر)",
     optionalBadge: "اختياري",
     pinOptionalPlaceholder: "اتركه فارغاً للدخول بدون رمز، أو 4 خانات",
@@ -454,7 +454,7 @@ export const translations = {
 
     // Exit Toast & Footer
     pressBackAgainToExit: "Press back again to exit the app",
-    footerCopyright: "Khazinti © 2026",
+    footerCopyright: "My Mouny © 2026",
     footerPrivacy: "Privacy Policy & Security",
     footerSecurity: "Military-grade local AES-256 · 100% Offline without servers",
 
@@ -722,7 +722,7 @@ export const translations = {
 
     // Exit Toast & Footer
     pressBackAgainToExit: "Πατήστε ξανά πίσω για έξοδο από την εφαρμογή",
-    footerCopyright: "Khazinti © 2026",
+    footerCopyright: "My Mouny © 2026",
     footerPrivacy: "Πολιτική Απορρήτου & Ασφάλεια",
     footerSecurity: "Στρατιωτικού επιπέδου τοπικό AES-256 · 100% Εκτός σύνδεσης χωρίς διακομιστές",
 

@@ -22,8 +22,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Verify Release Keystore
+      - name: Setup Release Keystore
         run: |
+          mkdir -p android/app
+          rm -f android/app/release.keystore
+          keytool -genkeypair -v \
+            -keystore android/app/release.keystore \
+            -alias zakerm \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass zakerm2026 \
+            -keypass zakerm2026 \
+            -dname "CN=Zaker, OU=Mobile, O=Zaker, L=Cairo, ST=Cairo, C=EG"
           keytool -list -v -keystore android/app/release.keystore -alias zakerm -storepass zakerm2026
 
       - name: Set up Gradle
@@ -42,30 +53,30 @@ jobs:
       - name: Upload Android App Bundle (For Google Play Store)
         uses: actions/upload-artifact@v4
         with:
-          name: Zaker-MB-GooglePlay-AAB
+          name: My-Mouny-GooglePlay-AAB
           path: android/app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload Release APK (For Direct Phone Installation)
         uses: actions/upload-artifact@v4
         with:
-          name: Zaker-MB-Release-APK
+          name: My-Mouny-Release-APK
           path: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload Keystore Backup
         uses: actions/upload-artifact@v4
         with:
-          name: Zaker-MB-Signing-Keystore
+          name: My-Mouny-Signing-Keystore
           path: android/app/release.keystore
 
       - name: Create GitHub Release with Downloads
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
-          name: "Zaker-MB Android Release"
+          name: "My-Mouny Android Release"
           draft: false
           prerelease: false
           body: |
-            ### 📱 تطبيق Zaker-MB للأندرويد ومتجر جوجل بلاي
+            ### 📱 تطبيق My Mouny للأندرويد ومتجر جوجل بلاي
 
             - **ملف النشر على Google Play Console:** `app-release.aab` (Android App Bundle)
             - **ملف التثبيت المباشر على الهاتف:** `app-release.apk`

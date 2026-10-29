@@ -682,7 +682,7 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
       const json = await exportBackup();
       const blob = new Blob([json], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const fileName = `Khazinti_${currentVault?.name || "backup"}_${new Date().toISOString().slice(0, 10)}.json`;
+      const fileName = `My_Mouny_${currentVault?.name || "backup"}_${new Date().toISOString().slice(0, 10)}.json`;
       setDownloadUrl(url);
       setDownloadFileName(fileName);
       setStatusMsg(t("backupReadySuccess", lang));
