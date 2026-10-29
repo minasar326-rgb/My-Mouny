@@ -21,11 +21,13 @@ function RootShell() {
       } else {
         window.addEventListener("load", () => {
           const base =
-            typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-m")
-              ? "/Zaker-m/"
-              : typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
-                ? "/My-Mouny/"
-                : "/";
+            typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
+              ? "/Zaker-MB/"
+              : typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-m")
+                ? "/Zaker-m/"
+                : typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
+                  ? "/My-Mouny/"
+                  : "/";
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {

@@ -4,7 +4,7 @@ import path from "node:path";
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const REPO_NAME = "My-Mouny";
+const REPO_NAME = "Zaker-MB";
 const REPO_BASE = `/${REPO_NAME}/`;
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
@@ -49,8 +49,9 @@ let html = await res.text();
 // 4. Adapt paths for GitHub Pages subpath
 function fixPaths(str) {
   let s = str;
-  // Convert any previous /My-Mouny/ to new REPO_BASE
+  // Convert any previous /My-Mouny/ or /Zaker-m/ to new REPO_BASE
   s = s.replaceAll('/My-Mouny/', REPO_BASE);
+  s = s.replaceAll('/Zaker-m/', REPO_BASE);
 
   // Replace in HTML attributes
   s = s.replaceAll('href="/assets/', `href="${REPO_BASE}assets/`);
