@@ -1,35 +1,35 @@
 // my Mouny - High-Performance Offline-First Service Worker
-const CACHE_NAME = "mymouny-cache-v1793273736969";
+const CACHE_NAME = "zaker-cache-v1793274559878";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
-// Determine base scope dynamically (e.g. /My-Mouny/ or /My-Mouny/)
+// Determine base scope dynamically (e.g. /Zaker-MB/ or /Zaker-MB/)
 const SCOPE_BASE = (self.registration && self.registration.scope)
   ? new URL(self.registration.scope).pathname
-  : "/My-Mouny/";
+  : "/Zaker-MB/";
 const cleanBase = SCOPE_BASE.endsWith("/") ? SCOPE_BASE : SCOPE_BASE + "/";
 
 const OFFLINE_URL = `${cleanBase}offline.html`;
 
 // Core offline assets precached on install
 const PRECACHE_ASSETS = [
-  "/My-Mouny/",
-  "/My-Mouny/index.html",
-  "/My-Mouny/offline.html",
-  "/My-Mouny/manifest.json",
-  "/My-Mouny/favicon.png",
-  "/My-Mouny/favicon.svg",
-  "/My-Mouny/apple-touch-icon.png",
-  "/My-Mouny/icons/icon-192.png",
-  "/My-Mouny/icons/icon-512.png",
-  "/My-Mouny/icons/icon-maskable.png",
-  "/My-Mouny/screenshots/screenshot-mobile.png",
-  "/My-Mouny/screenshots/screenshot-desktop.png",
-  "/My-Mouny/widgets/balance.json",
-  "/My-Mouny/widgets/balance-data.json",
-  "/My-Mouny/assets/index-D-VBRcvp.js",
-  "/My-Mouny/assets/routes-u1dX_8lk.js",
-  "/My-Mouny/assets/styles-DX88isJf.css"
+  "/Zaker-MB/",
+  "/Zaker-MB/index.html",
+  "/Zaker-MB/offline.html",
+  "/Zaker-MB/manifest.json",
+  "/Zaker-MB/favicon.png",
+  "/Zaker-MB/favicon.svg",
+  "/Zaker-MB/apple-touch-icon.png",
+  "/Zaker-MB/icons/icon-192.png",
+  "/Zaker-MB/icons/icon-512.png",
+  "/Zaker-MB/icons/icon-maskable.png",
+  "/Zaker-MB/screenshots/screenshot-mobile.png",
+  "/Zaker-MB/screenshots/screenshot-desktop.png",
+  "/Zaker-MB/widgets/balance.json",
+  "/Zaker-MB/widgets/balance-data.json",
+  "/Zaker-MB/assets/index-D-VBRcvp.js",
+  "/Zaker-MB/assets/routes-u1dX_8lk.js",
+  "/Zaker-MB/assets/styles-DX88isJf.css"
 ];
 
 // 1. تثبيت الـ Service Worker وحفظ الأصول الأساسية في الكاش فوراً
@@ -152,7 +152,7 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() => {
           if (req.headers.get("accept")?.includes("image/")) {
-            return caches.match("/My-Mouny/icons/icon-192.png");
+            return caches.match("/Zaker-MB/icons/icon-192.png");
           }
           return new Response("Offline", { status: 503, statusText: "Service Unavailable" });
         });
@@ -196,8 +196,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification("ذاكر", {
       body: payload,
-      icon: "/My-Mouny/icons/icon-192.png",
-      badge: "/My-Mouny/icons/icon-192.png",
+      icon: "/Zaker-MB/icons/icon-192.png",
+      badge: "/Zaker-MB/icons/icon-192.png",
       dir: "rtl",
       lang: "ar"
     })
@@ -207,7 +207,7 @@ self.addEventListener("push", (event) => {
 // 4. النقر على الإشعار وفتح التطبيق
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const urlToOpen = "/My-Mouny/";
+  const urlToOpen = "/Zaker-MB/";
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
       for (const client of windowClients) {

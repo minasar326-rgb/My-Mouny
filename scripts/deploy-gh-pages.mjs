@@ -7,7 +7,6 @@ const root = process.cwd();
 const distDir = path.join(root, "dist");
 
 const remotes = [
-  "https://github.com/minasar326-rgb/My-Mouny.git",
   "https://github.com/minasar326-rgb/Zaker-MB.git",
 ];
 

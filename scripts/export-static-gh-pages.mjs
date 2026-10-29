@@ -5,8 +5,8 @@ import { execSync } from "node:child_process";
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const REPO_NAME = "My-Mouny";
-const REPO_BASE = "/My-Mouny/";
+const REPO_NAME = "Zaker-MB";
+const REPO_BASE = "/Zaker-MB/";
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
 
@@ -145,8 +145,10 @@ if (fs.existsSync(assetsDir)) {
   html = html.replaceAll(`${REPO_BASE}${REPO_NAME}/`, REPO_BASE);
 }
 
-// Ensure correct Title
-html = html.replace(/<title>.*?<\/title>/gi, `<title>my Mouny</title>`);
+// Ensure correct Title and Brand Meta
+html = html.replace(/<title>.*?<\/title>/gi, `<title>ذاكر - تطبيق إدارة المصاريف والخزنة</title>`);
+html = html.replace(/content="my Mouny"/gi, `content="ذاكر"`);
+html = html.replace(/my Mouny: خزنتك المالية الذكية والمشفرة محلياً/gi, `ذاكر: تطبيق إدارة المصاريف والخزنة الذكية والمشفرة محلياً`);
 
 // Ensure CSS stylesheet link is present in <head>
 if (actualCss && !html.includes(actualCss)) {
@@ -234,8 +236,8 @@ if (fs.existsSync(assetsDir)) {
 const sourceManifestPath = path.join(root, "public", "manifest.json");
 const manifestPath = path.join(distDir, "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
-  manifest.name = "my Mouny";
-  manifest.short_name = "my Mouny";
+  manifest.name = "ذاكر - تطبيق إدارة المصاريف والخزنة";
+  manifest.short_name = "ذاكر";
   manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
   manifest.start_url = `${REPO_BASE}?source=pwa`;
   manifest.scope = REPO_BASE;
@@ -353,7 +355,7 @@ if (fs.existsSync(swPath)) {
   const timestamp = Date.now();
   swContent = swContent.replace(
     /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "mymouny-cache-v${timestamp}";`
+    `const CACHE_NAME = "zaker-cache-v${timestamp}";`
   );
 
   swContent = fixPaths(swContent);
