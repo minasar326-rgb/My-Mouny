@@ -602,13 +602,15 @@ function Ledger() {
 
       if (ledgerSearch.trim()) {
         const q = ledgerSearch.trim().toLowerCase();
+        const qDigits = convertArabicDigits(q);
         const view = describeLocalized(tx, lang);
         const matchTitle = (view.title || "").toLowerCase().includes(q);
         const matchDetail = (view.detail || "").toLowerCase().includes(q);
         const matchNote = (tx.note || "").toLowerCase().includes(q);
         const matchPerson = (tx.person || "").toLowerCase().includes(q);
         const matchCategory = tx.category ? getCategoryLabel(tx.category, lang).toLowerCase().includes(q) : false;
-        const matchAmount = (tx.amount / 100).toString().includes(q);
+        const amountStr = (tx.amount / 100).toString();
+        const matchAmount = amountStr.includes(q) || amountStr.includes(qDigits);
         return matchTitle || matchDetail || matchNote || matchPerson || matchCategory || matchAmount;
       }
       return true;
@@ -1924,6 +1926,21 @@ function ActionForm({
       }
     }
 
+    // Validate required fields across both Create and Edit modes
+    if (
+      (effectiveKind === "receivable" || effectiveKind === "payable") &&
+      person.trim().length === 0
+    ) {
+      setError(t("enterPersonNameError", lang));
+      setSubmitting(false);
+      return;
+    }
+    if (effectiveKind === "purchase" && note.trim().length === 0) {
+      setError(t("enterItemDescError", lang));
+      setSubmitting(false);
+      return;
+    }
+
     // Handle Edit Mode
     if (isEditing && targetTx) {
       const updatedFields: Partial<Omit<Tx, "id">> = {
@@ -1961,17 +1978,6 @@ function ActionForm({
         return;
       }
       onClose();
-      return;
-    }
-
-    if ((sheet.kind === "receivable" || sheet.kind === "payable") && person.trim().length === 0) {
-      setError(t("enterPersonNameError", lang));
-      setSubmitting(false);
-      return;
-    }
-    if (sheet.kind === "purchase" && note.trim().length === 0) {
-      setError(t("enterItemDescError", lang));
-      setSubmitting(false);
       return;
     }
 

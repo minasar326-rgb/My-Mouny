@@ -1,5 +1,5 @@
 // ذاكر - High-Performance Offline-First Service Worker
-const CACHE_NAME = "zaker-cache-v1793283489075";
+const CACHE_NAME = "zaker-cache-v1793284239874";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
@@ -27,8 +27,8 @@ const PRECACHE_ASSETS = [
   "/Zaker-MB/screenshots/screenshot-desktop.png",
   "/Zaker-MB/widgets/balance.json",
   "/Zaker-MB/widgets/balance-data.json",
-  "/Zaker-MB/assets/index-e-YHKDBa.js",
-  "/Zaker-MB/assets/routes-BPE0nlIj.js",
+  "/Zaker-MB/assets/index-Cd4Q3vg8.js",
+  "/Zaker-MB/assets/routes-AOaX1v9U.js",
   "/Zaker-MB/assets/styles-DX88isJf.css"
 ];
 

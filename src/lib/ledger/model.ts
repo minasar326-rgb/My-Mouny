@@ -179,7 +179,7 @@ export function parseMoney(raw: string, allowZero = false): number | null {
   const converted = convertArabicDigits(raw);
   const trimmed = converted
     .trim()
-    .replace(/[€\$]/g, "")
+    .replace(/[€$]/g, "")
     .replace(/ج\.م\.?/gi, "")
     .replace(/EGP|USD|EUR/gi, "")
     .replace(/\s+/g, "")

@@ -266,3 +266,40 @@ test("QA Audit 7: Client-side PBKDF2 and AES-GCM Encrypted Storage Roundtrip", a
   const checksum = await calculateLedgerChecksum(decrypted as any);
   assert.equal(checksum.length, 64);
 });
+
+test("QA Audit 8: Search & Filter with Arabic Digits and Categories", () => {
+  const t0 = Date.now();
+  const txs: Tx[] = [
+    { id: "1", at: t0, kind: "income", amount: 150000, pocket: "bank", category: "salary", note: "مرتب شهر أكتوبر" },
+    { id: "2", at: t0 + 10, kind: "purchase", amount: 4500, pocket: "cash", category: "food", note: "غداء عمل" },
+    { id: "3", at: t0 + 20, kind: "receivable", amount: 5000, person: "أحمد حسني", note: "سلفة" },
+  ];
+
+  // Test Arabic numerals conversion in search
+  const arabicQuery = "٤٥"; // 45
+  const converted = convertArabicDigits(arabicQuery);
+  assert.equal(converted, "45");
+  assert.ok((txs[1].amount / 100).toString().includes(converted));
+
+  // Test Category lookup
+  const catLabelAr = getCategoryLabel("food", "ar");
+  assert.ok(catLabelAr.includes("طعام"));
+  const catLabelEn = getCategoryLabel("food", "en");
+  assert.ok(catLabelEn.includes("Food"));
+});
+
+test("QA Audit 9: Ledger Integrity, Ordering and Zero Balance Safety", () => {
+  const txs: Tx[] = [
+    { id: "b", at: 200, kind: "purchase", amount: 2000, pocket: "cash", note: "Second" },
+    { id: "a", at: 100, kind: "adjust", amount: 2000, pocket: "cash", note: "First" },
+  ];
+
+  const sorted = orderTxs(txs);
+  assert.equal(sorted[0].id, "a");
+  assert.equal(sorted[1].id, "b");
+
+  const l = derive(sorted);
+  assert.equal(l.cash, 0);
+  assert.equal(l.net, 0);
+  assert.equal(rejectReason(sorted), null, "Spending whole balance down to zero must be valid");
+});

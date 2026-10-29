@@ -10,11 +10,14 @@ export default tseslint.config(
   {
     ignores: [
       "dist/**",
+      "assets/**",
       ".output/**",
       ".vercel/**",
       ".nitro/**",
       "node_modules/**",
       "src/routeTree.gen.ts",
+      "sw.js",
+      "public/sw.js",
     ],
   },
   js.configs.recommended,
@@ -40,6 +43,7 @@ export default tseslint.config(
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "@typescript-eslint/no-explicit-any": "off",
+      "no-empty": ["error", { "allowEmptyCatch": true }],
     },
   },
   // Disable rules that conflict with Prettier formatting.
