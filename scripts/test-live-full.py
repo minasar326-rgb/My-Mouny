@@ -7,7 +7,10 @@ try:
         html = resp.read().decode('utf-8')
         print('Status:', resp.status)
         title_match = re.search(r'<title>(.*?)</title>', html)
-        print('Title:', title_match.group(1) if title_match else 'None')
+        title_str = title_match.group(1) if title_match else 'None'
+        print('Title:', title_str.encode('ascii', 'ignore').decode(), f'(Length: {len(title_str)})')
+        print('Has Zaker Arabic:', 'ذاكر' in html)
+        print('Has my Mouny:', 'my Mouny' in html)
         
         # Check all css links
         css_links = re.findall(r'href=[\'"]([^\'"]*?\.css[^\'"]*?)[\'"]', html)
