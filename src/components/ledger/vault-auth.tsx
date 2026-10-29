@@ -49,7 +49,6 @@ export function VaultAuthScreen() {
   const unlock = useLedger((s) => s.unlock);
   const createVault = useLedger((s) => s.createVault);
   const importBackup = useLedger((s) => s.importBackup);
-  const skipOrOpenDefault = useLedger((s) => s.skipOrOpenDefault);
   const lang = useLedger((s) => s.lang);
   const setLang = useLedger((s) => s.setLang);
 
@@ -86,17 +85,11 @@ export function VaultAuthScreen() {
     return () => clearInterval(interval);
   }, [selectedVaultId]);
 
-  // Back button handling: ALWAYS returns to the main ledger screen or previous mode!
+  // Back button handling: when in create or import mode, return to unlock screen
   useModalBackHandler(true, () => {
     if (mode === "create" || mode === "import") {
-      if (vaults.length > 0) {
-        setMode("unlock");
-      } else {
-        skipOrOpenDefault();
-      }
-    } else {
-      // In unlock mode, if user wants to enter without password
-      skipOrOpenDefault();
+      setMode("unlock");
+      setError(null);
     }
   });
 
@@ -176,17 +169,27 @@ export function VaultAuthScreen() {
 
   return (
     <main className="mx-auto flex min-h-[90vh] w-full max-w-md flex-col justify-center px-4 py-6 sm:px-6">
-      {/* Top Navigation Back to Home Button & Language selector */}
+      {/* Top Navigation Back Button in Create/Import Mode & Language selector */}
       <div className="mb-4 flex items-center justify-between gap-2">
-        <button
-          type="button"
-          onClick={() => skipOrOpenDefault()}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-ink shadow-xs transition hover:border-ink hover:bg-surface-alt"
-          title={t("returnToDashboard", lang)}
-        >
-          <ArrowRight className="size-4 rtl:rotate-0 ltr:rotate-180" />
-          {t("btnSkipToMain", lang)}
-        </button>
+        {mode !== "unlock" ? (
+          <button
+            type="button"
+            onClick={() => {
+              setMode("unlock");
+              setError(null);
+            }}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-ink shadow-xs transition hover:border-ink hover:bg-surface-alt"
+            title={t("returnToVaultList", lang)}
+          >
+            <ArrowRight className="size-4 rtl:rotate-0 ltr:rotate-180" />
+            {t("returnToVaultList", lang)}
+          </button>
+        ) : (
+          <div className="inline-flex items-center gap-1.5 rounded-xl border border-line/60 bg-surface/50 px-3 py-1 text-xs font-semibold text-muted">
+            <Lock className="size-3 text-accent" />
+            <span>{t("vaultEncrypted", lang)}</span>
+          </div>
+        )}
 
         {/* Language selector in VaultAuth */}
         <div className="flex items-center rounded-xl border border-line bg-surface p-1 shadow-xs">
@@ -301,15 +304,6 @@ export function VaultAuthScreen() {
               {loading ? t("verifyingPin", lang) : t("openVaultBtn", lang)}
             </button>
 
-            {/* Quick Access to Main Screen Without Password */}
-            <button
-              type="button"
-              onClick={() => skipOrOpenDefault()}
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 text-sm font-medium text-ink hover:border-ink hover:bg-surface-alt"
-            >
-              {t("btnSkipToMain", lang)}
-            </button>
-
             <div className="pt-2 flex flex-col gap-2 text-center text-xs text-muted sm:text-sm">
               <button
                 type="button"
@@ -408,28 +402,17 @@ export function VaultAuthScreen() {
               {loading ? t("creatingVaultBtn", lang) : pin ? t("createAndProtectVaultBtn", lang) : t("enterVaultNowBtn", lang)}
             </button>
 
-            {/* Direct Skip to Main Screen */}
-            <button
-              type="button"
-              onClick={() => skipOrOpenDefault()}
-              className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-surface text-xs font-semibold text-ink hover:bg-surface-alt"
-            >
-              {t("returnToHomeImmediate", lang)}
-            </button>
-
             {vaults.length > 0 && (
-              <div className="pt-1 text-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode("unlock");
-                    setError(null);
-                  }}
-                  className="text-xs text-muted hover:text-ink underline"
-                >
-                  {t("returnToVaultList", lang)}
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("unlock");
+                  setError(null);
+                }}
+                className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-surface text-xs font-semibold text-ink hover:bg-surface-alt"
+              >
+                {t("returnToVaultList", lang)}
+              </button>
             )}
           </form>
         )}
@@ -475,7 +458,10 @@ export function VaultAuthScreen() {
 
             <button
               type="button"
-              onClick={() => skipOrOpenDefault()}
+              onClick={() => {
+                setMode("unlock");
+                setError(null);
+              }}
               className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-surface text-xs font-semibold text-ink hover:bg-surface-alt"
             >
               {t("cancelAndReturnHome", lang)}

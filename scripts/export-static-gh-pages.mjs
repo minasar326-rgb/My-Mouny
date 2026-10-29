@@ -92,6 +92,10 @@ function fixPaths(str) {
 
   s = s.replaceAll('/Zaker-MB/', REPO_BASE);
   s = s.replaceAll('/Zaker-m/', REPO_BASE);
+  s = s.replaceAll('/Zaker-MB', REPO_NAME);
+  s = s.replaceAll("location.pathname.startsWith('/Zaker-MB')", `location.pathname.startsWith('${REPO_BASE.slice(0, -1)}')`);
+  s = s.replaceAll("'/Zaker-MB/'", `'${REPO_BASE}'`);
+  s = s.replaceAll('"/Zaker-MB/"', `"${REPO_BASE}"`);
 
   // Idempotently clean any double prefix
   s = s.replaceAll(`${REPO_BASE}${REPO_NAME}/`, REPO_BASE);
@@ -229,6 +233,8 @@ const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
   if (Array.isArray(manifest.widgets)) {
     manifest.widgets = manifest.widgets.map((w) => ({
       ...w,
+      ms_ac_template: `${REPO_BASE}widgets/balance.json`,
+      data: `${REPO_BASE}widgets/balance-data.json`,
       screenshots: Array.isArray(w.screenshots)
         ? w.screenshots.map((sc) => {
             const cleanSrc = sc.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
@@ -272,6 +278,8 @@ if (fs.existsSync(swPath)) {
     `${REPO_BASE}icons/icon-maskable.png`,
     `${REPO_BASE}screenshots/screenshot-mobile.png`,
     `${REPO_BASE}screenshots/screenshot-desktop.png`,
+    `${REPO_BASE}widgets/balance.json`,
+    `${REPO_BASE}widgets/balance-data.json`,
     ...staticAssetFiles,
   ];
 
@@ -279,6 +287,13 @@ if (fs.existsSync(swPath)) {
   swContent = swContent.replace(
     /const PRECACHE_ASSETS = \[[^\]]*\];/s,
     `const PRECACHE_ASSETS = ${JSON.stringify(precacheList, null, 2)};`
+  );
+
+  // Bump Cache Name with timestamp to invalidate any stale browser SW cache
+  const timestamp = Date.now();
+  swContent = swContent.replace(
+    /const CACHE_NAME = "[^"]*";/,
+    `const CACHE_NAME = "mymouny-cache-v${timestamp}";`
   );
 
   swContent = fixPaths(swContent);
@@ -290,6 +305,15 @@ const sourceOfflineHtml = path.join(root, "public", "offline.html");
 const distOfflineHtml = path.join(distDir, "offline.html");
 if (fs.existsSync(sourceOfflineHtml)) {
   fs.copyFileSync(sourceOfflineHtml, distOfflineHtml);
+}
+
+// Copy widgets to dist and root
+const sourceWidgetsDir = path.join(root, "public", "widgets");
+const distWidgetsDir = path.join(distDir, "widgets");
+const rootWidgetsDir = path.join(root, "widgets");
+if (fs.existsSync(sourceWidgetsDir)) {
+  copyDir(sourceWidgetsDir, distWidgetsDir);
+  copyDir(sourceWidgetsDir, rootWidgetsDir);
 }
 
 // 9. Mirror static entry files to repository root for dual-mode deployment (branch root or gh-pages)

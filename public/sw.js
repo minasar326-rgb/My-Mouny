@@ -1,57 +1,55 @@
-// This is the "Offline page" service worker for Zaker PWA
+// my Mouny - High-Performance Offline-First Service Worker
 
-const CACHE = "pwabuilder-offline-page";
-const CACHE_NAME = "pwabuilder-offline-page";
-const offlineFallbackPage = "offline.html";
+const CACHE_NAME = "mymouny-offline-cache-v2026";
+const OFFLINE_URL = "/My-Mouny/offline.html";
 
+// الأصول الأساسية التي يتم تخزينها فوراً عند التثبيت
 const PRECACHE_ASSETS = [
-  "/Zaker-MB/",
-  "/Zaker-MB/index.html",
-  "/Zaker-MB/?source=pwa",
-  "/Zaker-MB/offline.html",
-  "offline.html",
-  "/Zaker-MB/manifest.json",
-  "/Zaker-MB/favicon.png",
-  "/Zaker-MB/favicon.ico",
-  "/Zaker-MB/apple-touch-icon.png",
-  "/Zaker-MB/privacy.html",
-  "/Zaker-MB/icons/icon-192.png",
-  "/Zaker-MB/icons/icon-512.png",
-  "/Zaker-MB/icons/icon-maskable.png",
-  "/Zaker-MB/screenshots/screenshot-mobile.png",
-  "/Zaker-MB/screenshots/screenshot-desktop.png"
+  "/My-Mouny/",
+  "/My-Mouny/index.html",
+  "/My-Mouny/?source=pwa",
+  "/My-Mouny/manifest.json",
+  "/My-Mouny/offline.html",
+  "/My-Mouny/favicon.png",
+  "/My-Mouny/favicon.svg",
+  "/My-Mouny/favicon.ico",
+  "/My-Mouny/apple-touch-icon.png",
+  "/My-Mouny/privacy.html",
+  "/My-Mouny/icons/icon-192.png",
+  "/My-Mouny/icons/icon-512.png",
+  "/My-Mouny/icons/icon-maskable.png",
+  "/My-Mouny/screenshots/screenshot-mobile.png",
+  "/My-Mouny/screenshots/screenshot-desktop.png"
 ];
 
-// 1. Install Event: Cache offline fallback page and all core assets
+// 1. تثبيت الـ Service Worker وحفظ الأصول الأساسية في الكاش فوراً
 self.addEventListener("install", (event) => {
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE).then(async (cache) => {
-      console.log("[ذاكر SW] Pre-caching offline fallback page and assets...");
-      try {
-        await cache.add(new Request(offlineFallbackPage, { cache: "reload" }));
-      } catch (e) {
-        console.warn("[ذاكر SW] offlineFallbackPage cache skipped:", e);
-      }
+    caches.open(CACHE_NAME).then(async (cache) => {
+      console.log("[my Mouny SW] Pre-caching core offline assets...");
       for (const asset of PRECACHE_ASSETS) {
         try {
-          await cache.add(new Request(asset, { cache: "reload" }));
+          const res = await fetch(asset, { cache: "reload" });
+          if (res && res.status === 200) {
+            await cache.put(asset, res);
+          }
         } catch (err) {
-          console.warn("[ذاكر SW] Precache asset skipped:", asset, err);
+          console.warn("[my Mouny SW] Precache skip:", asset, err);
         }
       }
     })
   );
-  self.skipWaiting();
 });
 
-// 2. Activate Event: Clean up old caches and claim clients immediately
+// 2. تفعيل وتنظيف أي كاش قديم والتحكم الفوري بالمتصفح
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
         keys.map((key) => {
-          if (key !== CACHE) {
-            console.log("[ذاكر SW] Deleting obsolete cache:", key);
+          if (key !== CACHE_NAME) {
+            console.log("[my Mouny SW] Deleting obsolete cache:", key);
             return caches.delete(key);
           }
         })
@@ -60,75 +58,86 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// 3. Fetch Event: Respond offline with cached app shell or offline fallback page
+// 3. اعتراض كافة الطلبات لتشغيل التطبيق أوفلاين 100% بدون إنترنت
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
   if (!req.url.startsWith("http://") && !req.url.startsWith("https://")) return;
 
-  // Handle navigation requests (loading an HTML page)
-  if (req.mode === "navigate") {
+  const url = new URL(req.url);
+
+  // أ) طلبات التنقل (صفحات HTML) - العمل أوفلاين التام
+  if (req.mode === "navigate" || req.headers.get("accept")?.includes("text/html")) {
     event.respondWith(
       (async () => {
+        const cache = await caches.open(CACHE_NAME);
         try {
-          // Try network first
+          // محاولة جلب أحدث نسخة إذا وُجد إنترنت
           const networkResp = await fetch(req);
           if (networkResp && networkResp.status === 200) {
-            const cache = await caches.open(CACHE);
             cache.put(req, networkResp.clone());
-            cache.put("/Zaker-MB/", networkResp.clone());
-            cache.put("/Zaker-MB/index.html", networkResp.clone());
+            cache.put("/My-Mouny/", networkResp.clone());
+            cache.put("/My-Mouny/index.html", networkResp.clone());
+            return networkResp;
           }
-          return networkResp;
-        } catch (error) {
-          // If network fails (offline), serve the cached app or fallback page
-          const cache = await caches.open(CACHE);
-          const cachedApp =
-            (await cache.match(req, { ignoreSearch: true })) ||
-            (await cache.match("/Zaker-MB/", { ignoreSearch: true })) ||
-            (await cache.match("/Zaker-MB/index.html", { ignoreSearch: true }));
-
-          if (cachedApp) {
-            return cachedApp;
-          }
-
-          const cachedResp =
-            (await cache.match(offlineFallbackPage)) ||
-            (await cache.match("/Zaker-MB/offline.html"));
-
-          return cachedResp;
+        } catch (_) {
+          // انقطاع تام للإنترنت (أوفلاين)
         }
+
+        // استرجاع واجهة التطبيق فوراً من الكاش لتعمل بدون نت
+        const cachedApp =
+          (await cache.match(req, { ignoreSearch: true })) ||
+          (await cache.match("/My-Mouny/", { ignoreSearch: true })) ||
+          (await cache.match("/My-Mouny/index.html", { ignoreSearch: true })) ||
+          (await cache.match(OFFLINE_URL, { ignoreSearch: true }));
+
+        if (cachedApp) {
+          return cachedApp;
+        }
+
+        // لو لم يُعثر على الصفحة، إنشاء رد أوفلاين تلقائي
+        return new Response(
+          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>my Mouny Offline</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>my Mouny</h1><p>التطبيق يعمل بوضع الأوفلاين التام</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
+          { headers: { "Content-Type": "text/html; charset=utf-8" } }
+        );
       })()
     );
     return;
   }
 
-  // Handle static assets (JS, CSS, Images, Fonts): Cache-First with Network Fallback
+  // ب) الأصول والملفات (JS, CSS, خطوط، صور، أيقونات) - استراتيجية Cache-First سريعة
   event.respondWith(
     caches.match(req, { ignoreSearch: true }).then((cachedResponse) => {
       if (cachedResponse) {
-        // Update asset in background if online
+        // تحديث صامت في الخلفية لو الإنترنت متاح
         fetch(req)
           .then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
-              caches.open(CACHE).then((cache) => cache.put(req, networkResponse));
+              caches.open(CACHE_NAME).then((cache) => cache.put(req, networkResponse));
             }
           })
           .catch(() => {});
         return cachedResponse;
       }
 
+      // إذا لم يكن مخزناً في الكاش، جلب من الشبكة وتخزينه
       return fetch(req)
         .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
+          if (
+            networkResponse &&
+            networkResponse.status === 200 &&
+            (url.origin === location.origin ||
+              url.hostname.includes("fonts.googleapis.com") ||
+              url.hostname.includes("fonts.gstatic.com"))
+          ) {
             const copy = networkResponse.clone();
-            caches.open(CACHE).then((cache) => cache.put(req, copy));
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
           }
           return networkResponse;
         })
         .catch(() => {
           if (req.headers.get("accept")?.includes("image/")) {
-            return caches.match("/Zaker-MB/icons/icon-192.png");
+            return caches.match("/My-Mouny/icons/icon-192.png");
           }
           return new Response("Offline", { status: 503, statusText: "Service Unavailable" });
         });
@@ -140,40 +149,54 @@ self.addEventListener("fetch", (event) => {
 // قدرات PWABuilder المتقدمة (Sync & Push)
 // ==========================================
 
+// 1. Background Sync (مزامنة العمليات المالية عند عودة الاتصال)
 self.addEventListener("sync", (event) => {
-  console.log("[ذاكر SW] Background sync event triggered:", event.tag);
-  if (event.tag === "zaker-tx-sync" || event.tag === "sync-ledger") {
+  console.log("[my Mouny SW] Background sync event triggered:", event.tag);
+  if (
+    event.tag === "sync-ledger" ||
+    event.tag === "mouny-tx-sync" ||
+    event.tag === "content-sync"
+  ) {
     event.waitUntil(Promise.resolve());
   }
 });
 
+// 2. Periodic Background Sync (مزامنة دورية في الخلفية)
 self.addEventListener("periodicsync", (event) => {
-  console.log("[ذاكر SW] Periodic sync event triggered:", event.tag);
-  if (event.tag === "zaker-balance-sync" || event.tag === "daily-check") {
+  console.log("[my Mouny SW] Periodic sync event triggered:", event.tag);
+  if (
+    event.tag === "content-sync" ||
+    event.tag === "get-latest-content" ||
+    event.tag === "daily-balance-check" ||
+    event.tag === "daily-check" ||
+    event.tag === "mouny-balance-sync"
+  ) {
     event.waitUntil(Promise.resolve());
   }
 });
 
+// 3. Push Notifications (إشعارات تنبيهات المصاريف)
 self.addEventListener("push", (event) => {
-  const payload = event.data ? event.data.text() : "تنبيه من تطبيق ذاكر";
+  const payload = event.data ? event.data.text() : "تنبيه جديد من my Mouny";
   event.waitUntil(
-    self.registration.showNotification("ذاكر", {
+    self.registration.showNotification("my Mouny", {
       body: payload,
-      icon: "/Zaker-MB/icons/icon-192.png",
-      badge: "/Zaker-MB/icons/icon-192.png",
+      icon: "/My-Mouny/icons/icon-192.png",
+      badge: "/My-Mouny/icons/icon-192.png",
       dir: "rtl",
       lang: "ar"
     })
   );
 });
 
+// 4. النقر على الإشعار وفتح التطبيق
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const urlToOpen = "/Zaker-MB/";
+  const urlToOpen = "/My-Mouny/";
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
       for (const client of windowClients) {
-        if (client.url.includes("Zaker-MB") && "focus" in client) {
+        if (client.url.includes("My-Mouny") && "focus" in client) {
           return client.focus();
         }
       }

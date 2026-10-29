@@ -289,11 +289,12 @@ export const useLedger = create<LedgerState>((set, get) => ({
 
   skipOrOpenDefault: async () => {
     const vaults = await listVaults();
-    // Find first vault without a PIN, or create one
-    let target = vaults.find((v) => !v.hasPin);
+    // Only open if there is an unencrypted vault without a PIN
+    const target = vaults.find((v) => !v.hasPin);
     if (!target) {
-      const res = await idbCreateVault("my Mouny", undefined);
-      target = res.meta;
+      // All existing vaults are protected with a PIN - DO NOT create a dummy vault or bypass!
+      set({ isUnlocked: false });
+      return;
     }
     const txs = await loadVaultTransactions(target.id, undefined);
     const updatedVaults = await listVaults();

@@ -2,16 +2,17 @@
   "id": "https://minasar326-rgb.github.io/Zaker-MB/",
   "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
   "short_name": "ذاكر",
-  "description": "ذاكر: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100%.",
+  "description": "ذاكر: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.",
   "start_url": "/Zaker-MB/?source=pwa",
   "scope": "/Zaker-MB/",
   "display": "standalone",
   "display_override": [
+    "tabbed",
     "window-controls-overlay",
     "standalone",
     "minimal-ui"
   ],
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#0f172a",
   "theme_color": "#0284c7",
   "dir": "rtl",
@@ -19,10 +20,23 @@
   "categories": [
     "finance",
     "productivity",
-    "utilities"
+    "utilities",
+    "business"
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.minasar.zakerm",
+      "id": "com.minasar.zakerm"
+    },
+    {
+      "platform": "windows",
+      "url": "https://www.microsoft.com/store/apps/9NBLGGH4NNS1",
+      "id": "9NBLGGH4NNS1"
+    }
+  ],
   "launch_handler": {
     "client_mode": [
       "navigate-existing",
@@ -32,6 +46,24 @@
   "edge_side_panel": {
     "preferred_width": 480
   },
+  "tab_strip": {
+    "home_tab": {
+      "scope_patterns": [
+        "*"
+      ]
+    },
+    "new_tab_button": {
+      "url": "/Zaker-MB/"
+    }
+  },
+  "note_taking": {
+    "new_note_url": "/Zaker-MB/?action=new_note"
+  },
+  "scope_extensions": [
+    {
+      "origin": "https://minasar326-rgb.github.io"
+    }
+  ],
   "file_handlers": [
     {
       "action": "/Zaker-MB/?action=import",
@@ -49,6 +81,7 @@
   "share_target": {
     "action": "/Zaker-MB/?action=share",
     "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
     "params": {
       "title": "title",
       "text": "text",
@@ -69,8 +102,8 @@
       "description": "عرض رصيد الخزنة ومصاريف الشهر بضغطة واحدة",
       "tag": "zaker-widget",
       "template": "widget-template",
-      "ms_ac_template": "widgets/balance.json",
-      "data": "widgets/balance-data.json",
+      "ms_ac_template": "/Zaker-MB/widgets/balance.json",
+      "data": "/Zaker-MB/widgets/balance-data.json",
       "type": "application/json",
       "screenshots": [
         {

@@ -20,11 +20,21 @@ if (fs.existsSync(distGit)) {
 
 execSync(`"${gitPath}" init`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" add -A`, { cwd: distDir, stdio: "inherit" });
-execSync(`"${gitPath}" commit -m "deploy: static GitHub Pages build for Zaker-MB 100% offline and persistent"`, { cwd: distDir, stdio: "inherit" });
+execSync(`"${gitPath}" commit -m "deploy: static GitHub Pages build for my Mouny 100% offline and persistent"`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" branch -M gh-pages`, { cwd: distDir, stdio: "inherit" });
 
-console.log("Pushing to Zaker-MB gh-pages...");
-execSync(`"${gitPath}" remote add origin https://github.com/minasar326-rgb/Zaker-MB.git`, { cwd: distDir, stdio: "inherit" });
+// 1. Push to Primary My-Mouny repo
+console.log("Pushing to My-Mouny gh-pages...");
+execSync(`"${gitPath}" remote add origin https://github.com/minasar326-rgb/My-Mouny.git`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" push -f origin gh-pages`, { cwd: distDir, stdio: "inherit" });
+
+// 2. Also push mirror to Zaker-MB repo
+try {
+  console.log("Pushing mirror to Zaker-MB gh-pages...");
+  execSync(`"${gitPath}" remote set-url origin https://github.com/minasar326-rgb/Zaker-MB.git`, { cwd: distDir, stdio: "inherit" });
+  execSync(`"${gitPath}" push -f origin gh-pages`, { cwd: distDir, stdio: "inherit" });
+} catch (e) {
+  console.warn("Mirror push warning:", e.message);
+}
 
 console.log("Successfully pushed to gh-pages branches!");
