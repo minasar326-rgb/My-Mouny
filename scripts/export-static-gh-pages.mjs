@@ -5,8 +5,8 @@ import { execSync } from "node:child_process";
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const REPO_NAME = "Zaker-MB";
-const REPO_BASE = "/Zaker-MB/";
+const REPO_NAME = "My-Mouny";
+const REPO_BASE = "/My-Mouny/";
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
 
@@ -145,11 +145,10 @@ if (fs.existsSync(assetsDir)) {
   html = html.replaceAll(`${REPO_BASE}${REPO_NAME}/`, REPO_BASE);
 }
 
-// Ensure correct Title and Brand Meta
-html = html.replace(/<title>.*?<\/title>/gi, `<title>ذاكر - تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية</title>`);
-html = html.replace(/content="my Mouny"/gi, `content="ذاكر"`);
-html = html.replace(/content="[^"]*(?:خزنتك|المصاريف|الأموال|الحسابات)[^"]*"/gi, `content="ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت."`);
-html = html.replace(/my Mouny: [^"<]*/gi, `ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت.`);
+// Ensure correct Title and Brand Meta for my Mouny
+html = html.replace(/<title>.*?<\/title>/gi, `<title>my Mouny</title>`);
+html = html.replace(/<meta[^>]*apple-mobile-web-app-title[^>]*>/gi, `<meta name="apple-mobile-web-app-title" content="my Mouny">`);
+html = html.replace(/<meta[^>]*application-name[^>]*>/gi, `<meta name="application-name" content="my Mouny">`);
 
 // Ensure CSS stylesheet link is present in <head>
 if (actualCss && !html.includes(actualCss)) {
@@ -160,9 +159,9 @@ if (actualCss && !html.includes(actualCss)) {
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="ذاكر" />
-  <meta name="application-name" content="ذاكر" />
-  <meta name="description" content="ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت." />
+  <meta name="apple-mobile-web-app-title" content="my Mouny" />
+  <meta name="application-name" content="my Mouny" />
+  <meta name="description" content="my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم." />
   <link rel="icon" type="image/png" href="${REPO_BASE}favicon.png" />
   <link rel="icon" type="image/svg+xml" href="${REPO_BASE}favicon.svg" />
   <link rel="apple-touch-icon" href="${REPO_BASE}apple-touch-icon.png" />
@@ -237,10 +236,10 @@ if (fs.existsSync(assetsDir)) {
 const sourceManifestPath = path.join(root, "public", "manifest.json");
 const manifestPath = path.join(distDir, "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
-manifest.name = "ذاكر - تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية";
-manifest.short_name = "ذاكر";
-manifest.description = "ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت.";
-manifest.categories = ["education", "productivity", "utilities"];
+manifest.name = "my Mouny";
+manifest.short_name = "my Mouny";
+manifest.description = "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.";
+manifest.categories = ["finance", "productivity", "utilities", "business"];
 manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
 manifest.start_url = `${REPO_BASE}?source=pwa`;
 manifest.scope = REPO_BASE;
@@ -359,7 +358,7 @@ if (fs.existsSync(swPath)) {
   const timestamp = Date.now();
   swContent = swContent.replace(
     /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "zaker-cache-v${timestamp}";`
+    `const CACHE_NAME = "mymouny-cache-v${timestamp}";`
   );
 
   swContent = fixPaths(swContent);
