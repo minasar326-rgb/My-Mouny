@@ -265,12 +265,13 @@ manifest.scope = REPO_BASE;
   if (Array.isArray(manifest.shortcuts)) {
     manifest.shortcuts = manifest.shortcuts.map((sh) => ({
       ...sh,
-      url: REPO_BASE,
+      url: `${REPO_BASE}${sh.url ? sh.url.replace(/^\/?(?:Zaker-MB\/)?/, "") : ""}`,
       icons: Array.isArray(sh.icons)
         ? sh.icons.map((ic) => {
             const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
             return {
               ...ic,
+              type: ic.type || "image/png",
               src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
             };
           })
@@ -381,20 +382,36 @@ if (fs.existsSync(sourceWidgetsDir)) {
   copyDir(sourceWidgetsDir, rootWidgetsDir);
 }
 
-// 9. Mirror static entry files to repository root for dual-mode deployment (branch root or gh-pages)
-const rootFilesToSync = ["404.html", "manifest.json", "sw.js", ".nojekyll", "offline.html", "index.html"];
+// 9. Mirror all static files and folders from dist to repository root for dual-mode deployment (branch root or gh-pages)
+const rootFoldersToSync = ["assets", "icons", "screenshots", "widgets", ".well-known"];
+for (const folder of rootFoldersToSync) {
+  const src = path.join(distDir, folder);
+  const dest = path.join(root, folder);
+  if (fs.existsSync(src)) {
+    copyDir(src, dest);
+  }
+}
+
+const rootFilesToSync = [
+  "404.html",
+  "manifest.json",
+  "sw.js",
+  ".nojekyll",
+  "offline.html",
+  "index.html",
+  "apple-touch-icon.png",
+  "favicon.png",
+  "favicon.svg",
+  "favicon.ico",
+  "feature-graphic.png",
+  "privacy.html"
+];
 for (const file of rootFilesToSync) {
   const src = path.join(distDir, file);
   const dest = path.join(root, file);
   if (fs.existsSync(src)) {
     fs.copyFileSync(src, dest);
   }
-}
-
-// Also ensure root assets directory exists for root-serving fallback
-const rootAssetsDir = path.join(root, "assets");
-if (fs.existsSync(assetsDir)) {
-  copyDir(assetsDir, rootAssetsDir);
 }
 
 console.log(`GitHub Pages static export completed successfully with all asset paths mapped to ${REPO_BASE}!`);

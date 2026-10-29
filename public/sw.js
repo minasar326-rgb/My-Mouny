@@ -1,12 +1,12 @@
-// my Mouny - High-Performance Offline-First Service Worker
-const CACHE_NAME = "mymouny-offline-cache-v2026";
+// ذاكر - High-Performance Offline-First Service Worker
+const CACHE_NAME = "zaker-offline-cache-v2026";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
-// Determine base scope dynamically (e.g. /My-Mouny/ or /Zaker-MB/)
+// Determine base scope dynamically (e.g. /Zaker-MB/)
 const SCOPE_BASE = (self.registration && self.registration.scope)
   ? new URL(self.registration.scope).pathname
-  : "/My-Mouny/";
+  : "/Zaker-MB/";
 const cleanBase = SCOPE_BASE.endsWith("/") ? SCOPE_BASE : SCOPE_BASE + "/";
 
 const OFFLINE_URL = `${cleanBase}offline.html`;
@@ -32,12 +32,26 @@ const PRECACHE_ASSETS = [
   `${cleanBase}widgets/balance-data.json`
 ];
 
-// 1. تثبيت الـ Service Worker وحفظ الأصول الأساسية في الكاش فوراً
+// 1. تثبيت الـ Service Worker وحفظ الأصول الأساسية وصفحة الأوفلاين في الكاش فوراً
 self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      console.log("[my Mouny SW] Pre-caching core offline assets for scope:", cleanBase);
+    (async () => {
+      // أ) كاش PWABuilder القياسي لصفحة الأوفلاين
+      try {
+        const pwaCache = await caches.open(CACHE);
+        const offlineResp = await fetch(OFFLINE_URL, { cache: "reload" });
+        if (offlineResp && offlineResp.status === 200) {
+          await pwaCache.put(offlineFallbackPage, offlineResp.clone());
+          await pwaCache.put(OFFLINE_URL, offlineResp.clone());
+        }
+      } catch (err) {
+        console.warn("[ذاكر SW] PWABuilder cache preload warning:", err);
+      }
+
+      // ب) كاش الأصول الكاملة للتطبيق
+      const cache = await caches.open(CACHE_NAME);
+      console.log("[ذاكر SW] Pre-caching core offline assets for scope:", cleanBase);
       for (const asset of PRECACHE_ASSETS) {
         try {
           const res = await fetch(asset, { cache: "reload" });
@@ -45,21 +59,21 @@ self.addEventListener("install", (event) => {
             await cache.put(asset, res);
           }
         } catch (err) {
-          console.warn("[my Mouny SW] Precache skip:", asset, err);
+          console.warn("[ذاكر SW] Precache skip:", asset, err);
         }
       }
-    })
+    })()
   );
 });
 
-// 2. تفعيل وتنظيف أي كاش قديم والتحكم الفوري بالمتصفح
+// 2. تفعيل وتنظيف أي كاش قديم والاستحواذ الفوري على الصفحات
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME && key !== CACHE) {
-            console.log("[my Mouny SW] Deleting obsolete cache:", key);
+            console.log("[ذاكر SW] Deleting obsolete cache:", key);
             return caches.delete(key);
           }
         })
@@ -76,13 +90,13 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(req.url);
 
-  // أ) طلبات التنقل (صفحات HTML) - العمل أوفلاين التام
+  // أ) طلبات التنقل (صفحات HTML) - العمل أوفلاين الدائم
   if (req.mode === "navigate" || req.headers.get("accept")?.includes("text/html")) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(CACHE_NAME);
         try {
-          // محاولة جلب أحدث نسخة إذا وُجد إنترنت
+          // محاولة جلب أحدث نسخة إذا وجد إنترنت
           const networkResp = await fetch(req);
           if (networkResp && networkResp.status === 200) {
             cache.put(req, networkResp.clone());
@@ -94,7 +108,7 @@ self.addEventListener("fetch", (event) => {
           // انقطاع تام للإنترنت (أوفلاين)
         }
 
-        // استرجاع واجهة التطبيق فوراً من الكاش لتعمل بدون نت
+        // استرجاع واجهة التطبيق فوراً من الكاش ليعمل بدون نت
         const cachedApp =
           (await cache.match(req, { ignoreSearch: true })) ||
           (await cache.match(cleanBase, { ignoreSearch: true })) ||
@@ -106,10 +120,12 @@ self.addEventListener("fetch", (event) => {
           return cachedApp;
         }
 
-        // لو لم يُعثر على الصفحة، محاولة كاش PWABuilder أو كاش بديل
-        const pwaCache = await caches.open(CACHE);
-        const pwaCached = await pwaCache.match(offlineFallbackPage);
-        if (pwaCached) return pwaCached;
+        // لو لم يعثر على الصفحة، محاولة كاش PWABuilder أو كاش بديل
+        try {
+          const pwaCache = await caches.open(CACHE);
+          const pwaCached = (await pwaCache.match(OFFLINE_URL)) || (await pwaCache.match(offlineFallbackPage));
+          if (pwaCached) return pwaCached;
+        } catch (_) {}
 
         return new Response(
           `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ذاكر - جدول المذاكرة أوفلاين</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>ذاكر</h1><p>تطبيق تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية يعمل أوفلاين 100%</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
@@ -120,7 +136,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ب) الأصول والملفات (JS, CSS, خطوط، صور، أيقونات) - استراتيجية Cache-First سريعة
+  // ب) الأصول والملفات (JS, CSS, خطوط، صور، أيقونات) - استراتيجية Cache-First سريعة وآمنة
   event.respondWith(
     caches.match(req, { ignoreSearch: true }).then((cachedResponse) => {
       if (cachedResponse) {
@@ -135,7 +151,7 @@ self.addEventListener("fetch", (event) => {
         return cachedResponse;
       }
 
-      // إذا لم يكن مخزناً في الكاش، جلب من الشبكة وتخزينه
+      // إذا لم يكن مخزناً في الكاش، طلب من الشبكة وتخزينه
       return fetch(req)
         .then((networkResponse) => {
           if (
@@ -150,9 +166,15 @@ self.addEventListener("fetch", (event) => {
           }
           return networkResponse;
         })
-        .catch(() => {
+        .catch(async () => {
+          // في حالة عدم توفر اتصال بالشبكة للأصل المطلوب
           if (req.headers.get("accept")?.includes("image/")) {
-            return caches.match("/Zaker-MB/icons/icon-192.png");
+            const cachedIcon = await caches.match(`${cleanBase}icons/icon-192.png`);
+            if (cachedIcon) return cachedIcon;
+            return new Response(
+              '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192"><rect width="192" height="192" fill="#0284c7"/><text x="50%" y="50%" font-size="28" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">ذاكر</text></svg>',
+              { headers: { "Content-Type": "image/svg+xml" } }
+            );
           }
           return new Response("Offline", { status: 503, statusText: "Service Unavailable" });
         });
@@ -164,7 +186,7 @@ self.addEventListener("fetch", (event) => {
 // قدرات PWABuilder المتقدمة (Sync & Push)
 // ==========================================
 
-// 1. Background Sync (مزامنة العمليات المالية عند عودة الاتصال)
+// 1. Background Sync (مزامنة العمليات المحلية عند عودة الاتصال)
 self.addEventListener("sync", (event) => {
   console.log("[ذاكر SW] Background sync event triggered:", event.tag);
   if (
@@ -196,8 +218,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification("ذاكر", {
       body: payload,
-      icon: "/Zaker-MB/icons/icon-192.png",
-      badge: "/Zaker-MB/icons/icon-192.png",
+      icon: `${cleanBase}icons/icon-192.png`,
+      badge: `${cleanBase}icons/icon-192.png`,
       dir: "rtl",
       lang: "ar"
     })
@@ -207,7 +229,7 @@ self.addEventListener("push", (event) => {
 // 4. النقر على الإشعار وفتح التطبيق
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const urlToOpen = "/Zaker-MB/";
+  const urlToOpen = cleanBase;
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
       for (const client of windowClients) {
