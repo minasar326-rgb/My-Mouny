@@ -1,10 +1,10 @@
 {
-  "id": "https://minasar326-rgb.github.io/My-Mouny/",
-  "name": "my Mouny",
+  "id": "https://minasar326-rgb.github.io/Zaker-MB/",
+  "name": "my Mouny - إدارة المصاريف والخزنة المالية",
   "short_name": "my Mouny",
-  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.",
-  "start_url": "/My-Mouny/?source=pwa",
-  "scope": "/My-Mouny/",
+  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات والخزنة المالية المشفرة محلياً 100% بدون إنترنت وبدون خوادم.",
+  "start_url": "/Zaker-MB/?source=pwa",
+  "scope": "/Zaker-MB/",
   "display": "standalone",
   "display_override": [
     "window-controls-overlay",
@@ -41,28 +41,28 @@
       ]
     },
     "new_tab_button": {
-      "url": "/My-Mouny/"
+      "url": "/Zaker-MB/"
     }
   },
   "note_taking": {
-    "new_note_url": "/My-Mouny/?action=new_note"
+    "new_note_url": "/Zaker-MB/?action=new_note"
   },
   "file_handlers": [
     {
-      "action": "/My-Mouny/",
-      "name": "ملفات وملاحظات المذاكرة لتطبيق ذاكر",
+      "action": "/Zaker-MB/",
+      "name": "نسخة احتياطية لتطبيق my Mouny",
       "accept": {
         "application/json": [
           ".json"
         ],
-        "application/x-zaker": [
-          ".zaker"
+        "application/x-mymouny": [
+          ".mouny"
         ]
       }
     }
   ],
   "share_target": {
-    "action": "/My-Mouny/",
+    "action": "/Zaker-MB/",
     "method": "GET",
     "params": {
       "title": "title",
@@ -72,45 +72,45 @@
   },
   "protocol_handlers": [
     {
-      "protocol": "web+zaker",
-      "url": "/My-Mouny/?action=%s"
+      "protocol": "web+mymouny",
+      "url": "/Zaker-MB/?action=%s"
     }
   ],
   "handle_links": "preferred",
   "widgets": [
     {
-      "name": "ذاكر - جدول المذاكرة اليومي",
-      "short_name": "جدول ذاكر",
-      "description": "عرض جدول المذاكرة والمهام اليومية وتنظيم اليوم الدراسي بضغطة واحدة",
-      "tag": "zaker-widget",
+      "name": "my Mouny - رصيد الخزنة وصافي الثروة",
+      "short_name": "my Mouny",
+      "description": "عرض رصيد الخزنة ومصاريف الشهر وصافي الحسابات بضغطة واحدة",
+      "tag": "mymouny-widget",
       "template": "widget-template",
-      "ms_ac_template": "/My-Mouny/widgets/balance.json",
-      "data": "/My-Mouny/widgets/balance-data.json",
+      "ms_ac_template": "/Zaker-MB/widgets/balance.json",
+      "data": "/Zaker-MB/widgets/balance-data.json",
       "type": "application/json",
       "screenshots": [
         {
-          "src": "/My-Mouny/screenshots/screenshot-mobile.png",
+          "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
           "sizes": "390x844",
-          "label": "معاينة ودجت ذاكر"
+          "label": "معاينة ودجت my Mouny"
         }
       ]
     }
   ],
   "icons": [
     {
-      "src": "/My-Mouny/icons/icon-192.png",
+      "src": "/Zaker-MB/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/My-Mouny/icons/icon-512.png",
+      "src": "/Zaker-MB/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/My-Mouny/icons/icon-maskable.png",
+      "src": "/Zaker-MB/icons/icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -118,55 +118,55 @@
   ],
   "screenshots": [
     {
-      "src": "/My-Mouny/screenshots/screenshot-mobile.png",
+      "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق ذاكر لتنظيم المذاكرة على الهاتف المحمول"
+      "label": "واجهة تطبيق my Mouny لإدارة المصاريف على الموبايل"
     },
     {
-      "src": "/My-Mouny/screenshots/screenshot-desktop.png",
+      "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تنظيم اليوم الدراسي وجدول المهام اليومية في ذاكر"
+      "label": "لوحة إدارة المصاريف والخزنة المالية على الكمبيوتر والتابلت"
     }
   ],
   "shortcuts": [
     {
-      "name": "جدول المذاكرة اليومي",
-      "short_name": "جدول المذاكرة",
-      "description": "عرض جدول الحصص والمهام الدراسية لليوم",
-      "url": "/My-Mouny/?action=schedule",
+      "name": "سجّل شراء ومصروف",
+      "short_name": "مصروف",
+      "description": "تسجيل عملية شراء وخصم فوري من الكاش أو البنك",
+      "url": "/Zaker-MB/?action=new_expense",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
       ]
     },
     {
-      "name": "إضافة مهمة دراسية جديدة",
-      "short_name": "مهمة جديدة",
-      "description": "تسجيل واجب مدرسي أو مراجعة يومية",
-      "url": "/My-Mouny/?action=new_task",
+      "name": "سجّل إيراد ودخل",
+      "short_name": "دخل",
+      "description": "تسجيل إيراد مالي جديد في رصيدك",
+      "url": "/Zaker-MB/?action=new_income",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
       ]
     },
     {
-      "name": "مؤقت التركيز والمذاكرة",
-      "short_name": "مؤقت المذاكرة",
-      "description": "بدء جلسة مذاكرة بومودورو للتركيز العالي",
-      "url": "/My-Mouny/?action=timer",
+      "name": "الخزنة المالية والديون",
+      "short_name": "الخزنة",
+      "description": "عرض ما لك وما عليك والخزنة المشفرة",
+      "url": "/Zaker-MB/?action=vault",
       "icons": [
         {
-          "src": "/My-Mouny/icons/icon-192.png",
+          "src": "/Zaker-MB/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }

@@ -5,8 +5,8 @@ import { execSync } from "node:child_process";
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const REPO_NAME = "My-Mouny";
-const REPO_BASE = "/My-Mouny/";
+const REPO_NAME = "Zaker-MB";
+const REPO_BASE = "/Zaker-MB/";
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
 
@@ -146,9 +146,10 @@ if (fs.existsSync(assetsDir)) {
 }
 
 // Ensure correct Title and Brand Meta for my Mouny
-html = html.replace(/<title>.*?<\/title>/gi, `<title>my Mouny</title>`);
+html = html.replace(/<title>.*?<\/title>/gi, `<title>my Mouny - إدارة المصاريف والخزنة المالية</title>`);
 html = html.replace(/<meta[^>]*apple-mobile-web-app-title[^>]*>/gi, `<meta name="apple-mobile-web-app-title" content="my Mouny">`);
 html = html.replace(/<meta[^>]*application-name[^>]*>/gi, `<meta name="application-name" content="my Mouny">`);
+html = html.replace(/<meta[^>]*name="description"[^>]*>/gi, `<meta name="description" content="my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات والخزنة المالية المشفرة محلياً 100% بدون إنترنت وبدون خوادم.">`);
 
 // Ensure CSS stylesheet link is present in <head>
 if (actualCss && !html.includes(actualCss)) {
@@ -236,9 +237,9 @@ if (fs.existsSync(assetsDir)) {
 const sourceManifestPath = path.join(root, "public", "manifest.json");
 const manifestPath = path.join(distDir, "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(sourceManifestPath, "utf8"));
-manifest.name = "my Mouny";
+manifest.name = "my Mouny - إدارة المصاريف والخزنة المالية";
 manifest.short_name = "my Mouny";
-manifest.description = "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100% بدون خوادم.";
+manifest.description = "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات والخزنة المالية المشفرة محلياً 100% بدون إنترنت وبدون خوادم.";
 manifest.categories = ["finance", "productivity", "utilities", "business"];
 manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
 manifest.start_url = `${REPO_BASE}?source=pwa`;

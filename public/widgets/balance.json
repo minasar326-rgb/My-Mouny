@@ -11,7 +11,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "${tasksCount} مهام متبقية اليوم",
+      "text": "${balance} ج.م",
       "size": "ExtraLarge",
       "weight": "Bolder"
     },
@@ -25,7 +25,7 @@
   "actions": [
     {
       "type": "Action.OpenUrl",
-      "title": "فتح جدول ذاكر",
+      "title": "فتح my Mouny",
       "url": "https://minasar326-rgb.github.io/Zaker-MB/"
     }
   ]

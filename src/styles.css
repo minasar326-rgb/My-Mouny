@@ -3,16 +3,16 @@
 @theme {
   --font-sans: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
 
-  --color-bg: #070c18;
-  --color-surface: #0f172a;
-  --color-surface-alt: #1e293b;
+  --color-bg: #0b0d13;
+  --color-surface: #151822;
+  --color-surface-alt: #1e2230;
   --color-ink: #f8fafc;
   --color-muted: #94a3b8;
   --color-faint: #64748b;
   --color-line: rgba(255, 255, 255, 0.08);
-  --color-accent: #0284c7;
-  --color-accent-fg: #ffffff;
-  --color-debt: #f43f5e;
+  --color-accent: #f59e0b;
+  --color-accent-fg: #0b0d13;
+  --color-debt: #ef4444;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -27,11 +27,11 @@
 @layer base {
   html {
     color-scheme: dark;
-    background-color: #070c18;
+    background-color: #0b0d13;
     background-image: 
-      radial-gradient(at 15% 10%, rgba(14, 165, 233, 0.12) 0px, transparent 45%),
-      radial-gradient(at 85% 15%, rgba(139, 92, 246, 0.12) 0px, transparent 45%),
-      radial-gradient(at 50% 85%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+      radial-gradient(at 15% 12%, rgba(245, 158, 11, 0.10) 0px, transparent 45%),
+      radial-gradient(at 85% 18%, rgba(16, 185, 129, 0.09) 0px, transparent 45%),
+      radial-gradient(at 50% 85%, rgba(239, 68, 68, 0.07) 0px, transparent 50%);
     background-attachment: fixed;
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
@@ -63,34 +63,63 @@
   }
 }
 
-/* Card Bento & Visual Polish Classes */
+/* 3D Elevated Cards & Tactile Surfaces */
 .bento-card {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 4px 12px -4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(180deg, rgba(28, 32, 45, 0.95) 0%, rgba(17, 20, 28, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.16);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 3.5px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 
+    0 4px 0 rgba(0, 0, 0, 0.4),
+    0 14px 26px -4px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bento-card:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.6), 0 8px 16px -4px rgba(0, 0, 0, 0.4);
+  border-top-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 6px 0 rgba(0, 0, 0, 0.45),
+    0 20px 32px -4px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .bento-card-interactive {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.5);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(180deg, rgba(30, 35, 49, 0.95) 0%, rgba(19, 23, 33, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.16);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 4px solid rgba(0, 0, 0, 0.65);
+  box-shadow: 
+    0 5px 0 rgba(0, 0, 0, 0.5),
+    0 14px 24px -4px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bento-card-interactive:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 18px 30px -8px rgba(0, 0, 0, 0.65);
+  transform: translateY(-3px);
+  border-top-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 8px 0 rgba(0, 0, 0, 0.55),
+    0 22px 32px -4px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.bento-card-interactive:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+  box-shadow: 
+    0 2px 0 rgba(0, 0, 0, 0.5),
+    0 6px 12px -2px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .pill-badge {
@@ -100,9 +129,24 @@
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.025em;
-  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-3d {
+  border-bottom: 3.5px solid rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all 0.15s ease-out;
+}
+.btn-3d:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.btn-3d:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.4);
 }
 
 .safe-pad {

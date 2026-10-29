@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ledger/home";
 import { useLedger } from "@/lib/ledger/store";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "ذاكر - تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية";
+const APP_NAME = "my Mouny - إدارة المصاريف والخزنة المالية";
 
 function RootShell() {
   useEffect(() => {
@@ -167,12 +167,12 @@ export const Route = createRootRoute({
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "ذاكر" },
-      { name: "application-name", content: "ذاكر" },
+      { name: "apple-mobile-web-app-title", content: "my Mouny" },
+      { name: "application-name", content: "my Mouny" },
       {
         name: "description",
         content:
-          "ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت.",
+          "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات والخزنة المالية المشفرة محلياً 100% بدون إنترنت وبدون خوادم.",
       },
       {
         httpEquiv: "Content-Security-Policy",

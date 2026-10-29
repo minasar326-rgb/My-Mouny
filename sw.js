@@ -1,35 +1,35 @@
-// ذاكر - High-Performance Offline-First Service Worker
-const CACHE_NAME = "mymouny-cache-v1793311042257";
+// my Mouny - High-Performance Offline-First Service Worker
+const CACHE_NAME = "mymouny-cache-v1793311622896";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
-// Determine base scope dynamically (e.g. /My-Mouny/)
+// Determine base scope dynamically (e.g. /Zaker-MB/)
 const SCOPE_BASE = (self.registration && self.registration.scope)
   ? new URL(self.registration.scope).pathname
-  : "/My-Mouny/";
+  : "/Zaker-MB/";
 const cleanBase = SCOPE_BASE.endsWith("/") ? SCOPE_BASE : SCOPE_BASE + "/";
 
 const OFFLINE_URL = `${cleanBase}offline.html`;
 
 // Core offline assets precached on install
 const PRECACHE_ASSETS = [
-  "/My-Mouny/",
-  "/My-Mouny/index.html",
-  "/My-Mouny/offline.html",
-  "/My-Mouny/manifest.json",
-  "/My-Mouny/favicon.png",
-  "/My-Mouny/favicon.svg",
-  "/My-Mouny/apple-touch-icon.png",
-  "/My-Mouny/icons/icon-192.png",
-  "/My-Mouny/icons/icon-512.png",
-  "/My-Mouny/icons/icon-maskable.png",
-  "/My-Mouny/screenshots/screenshot-mobile.png",
-  "/My-Mouny/screenshots/screenshot-desktop.png",
-  "/My-Mouny/widgets/balance.json",
-  "/My-Mouny/widgets/balance-data.json",
-  "/My-Mouny/assets/index-AfhUbtJg.js",
-  "/My-Mouny/assets/routes-KBgly39A.js",
-  "/My-Mouny/assets/styles-G-5uyCGe.css"
+  "/Zaker-MB/",
+  "/Zaker-MB/index.html",
+  "/Zaker-MB/offline.html",
+  "/Zaker-MB/manifest.json",
+  "/Zaker-MB/favicon.png",
+  "/Zaker-MB/favicon.svg",
+  "/Zaker-MB/apple-touch-icon.png",
+  "/Zaker-MB/icons/icon-192.png",
+  "/Zaker-MB/icons/icon-512.png",
+  "/Zaker-MB/icons/icon-maskable.png",
+  "/Zaker-MB/screenshots/screenshot-mobile.png",
+  "/Zaker-MB/screenshots/screenshot-desktop.png",
+  "/Zaker-MB/widgets/balance.json",
+  "/Zaker-MB/widgets/balance-data.json",
+  "/Zaker-MB/assets/index-CnYyen_t.js",
+  "/Zaker-MB/assets/routes-DL8zxFGQ.js",
+  "/Zaker-MB/assets/styles-B-eU-nGh.css"
 ];
 
 // 1. تثبيت الـ Service Worker وحفظ الأصول الأساسية وصفحة الأوفلاين في الكاش فوراً
@@ -46,12 +46,12 @@ self.addEventListener("install", (event) => {
           await pwaCache.put(OFFLINE_URL, offlineResp.clone());
         }
       } catch (err) {
-        console.warn("[ذاكر SW] PWABuilder cache preload warning:", err);
+        console.warn("[my Mouny SW] PWABuilder cache preload warning:", err);
       }
 
       // ب) كاش الأصول الكاملة للتطبيق
       const cache = await caches.open(CACHE_NAME);
-      console.log("[ذاكر SW] Pre-caching core offline assets for scope:", cleanBase);
+      console.log("[my Mouny SW] Pre-caching core offline assets for scope:", cleanBase);
       for (const asset of PRECACHE_ASSETS) {
         try {
           const res = await fetch(asset, { cache: "reload" });
@@ -59,7 +59,7 @@ self.addEventListener("install", (event) => {
             await cache.put(asset, res);
           }
         } catch (err) {
-          console.warn("[ذاكر SW] Precache skip:", asset, err);
+          console.warn("[my Mouny SW] Precache skip:", asset, err);
         }
       }
     })()
@@ -73,7 +73,7 @@ self.addEventListener("activate", (event) => {
       Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME && key !== CACHE) {
-            console.log("[ذاكر SW] Deleting obsolete cache:", key);
+            console.log("[my Mouny SW] Deleting obsolete cache:", key);
             return caches.delete(key);
           }
         })
@@ -128,7 +128,7 @@ self.addEventListener("fetch", (event) => {
         } catch (_) {}
 
         return new Response(
-          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ذاكر - جدول المذاكرة أوفلاين</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>ذاكر</h1><p>تطبيق تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية يعمل أوفلاين 100%</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
+          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>my Mouny - إدارة المصاريف والخزنة (أوفلاين)</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>my Mouny</h1><p>تطبيق إدارة المصاريف والخزنة المالية يعمل أوفلاين 100% بدون إنترنت</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
           { headers: { "Content-Type": "text/html; charset=utf-8" } }
         );
       })()
@@ -172,7 +172,7 @@ self.addEventListener("fetch", (event) => {
             const cachedIcon = await caches.match(`${cleanBase}icons/icon-192.png`);
             if (cachedIcon) return cachedIcon;
             return new Response(
-              '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192"><rect width="192" height="192" fill="#0284c7"/><text x="50%" y="50%" font-size="28" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">ذاكر</text></svg>',
+              '<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192"><rect width="192" height="192" fill="#0284c7"/><text x="50%" y="50%" font-size="28" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">my Mouny</text></svg>',
               { headers: { "Content-Type": "image/svg+xml" } }
             );
           }
@@ -188,10 +188,10 @@ self.addEventListener("fetch", (event) => {
 
 // 1. Background Sync (مزامنة العمليات المحلية عند عودة الاتصال)
 self.addEventListener("sync", (event) => {
-  console.log("[ذاكر SW] Background sync event triggered:", event.tag);
+  console.log("[my Mouny SW] Background sync event triggered:", event.tag);
   if (
     event.tag === "sync-ledger" ||
-    event.tag === "zaker-tx-sync" ||
+    event.tag === "mouny-tx-sync" ||
     event.tag === "content-sync"
   ) {
     event.waitUntil(Promise.resolve());
@@ -200,23 +200,23 @@ self.addEventListener("sync", (event) => {
 
 // 2. Periodic Background Sync (مزامنة دورية في الخلفية)
 self.addEventListener("periodicsync", (event) => {
-  console.log("[ذاكر SW] Periodic sync event triggered:", event.tag);
+  console.log("[my Mouny SW] Periodic sync event triggered:", event.tag);
   if (
     event.tag === "content-sync" ||
     event.tag === "get-latest-content" ||
     event.tag === "daily-balance-check" ||
     event.tag === "daily-check" ||
-    event.tag === "zaker-balance-sync"
+    event.tag === "mouny-balance-sync"
   ) {
     event.waitUntil(Promise.resolve());
   }
 });
 
-// 3. Push Notifications (إشعارات مواعيد وجداول المذاكرة)
+// 3. Push Notifications (إشعارات المعاملات والخزنة)
 self.addEventListener("push", (event) => {
-  const payload = event.data ? event.data.text() : "حان وقت المذاكرة - تنبيه من تطبيق ذاكر";
+  const payload = event.data ? event.data.text() : "تنبيه من my Mouny - إدارة المصاريف والخزنة";
   event.waitUntil(
-    self.registration.showNotification("ذاكر", {
+    self.registration.showNotification("my Mouny", {
       body: payload,
       icon: `${cleanBase}icons/icon-192.png`,
       badge: `${cleanBase}icons/icon-192.png`,

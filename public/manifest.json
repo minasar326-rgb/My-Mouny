@@ -1,8 +1,8 @@
 {
   "id": "https://minasar326-rgb.github.io/Zaker-MB/",
-  "name": "ذاكر - تنظيم اليوم الدراسي وجدول المذاكرة والمهام اليومية",
-  "short_name": "ذاكر",
-  "description": "ذاكر: تطبيق للمذاكرة وتحديد جداول للمهام اليومية والمذاكرة اليومية وتنظيم اليوم الدراسي والواجبات المدرسية - يعمل أوفلاين 100% بدون إنترنت.",
+  "name": "my Mouny - إدارة المصاريف والخزنة المالية",
+  "short_name": "my Mouny",
+  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات والخزنة المالية المشفرة محلياً 100% بدون إنترنت وبدون خوادم.",
   "start_url": "/Zaker-MB/?source=pwa",
   "scope": "/Zaker-MB/",
   "display": "standalone",
@@ -18,9 +18,10 @@
   "dir": "rtl",
   "lang": "ar",
   "categories": [
-    "education",
+    "finance",
     "productivity",
-    "utilities"
+    "utilities",
+    "business"
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "prefer_related_applications": false,
@@ -49,13 +50,13 @@
   "file_handlers": [
     {
       "action": "/Zaker-MB/?action=import",
-      "name": "ملفات وملاحظات المذاكرة لتطبيق ذاكر",
+      "name": "نسخة احتياطية لتطبيق my Mouny",
       "accept": {
         "application/json": [
           ".json"
         ],
-        "application/x-zaker": [
-          ".zaker"
+        "application/x-mymouny": [
+          ".mouny"
         ]
       }
     }
@@ -71,17 +72,17 @@
   },
   "protocol_handlers": [
     {
-      "protocol": "web+zaker",
+      "protocol": "web+mymouny",
       "url": "/Zaker-MB/?action=%s"
     }
   ],
   "handle_links": "preferred",
   "widgets": [
     {
-      "name": "ذاكر - جدول المذاكرة اليومي",
-      "short_name": "جدول ذاكر",
-      "description": "عرض جدول المذاكرة والمهام اليومية وتنظيم اليوم الدراسي بضغطة واحدة",
-      "tag": "zaker-widget",
+      "name": "my Mouny - رصيد الخزنة وصافي الثروة",
+      "short_name": "my Mouny",
+      "description": "عرض رصيد الخزنة ومصاريف الشهر وصافي الحسابات بضغطة واحدة",
+      "tag": "mymouny-widget",
       "template": "widget-template",
       "ms_ac_template": "widgets/balance.json",
       "data": "widgets/balance-data.json",
@@ -90,7 +91,7 @@
         {
           "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
           "sizes": "390x844",
-          "label": "معاينة ودجت ذاكر"
+          "label": "معاينة ودجت my Mouny"
         }
       ]
     }
@@ -121,22 +122,22 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق ذاكر لتنظيم المذاكرة على الهاتف المحمول"
+      "label": "واجهة تطبيق my Mouny لإدارة المصاريف على الموبايل"
     },
     {
       "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تنظيم اليوم الدراسي وجدول المهام اليومية في ذاكر"
+      "label": "لوحة إدارة المصاريف والخزنة المالية على الكمبيوتر والتابلت"
     }
   ],
   "shortcuts": [
     {
-      "name": "جدول المذاكرة اليومي",
-      "short_name": "جدول المذاكرة",
-      "description": "عرض جدول الحصص والمهام الدراسية لليوم",
-      "url": "/Zaker-MB/?action=schedule",
+      "name": "سجّل شراء ومصروف",
+      "short_name": "مصروف",
+      "description": "تسجيل عملية شراء وخصم فوري من الكاش أو البنك",
+      "url": "/Zaker-MB/?action=new_expense",
       "icons": [
         {
           "src": "/Zaker-MB/icons/icon-192.png",
@@ -146,10 +147,10 @@
       ]
     },
     {
-      "name": "إضافة مهمة دراسية جديدة",
-      "short_name": "مهمة جديدة",
-      "description": "تسجيل واجب مدرسي أو مراجعة يومية",
-      "url": "/Zaker-MB/?action=new_task",
+      "name": "سجّل إيراد ودخل",
+      "short_name": "دخل",
+      "description": "تسجيل إيراد مالي جديد في رصيدك",
+      "url": "/Zaker-MB/?action=new_income",
       "icons": [
         {
           "src": "/Zaker-MB/icons/icon-192.png",
@@ -159,10 +160,10 @@
       ]
     },
     {
-      "name": "مؤقت التركيز والمذاكرة",
-      "short_name": "مؤقت المذاكرة",
-      "description": "بدء جلسة مذاكرة بومودورو للتركيز العالي",
-      "url": "/Zaker-MB/?action=timer",
+      "name": "الخزنة المالية والديون",
+      "short_name": "الخزنة",
+      "description": "عرض ما لك وما عليك والخزنة المشفرة",
+      "url": "/Zaker-MB/?action=vault",
       "icons": [
         {
           "src": "/Zaker-MB/icons/icon-192.png",

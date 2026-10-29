@@ -696,7 +696,7 @@ function Ledger() {
       {/* Top Header: Vault status & quick controls */}
       <div className="bento-card mb-5 flex flex-wrap items-center justify-between gap-3.5 rounded-3xl p-4.5 sm:p-5 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 text-cyan-400 border border-cyan-500/30 shadow-xs">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500/25 to-yellow-400/20 text-amber-400 border border-amber-500/40 shadow-[0_4px_12px_rgba(245,158,11,0.25)]">
             <Lock className="size-5.5" />
           </div>
           <div>
@@ -720,7 +720,7 @@ function Ledger() {
         <div className="flex flex-wrap items-center gap-2">
           {/* Language Switcher */}
           <div className="flex items-center rounded-2xl border border-white/10 bg-surface-alt/40 p-1 shadow-xs">
-            <Globe className="size-3.5 text-cyan-400 mx-1.5 hidden sm:inline" />
+            <Globe className="size-3.5 text-amber-400 mx-1.5 hidden sm:inline" />
             {LANGUAGES.map((l) => (
               <button
                 key={l.id}
@@ -728,7 +728,7 @@ function Ledger() {
                 onClick={() => setLang(l.id)}
                 className={`flex items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-bold transition-all ${
                   lang === l.id
-                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm"
+                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black shadow-sm"
                     : "text-muted hover:text-ink hover:bg-surface-alt/60"
                 }`}
                 title={l.nativeLabel}
@@ -783,7 +783,7 @@ function Ledger() {
             <button
               type="button"
               onClick={installApp}
-              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-3.5 text-xs font-bold text-white shadow-md shadow-cyan-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all btn-3d"
             >
               <Smartphone className="size-3.5" />
               <span>{t("installApp", lang)}</span>
@@ -809,7 +809,7 @@ function Ledger() {
                 className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-white/10 bg-surface px-3 text-xs font-semibold text-ink hover:border-white/25 hover:bg-surface-alt transition-all shadow-xs"
                 title={t("pinSettingsTooltip", lang)}
               >
-                <KeyRound className="size-3.5 text-cyan-400" />
+                <KeyRound className="size-3.5 text-amber-400" />
                 <span>{t("pinSettings", lang)}</span>
               </button>
               <button
@@ -830,7 +830,7 @@ function Ledger() {
             className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-white/10 bg-surface px-3 text-xs font-semibold text-ink hover:border-white/25 hover:bg-surface-alt transition-all shadow-xs"
             title={t("backupTooltip", lang)}
           >
-            <FolderArchive className="size-3.5 text-violet-400" />
+            <FolderArchive className="size-3.5 text-amber-400" />
             <span>{t("backup", lang)}</span>
           </button>
         </div>
@@ -843,7 +843,7 @@ function Ledger() {
           onClick={() => setActiveTab("overview")}
           className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-bold transition-all ${
             activeTab === "overview"
-              ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md shadow-cyan-500/25"
+              ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black shadow-md shadow-amber-500/30"
               : "text-muted hover:text-ink hover:bg-surface-alt/50"
           }`}
         >
@@ -855,7 +855,7 @@ function Ledger() {
           onClick={() => setActiveTab("ledger")}
           className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-bold transition-all ${
             activeTab === "ledger"
-              ? "bg-gradient-to-r from-violet-600 to-purple-500 text-white shadow-md shadow-violet-500/25"
+              ? "bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold shadow-md shadow-emerald-500/30"
               : "text-muted hover:text-ink hover:bg-surface-alt/50"
           }`}
         >
@@ -907,27 +907,27 @@ function Ledger() {
 
             {!started && <OpeningCard />}
 
-            {/* Net Worth Card */}
-            <div className="bento-card rounded-3xl p-6 sm:p-7 relative overflow-hidden group shadow-xl">
-              <div className="absolute top-0 right-0 -mt-8 -mr-8 size-40 rounded-full bg-gradient-to-br from-violet-500/15 to-purple-500/5 blur-2xl pointer-events-none" />
+            {/* Net Worth Card (3D Gold) */}
+            <div className="bento-card rounded-3xl p-6 sm:p-7 relative overflow-hidden group shadow-2xl border-t-2 border-t-amber-400/40">
+              <div className="absolute top-0 right-0 -mt-8 -mr-8 size-44 rounded-full bg-gradient-to-br from-amber-500/20 via-yellow-500/10 to-transparent blur-2xl pointer-events-none" />
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="pill-badge bg-gradient-to-r from-violet-500/15 to-purple-500/15 text-violet-300 border border-violet-500/30">
-                  <Coins className="size-3.5 text-violet-400" />
+                <span className="pill-badge bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 border border-amber-500/40 shadow-xs">
+                  <Coins className="size-3.5 text-amber-400" />
                   <span>{t("netWorth", lang)}</span>
                 </span>
-                <span className="text-xs font-bold text-muted/80">
+                <span className="text-xs font-bold text-amber-400/90 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
                   {getCurrencyLabel(currency, lang)}
                 </span>
               </div>
               <p
                 className={`mt-1 text-3xl font-black tabular-nums tracking-tight sm:text-5xl ${
-                  ledger.net < 0 ? "text-rose-400" : "text-ink"
+                  ledger.net < 0 ? "text-red-500" : "text-amber-300 drop-shadow-[0_2px_12px_rgba(245,158,11,0.35)]"
                 }`}
               >
                 {formatEuro(ledger.net, currency, lang)}
               </p>
-              <p className="mt-3 text-xs text-muted/80 flex items-center gap-1.5">
-                <span className="inline-block size-1.5 rounded-full bg-violet-400"></span>
+              <p className="mt-3 text-xs text-muted/90 flex items-center gap-1.5">
+                <span className="inline-block size-1.5 rounded-full bg-amber-400"></span>
                 <span>{t("netWorthFormula", lang)}</span>
               </p>
             </div>
@@ -946,7 +946,7 @@ function Ledger() {
                 label={formatPocketName("bank", lang)}
                 cents={ledger.bank}
                 onCorrect={() => setSheet({ kind: "adjust", pocket: "bank" })}
-                theme="cyan"
+                theme="amber"
               />
               <div
                 role="button"
@@ -961,13 +961,13 @@ function Ledger() {
                 className="bento-card-interactive cursor-pointer rounded-3xl p-4.5 sm:p-5 flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between gap-1 mb-2">
-                  <span className="pill-badge bg-gradient-to-r from-teal-500/15 to-emerald-500/15 text-teal-300 border border-teal-500/25 text-[11px]">
-                    <Users className="size-3 text-teal-400" />
+                  <span className="pill-badge bg-gradient-to-r from-emerald-500/15 to-teal-500/15 text-emerald-300 border border-emerald-500/25 text-[11px]">
+                    <Users className="size-3 text-emerald-400" />
                     <span>{t("owedToMe", lang)}</span>
                   </span>
-                  <span className="text-teal-400 text-[11px] font-bold">{t("viewArrow", lang)}</span>
+                  <span className="text-emerald-400 text-[11px] font-bold">{t("viewArrow", lang)}</span>
                 </div>
-                <p className="mt-1 text-xl sm:text-2xl font-black tabular-nums text-teal-400">
+                <p className="mt-1 text-xl sm:text-2xl font-black tabular-nums text-emerald-400">
                   {formatEuro(ledger.receivable, currency, lang)}
                 </p>
               </div>
@@ -984,24 +984,24 @@ function Ledger() {
                 className="bento-card-interactive cursor-pointer rounded-3xl p-4.5 sm:p-5 flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between gap-1 mb-2">
-                  <span className="pill-badge bg-gradient-to-r from-rose-500/15 to-pink-500/15 text-rose-300 border border-rose-500/25 text-[11px]">
-                    <Users className="size-3 text-rose-400" />
+                  <span className="pill-badge bg-gradient-to-r from-red-500/15 to-rose-500/15 text-red-300 border border-red-500/25 text-[11px]">
+                    <Users className="size-3 text-red-400" />
                     <span>{t("owedByMe", lang)}</span>
                   </span>
-                  <span className="text-rose-400 text-[11px] font-bold">{t("viewArrow", lang)}</span>
+                  <span className="text-red-400 text-[11px] font-bold">{t("viewArrow", lang)}</span>
                 </div>
-                <p className="mt-1 text-xl sm:text-2xl font-black tabular-nums text-rose-400">
+                <p className="mt-1 text-xl sm:text-2xl font-black tabular-nums text-red-400">
                   {formatEuro(ledger.payable, currency, lang)}
                 </p>
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action Buttons (3D Tactile Buttons) */}
             <div className="grid gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "purchase" })}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 px-4 text-base font-bold text-white shadow-lg shadow-rose-600/20 transition-all hover:opacity-95 hover:shadow-xl active:scale-[0.99]"
+                className="btn-3d inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 px-4 text-base font-black text-white shadow-lg shadow-red-600/30 transition-all hover:opacity-95"
               >
                 <ShoppingBag className="size-5" aria-hidden />
                 <span>{t("btnPurchase", lang)}</span>
@@ -1010,7 +1010,7 @@ function Ledger() {
                 <button
                   type="button"
                   onClick={() => setSheet({ kind: "income" })}
-                  className="bento-card-interactive flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-emerald-600/20 hover:opacity-95"
+                  className="btn-3d flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 px-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-emerald-600/30 hover:opacity-95"
                 >
                   <Plus className="size-4" aria-hidden />
                   <span>{t("btnIncome", lang)}</span>
@@ -1018,7 +1018,7 @@ function Ledger() {
                 <button
                   type="button"
                   onClick={() => setSheet({ kind: "transfer" })}
-                  className="bento-card-interactive flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 px-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-cyan-600/20 hover:opacity-95"
+                  className="btn-3d flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-3 text-xs sm:text-sm font-black text-slate-950 shadow-md shadow-amber-500/30 hover:opacity-95"
                 >
                   <ArrowLeftRight className="size-4" aria-hidden />
                   <span>{t("btnTransfer", lang)}</span>
@@ -1077,7 +1077,7 @@ function Ledger() {
               {categoryStats.length > 0 && (
                 <div className="mt-5 pt-4 border-t border-white/10">
                   <p className="text-xs font-bold text-ink mb-3 flex items-center gap-1.5">
-                    <PieChart className="size-3.5 text-cyan-400" />
+                    <PieChart className="size-3.5 text-amber-400" />
                     <span>{t("categoryBreakdownTitle", lang)}</span>
                   </p>
                   <div className="space-y-2.5">
@@ -1093,7 +1093,7 @@ function Ledger() {
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-surface-alt/70 border border-white/5">
                           <div
-                            className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300 shadow-xs"
+                            className="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-500 rounded-full transition-all duration-300 shadow-xs"
                             style={{ width: `${cat.percentage}%` }}
                           />
                         </div>
@@ -1110,15 +1110,15 @@ function Ledger() {
             <div className="bento-card rounded-3xl p-5 sm:p-6 shadow-xl">
               <div className="flex items-center justify-between border-b border-white/10 pb-3.5">
                 <div className="flex items-center gap-2">
-                  <span className="pill-badge bg-gradient-to-r from-blue-500/15 to-cyan-500/15 text-cyan-300 border border-cyan-500/25">
-                    <BookOpen className="size-3.5 text-cyan-400" />
+                  <span className="pill-badge bg-gradient-to-r from-amber-500/15 to-yellow-500/15 text-amber-300 border border-amber-500/25">
+                    <BookOpen className="size-3.5 text-amber-400" />
                     <span>{t("recentActivityTitle", lang)}</span>
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setActiveTab("ledger")}
-                  className="pill-badge bg-surface-alt/70 text-cyan-300 border border-white/10 hover:border-cyan-500/30 hover:bg-surface-alt transition-all"
+                  className="pill-badge bg-surface-alt/70 text-amber-300 border border-white/10 hover:border-amber-500/30 hover:bg-surface-alt transition-all"
                 >
                   <span>{t("viewAllCount", lang)} ({history.length})</span>
                   <span>{lang === "ar" ? "←" : "→"}</span>
@@ -1158,8 +1158,8 @@ function Ledger() {
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="pill-badge bg-gradient-to-r from-violet-500/15 to-purple-500/15 text-violet-300 border border-violet-500/30">
-                  <BookOpen className="size-4 text-violet-400" />
+                <span className="pill-badge bg-gradient-to-r from-emerald-500/15 to-teal-500/15 text-emerald-300 border border-emerald-500/30">
+                  <BookOpen className="size-4 text-emerald-400" />
                   <span className="text-sm">{t("tabLedger", lang)}</span>
                 </span>
                 <span className="text-xs text-muted/80">({history.length})</span>
@@ -1172,7 +1172,7 @@ function Ledger() {
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "purchase" })}
-                className="inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 px-3.5 text-xs font-bold text-white shadow-md shadow-rose-600/20 hover:opacity-95"
+                className="btn-3d inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-3.5 text-xs font-bold text-white shadow-md shadow-red-600/20 hover:opacity-95"
               >
                 <ShoppingBag className="size-3.5" />
                 <span>{t("btnPurchase", lang)}</span>
@@ -1180,7 +1180,7 @@ function Ledger() {
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "income" })}
-                className="inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:opacity-95"
+                className="btn-3d inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:opacity-95"
               >
                 <Plus className="size-3.5" />
                 <span>{t("btnIncome", lang)}</span>
@@ -1189,7 +1189,7 @@ function Ledger() {
           </div>
 
           {deleteError && (
-            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-xs text-rose-300 font-semibold">
+            <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-3.5 text-xs text-red-300 font-semibold">
               {deleteError}
             </div>
           )}
@@ -1205,13 +1205,13 @@ function Ledger() {
                   value={ledgerSearch}
                   onChange={(e) => setLedgerSearch(e.target.value)}
                   placeholder={t("ledgerSearchPlaceholder", lang)}
-                  className="w-full rounded-xl border border-white/10 bg-surface/80 py-2.5 pr-10 pl-16 text-xs text-ink outline-none focus:border-cyan-400 rtl:pr-10 rtl:pl-16 ltr:pl-10 ltr:pr-16"
+                  className="w-full rounded-xl border border-white/10 bg-surface/80 py-2.5 pr-10 pl-16 text-xs text-ink outline-none focus:border-amber-400 rtl:pr-10 rtl:pl-16 ltr:pl-10 ltr:pr-16"
                 />
                 {ledgerSearch && (
                   <button
                     type="button"
                     onClick={() => setLedgerSearch("")}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 text-xs font-bold rtl:left-3 ltr:right-3"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-400 hover:text-amber-300 text-xs font-bold rtl:left-3 ltr:right-3"
                   >
                     {t("clearSearch", lang)}
                   </button>
@@ -1226,7 +1226,7 @@ function Ledger() {
                     onClick={() => setLedgerFilter("all")}
                     className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "all"
-                        ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm"
+                        ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black shadow-sm"
                         : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
@@ -1237,7 +1237,7 @@ function Ledger() {
                     onClick={() => setLedgerFilter("purchase")}
                     className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "purchase"
-                        ? "bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-sm"
+                        ? "bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm"
                         : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
@@ -1259,7 +1259,7 @@ function Ledger() {
                     onClick={() => setLedgerFilter("transfer")}
                     className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "transfer"
-                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm"
+                        ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-sm"
                         : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
@@ -1270,7 +1270,7 @@ function Ledger() {
                     onClick={() => setLedgerFilter("debt")}
                     className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "debt"
-                        ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-sm"
+                        ? "bg-gradient-to-r from-red-700 to-amber-700 text-white shadow-sm"
                         : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
@@ -1283,7 +1283,7 @@ function Ledger() {
                   <select
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="rounded-xl border border-white/10 bg-surface px-2.5 py-1.5 text-xs text-ink outline-none focus:border-cyan-400"
+                    className="rounded-xl border border-white/10 bg-surface px-2.5 py-1.5 text-xs text-ink outline-none focus:border-amber-400"
                     title={t("filterCategory", lang)}
                   >
                     <option value="all">{t("allCategories", lang)}</option>
@@ -1295,11 +1295,11 @@ function Ledger() {
                   </select>
 
                   <div className="flex items-center gap-1.5">
-                    <ArrowUpDown className="size-3.5 text-cyan-400" />
+                    <ArrowUpDown className="size-3.5 text-amber-400" />
                     <select
                       value={ledgerSort}
                       onChange={(e) => setLedgerSort(e.target.value as any)}
-                      className="rounded-xl border border-white/10 bg-surface px-2.5 py-1.5 text-xs text-ink outline-none focus:border-cyan-400"
+                      className="rounded-xl border border-white/10 bg-surface px-2.5 py-1.5 text-xs text-ink outline-none focus:border-amber-400"
                     >
                       <option value="newest">{t("sortNewest", lang)}</option>
                       <option value="oldest">{t("sortOldest", lang)}</option>
@@ -1321,7 +1321,7 @@ function Ledger() {
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "purchase" })}
-                className="mt-4 inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 px-4 text-xs font-bold text-white shadow-md hover:opacity-90"
+                className="mt-4 inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-4 text-xs font-bold text-white shadow-md hover:opacity-90 btn-3d"
               >
                 <ShoppingBag className="size-3.5" />
                 <span>{t("btnStartFirstTx", lang)}</span>
@@ -1342,7 +1342,7 @@ function Ledger() {
                   <li key={tx.id} className="py-1">
                     {showDay && (
                       <div className="sticky top-0 z-10 bg-surface/95 py-2 backdrop-blur-md">
-                        <span className="pill-badge bg-surface-alt text-cyan-300 border border-white/10">
+                        <span className="pill-badge bg-surface-alt text-amber-300 border border-white/10">
                           {formatDayLocalized(tx.at, lang)}
                         </span>
                       </div>
@@ -1416,7 +1416,7 @@ function Ledger() {
                 <button
                   type="button"
                   onClick={() => setSheet({ kind: "receivable" })}
-                  className="mt-3.5 inline-flex h-9.5 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:opacity-95"
+                  className="mt-3.5 inline-flex h-9.5 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3 text-xs font-bold text-white shadow-md shadow-emerald-600/30 hover:opacity-95 btn-3d"
                 >
                   <Plus className="size-3.5" />
                   <span>{t("btnAddReceivable", lang)}</span>
@@ -1424,22 +1424,22 @@ function Ledger() {
               </div>
 
               {/* Payables Card */}
-              <div className="bento-card-interactive rounded-2xl border border-rose-500/25 bg-rose-500/5 p-4.5">
+              <div className="bento-card-interactive rounded-2xl border border-red-500/25 bg-red-500/5 p-4.5">
                 <div className="flex items-center justify-between">
-                  <span className="pill-badge bg-rose-500/15 text-rose-300 border border-rose-500/25">
+                  <span className="pill-badge bg-red-500/15 text-red-300 border border-red-500/25">
                     <span>{t("totalPayables", lang)}</span>
                   </span>
-                  <span className="rounded-full bg-rose-500/15 px-2.5 py-0.5 text-xs font-bold text-rose-300 border border-rose-500/20">
+                  <span className="rounded-full bg-red-500/15 px-2.5 py-0.5 text-xs font-bold text-red-300 border border-red-500/20">
                     {ledger.iOwe.length} {t("partiesCount", lang)}
                   </span>
                 </div>
-                <p className="mt-2.5 text-2xl font-black tabular-nums text-rose-400">
+                <p className="mt-2.5 text-2xl font-black tabular-nums text-red-400">
                   {formatEuro(ledger.payable, currency, lang)}
                 </p>
                 <button
                   type="button"
                   onClick={() => setSheet({ kind: "payable" })}
-                  className="mt-3.5 inline-flex h-9.5 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 px-3 text-xs font-bold text-white shadow-md shadow-rose-600/20 hover:opacity-95"
+                  className="mt-3.5 inline-flex h-9.5 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-3 text-xs font-bold text-white shadow-md shadow-red-600/30 hover:opacity-95 btn-3d"
                 >
                   <Plus className="size-3.5" />
                   <span>{t("btnAddPayable", lang)}</span>
@@ -1583,7 +1583,7 @@ function BalanceCard({
   label: string;
   cents: number;
   onCorrect: () => void;
-  theme?: "emerald" | "cyan";
+  theme?: "emerald" | "amber";
 }) {
   const currency = useLedger((state) => state.currency);
   const lang = useLedger((state) => state.lang);
@@ -1596,13 +1596,13 @@ function BalanceCard({
           <span
             className={`pill-badge ${
               isEmerald
-                ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/25"
-                : "bg-cyan-500/15 text-cyan-300 border border-cyan-500/25"
+                ? "bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-300 border border-emerald-500/35"
+                : "bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/35"
             }`}
           >
             <span
               className={`flex size-4 items-center justify-center rounded-full ${
-                isEmerald ? "bg-emerald-500/20 text-emerald-300" : "bg-cyan-500/20 text-cyan-300"
+                isEmerald ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"
               }`}
             >
               {icon}
@@ -1611,8 +1611,8 @@ function BalanceCard({
           </span>
         </div>
         <p
-          className={`mt-2 text-xl sm:text-2xl font-extrabold tabular-nums ${
-            isEmerald ? "text-emerald-400" : "text-cyan-400"
+          className={`mt-2 text-xl sm:text-2xl font-black tabular-nums ${
+            isEmerald ? "text-emerald-400" : "text-amber-400"
           }`}
         >
           {formatEuro(cents, currency, lang)}
@@ -1621,8 +1621,8 @@ function BalanceCard({
       <button
         type="button"
         onClick={onCorrect}
-        className={`mt-3 inline-flex items-center gap-1 text-xs font-semibold underline-offset-4 hover:underline transition-colors ${
-          isEmerald ? "text-emerald-400/80 hover:text-emerald-300" : "text-cyan-400/80 hover:text-cyan-300"
+        className={`mt-3 inline-flex items-center gap-1 text-xs font-bold underline-offset-4 hover:underline transition-colors ${
+          isEmerald ? "text-emerald-400/80 hover:text-emerald-300" : "text-amber-400/80 hover:text-amber-300"
         }`}
       >
         <Pencil className="size-3" />
@@ -1844,7 +1844,7 @@ function HistoryRow({
   const iconBg = isOut
     ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
     : isNeutral
-      ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
+      ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
       : "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30";
 
   const color = isOut
@@ -1902,7 +1902,7 @@ function HistoryRow({
                 <button
                   type="button"
                   onClick={onEdit}
-                  className="inline-flex h-7 items-center gap-1 rounded-lg px-2.5 text-xs text-muted hover:text-cyan-400 hover:bg-cyan-500/10 transition border border-transparent hover:border-cyan-500/20"
+                  className="inline-flex h-7 items-center gap-1 rounded-lg px-2.5 text-xs text-muted hover:text-amber-400 hover:bg-amber-500/10 transition border border-transparent hover:border-amber-500/20"
                   aria-label={`${t("btnEdit", lang)} ${view.title}`}
                 >
                   <Pencil className="size-3" aria-hidden />
@@ -1965,7 +1965,7 @@ function SheetDialog({
         className="sheet-panel safe-pad relative z-10 max-h-[85vh] w-full overflow-y-auto rounded-t-3xl border border-white/10 bg-slate-900/95 backdrop-blur-2xl p-5 sm:p-6 sm:max-w-md sm:rounded-3xl shadow-2xl"
       >
         <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3.5">
-          <span className="pill-badge bg-gradient-to-r from-cyan-500/15 to-blue-500/15 text-cyan-300 border border-cyan-500/25">
+          <span className="pill-badge bg-gradient-to-r from-amber-500/15 to-yellow-500/15 text-amber-300 border border-amber-500/25">
             <h2 id={titleId} className="text-sm sm:text-base font-bold">
               {title}
             </h2>
