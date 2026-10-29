@@ -45,10 +45,14 @@ if (res.status !== 200) {
 let html = await res.text();
 
 // 4. Adapt paths for GitHub Pages subpath /My-Mouny/
-// Replace absolute root paths with /My-Mouny/ paths
+// Replace absolute root paths with /My-Mouny/ paths idempotently
+html = html.replaceAll('href="/My-Mouny/', 'href="/');
+html = html.replaceAll('src="/My-Mouny/', 'src="/');
+html = html.replaceAll('"/My-Mouny/', '"/');
 html = html.replaceAll('href="/', 'href="/My-Mouny/');
 html = html.replaceAll('src="/', 'src="/My-Mouny/');
 html = html.replaceAll('"/assets/', '"/My-Mouny/assets/');
+html = html.replaceAll('/My-Mouny/My-Mouny/', '/My-Mouny/');
 
 // Clean up platform-specific dynamic middleware artifacts not present on static GitHub Pages
 html = html.replace(/<link rel="manifest" href="\/My-Mouny\/__grok\/manifest\.webmanifest">/g, '');
