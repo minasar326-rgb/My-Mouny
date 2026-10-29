@@ -126,7 +126,7 @@ self.addEventListener("fetch", (event) => {
           if (cached) return cached;
 
           return new Response(
-            `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>my Mouny</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;text-align:center;padding:50px 20px;background:#f4f1eb;color:#1c1a17"><h2>my Mouny</h2><p style="color:#666">أنت الآن تعمل دون اتصال بالإنترنت.</p><button onclick="location.reload()" style="padding:10px 24px;border-radius:10px;background:#0d9488;color:#fff;border:none;cursor:pointer;font-weight:bold;margin-top:20px">تحديث</button></body></html>`,
+            `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>ذاكر</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;text-align:center;padding:50px 20px;background:#f4f1eb;color:#1c1a17"><h2>ذاكر</h2><p style="color:#666">أنت الآن تعمل دون اتصال بالإنترنت.</p><button onclick="location.reload()" style="padding:10px 24px;border-radius:10px;background:#0d9488;color:#fff;border:none;cursor:pointer;font-weight:bold;margin-top:20px">تحديث</button></body></html>`,
             { headers: { "Content-Type": "text/html; charset=utf-8" } }
           );
         })

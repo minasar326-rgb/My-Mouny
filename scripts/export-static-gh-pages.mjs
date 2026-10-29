@@ -5,7 +5,7 @@ const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
 const repoFromGit = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split("/")[1] : null;
-const REPO_NAME = process.env.REPO_NAME || repoFromGit || "My-Mouny";
+const REPO_NAME = process.env.REPO_NAME || repoFromGit || "Zaker-MB";
 const REPO_BASE = `/${REPO_NAME}/`;
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
@@ -281,6 +281,22 @@ if (fs.existsSync(swPath)) {
 
   swContent = fixPaths(swContent);
   fs.writeFileSync(swPath, swContent, "utf8");
+}
+
+// 9. Mirror static entry files to repository root for dual-mode deployment (branch root or gh-pages)
+const rootFilesToSync = ["index.html", "404.html", "manifest.json", "sw.js", ".nojekyll"];
+for (const file of rootFilesToSync) {
+  const src = path.join(distDir, file);
+  const dest = path.join(root, file);
+  if (fs.existsSync(src)) {
+    fs.copyFileSync(src, dest);
+  }
+}
+
+// Also ensure root assets directory exists for root-serving fallback
+const rootAssetsDir = path.join(root, "assets");
+if (fs.existsSync(assetsDir)) {
+  copyDir(assetsDir, rootAssetsDir);
 }
 
 console.log(`GitHub Pages static export completed successfully with all asset paths mapped to ${REPO_BASE}!`);

@@ -34,7 +34,7 @@ jobs:
             -validity 10000 \
             -storepass zakerm2026 \
             -keypass zakerm2026 \
-            -dname "CN=my-mouny, OU=Mobile, O=my-mouny, L=Cairo, ST=Cairo, C=EG"
+            -dname "CN=zaker, OU=Mobile, O=zaker, L=Cairo, ST=Cairo, C=EG"
           keytool -list -v -keystore android/app/release.keystore -alias zakerm -storepass zakerm2026
 
       - name: Set up Gradle
@@ -58,31 +58,31 @@ jobs:
       - name: Upload Android App Bundle (For Google Play Store)
         uses: actions/upload-artifact@v4
         with:
-          name: my-Mouny-GooglePlay-AAB
+          name: Zaker-GooglePlay-AAB
           path: android/app/build/outputs/**/*.aab
 
       - name: Upload Release APK (For Direct Phone Installation)
         uses: actions/upload-artifact@v4
         with:
-          name: my-Mouny-Release-APK
+          name: Zaker-Release-APK
           path: android/app/build/outputs/**/*.apk
 
       - name: Upload Keystore Backup
         uses: actions/upload-artifact@v4
         with:
-          name: my-Mouny-Signing-Keystore
+          name: Zaker-Signing-Keystore
           path: android/app/release.keystore
 
       - name: Create GitHub Release with Downloads
         uses: softprops/action-gh-release@v2
         if: always()
         with:
-          name: "my Mouny Android Release (Google Play AAB & APK)"
+          name: "Zaker Android Release (Google Play AAB & APK)"
           tag_name: "v1.0.4"
           draft: false
           prerelease: false
           body: |
-            ### 📱 تطبيق my Mouny للأندرويد ومتجر جوجل بلاي
+            ### 📱 تطبيق ذاكر للأندرويد ومتجر جوجل بلاي
 
             - **حزمة النشر على Google Play Console:** `app-release.aab` (Android App Bundle)
             - **ملف التثبيت المباشر على الهاتف:** `app-release.apk`

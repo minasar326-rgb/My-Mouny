@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ledger/home";
 import { useLedger } from "@/lib/ledger/store";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "my Mouny";
+const APP_NAME = "ذاكر";
 
 function RootShell() {
   useEffect(() => {
@@ -21,11 +21,9 @@ function RootShell() {
       } else {
         const registerSW = () => {
           const base =
-            typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
-              ? "/My-Mouny/"
-              : typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
-                ? "/Zaker-MB/"
-                : "/";
+            typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
+              ? "/Zaker-MB/"
+              : "/";
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
@@ -64,7 +62,7 @@ function RootComponent() {
     if (typeof window !== "undefined") {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-      document.title = "my Mouny";
+      document.title = lang === "ar" ? "ذاكر - تطبيق إدارة المصاريف والخزنة" : (lang === "el" ? "Zaker - Διαχείριση Εξόδων" : "Zaker - Expense & Vault Manager");
     }
   }, [lang]);
 
@@ -106,11 +104,11 @@ function RootComponent() {
                       });
                     }
                   } else {
-                    var swBase = location.pathname.startsWith('/My-Mouny') ? '/My-Mouny/' : (location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/');
+                    var swBase = location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/';
                     navigator.serviceWorker.register(swBase + 'sw.js', { scope: swBase }).then(function(reg) {
-                      console.log('[my Mouny] Head SW registered:', reg.scope);
+                      console.log('[ذاكر] Head SW registered:', reg.scope);
                     }).catch(function(err) {
-                      console.warn('[my Mouny] Head SW register error:', err);
+                      console.warn('[ذاكر] Head SW register error:', err);
                     });
                   }
                 }
@@ -140,10 +138,10 @@ export const Route = createRootRoute({
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "my Mouny" },
+      { name: "apple-mobile-web-app-title", content: "ذاكر" },
       {
         name: "description",
-        content: "my Mouny: خزنتك المالية الذكية والمشفرة محلياً - أوفلاين 100% دون خوادم.",
+        content: "ذاكر: تطبيق إدارة المصاريف والخزنة الذكية والمشفرة محلياً - أوفلاين 100% دون خوادم.",
       },
       {
         httpEquiv: "Content-Security-Policy",

@@ -267,7 +267,7 @@ export async function getOrCreateDefaultVault(): Promise<VaultMeta> {
   const id = crypto.randomUUID();
   const defaultVault: VaultRecord = {
     id,
-    name: "my Mouny",
+    name: "ذاكر",
     hasPin: false,
     pinHash: "",
     salt: generateSalt(32),

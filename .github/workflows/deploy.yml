@@ -1,4 +1,4 @@
-name: Deploy my Mouny to GitHub Pages
+name: Deploy Zaker-MB to GitHub Pages
 
 on:
   push:
