@@ -212,30 +212,35 @@ export function VaultAuthScreen() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-8">
-        <header className="text-center">
-          <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+      <div className="bento-card rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden border border-white/10">
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 size-48 rounded-full bg-gradient-to-br from-cyan-500/15 to-blue-500/5 blur-3xl pointer-events-none" />
+        <header className="text-center relative">
+          <div className="mx-auto mb-3.5 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 text-cyan-400 border border-cyan-500/30 shadow-md">
             <Lock className="size-7" />
           </div>
-          <p className="text-sm font-medium text-muted">{t("appName", lang)}</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+          <div className="inline-block mb-1">
+            <span className="pill-badge bg-surface-alt/70 text-cyan-300 border border-white/10 text-xs">
+              {t("appName", lang)}
+            </span>
+          </div>
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-ink sm:text-3xl">
             {mode === "unlock" && t("unlockVaultTitle", lang)}
             {mode === "create" && t("createVaultTitle", lang)}
             {mode === "import" && t("importBackupTitle", lang)}
           </h1>
-          <p className="mt-2 text-xs text-muted sm:text-sm">
+          <p className="mt-2 text-xs text-muted/80 sm:text-sm">
             {t("appSubtitle", lang)}
           </p>
         </header>
 
         {lockoutSec > 0 && (
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-debt/30 bg-debt/10 p-3 text-sm text-debt">
-            <ShieldAlert className="size-5 shrink-0" />
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-sm text-rose-300">
+            <ShieldAlert className="size-5 shrink-0 text-rose-400" />
             <div>
-              <p className="font-semibold">{t("bruteForceProtectionActive", lang)}</p>
+              <p className="font-bold">{t("bruteForceProtectionActive", lang)}</p>
               <p className="text-xs mt-0.5">
                 {t("waitPrefix", lang)}{" "}
-                <span className="font-bold text-base tabular-nums">{lockoutSec}</span>{" "}
+                <span className="font-extrabold text-base tabular-nums">{lockoutSec}</span>{" "}
                 {t("waitSuffix", lang)}
               </p>
             </div>
@@ -243,9 +248,9 @@ export function VaultAuthScreen() {
         )}
 
         {error && lockoutSec === 0 && (
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-debt/30 bg-debt/5 p-3 text-sm text-debt">
-            <AlertCircle className="size-4 shrink-0" />
-            <span>{error}</span>
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-sm text-rose-300">
+            <AlertCircle className="size-4 shrink-0 text-rose-400" />
+            <span className="font-semibold">{error}</span>
           </div>
         )}
 
@@ -254,13 +259,13 @@ export function VaultAuthScreen() {
           <form onSubmit={handleUnlock} className="mt-6 space-y-4">
             {vaults.length > 1 && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-ink">
+                <label className="mb-1 block text-sm font-semibold text-ink">
                   {t("selectVaultLabel", lang)}
                 </label>
                 <select
                   value={selectedVaultId}
                   onChange={(e) => setSelectedVaultId(e.target.value)}
-                  className="w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-ink"
+                  className="w-full rounded-2xl border border-white/10 bg-surface/80 px-4 py-2.5 text-sm text-ink outline-none focus:border-cyan-400"
                 >
                   {vaults.map((v) => (
                     <option key={v.id} value={v.id}>
@@ -272,7 +277,7 @@ export function VaultAuthScreen() {
             )}
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-ink">
+              <label className="mb-1 block text-sm font-semibold text-ink">
                 {t("vaultPinLabel", lang)} {vaults.length === 1 && `(${getVaultDisplayName(vaults[0]?.name, lang)})`}
               </label>
               <div className="relative">
@@ -283,12 +288,12 @@ export function VaultAuthScreen() {
                   placeholder={t("enterPinPlaceholder", lang)}
                   autoFocus
                   disabled={lockoutSec > 0}
-                  className="w-full rounded-xl border border-line bg-surface px-4 py-3 pl-11 text-base text-ink outline-none transition focus:border-ink disabled:opacity-50 rtl:pl-11 rtl:pr-4 ltr:pr-11 ltr:pl-4"
+                  className="w-full rounded-2xl border border-white/10 bg-surface/80 px-4 py-3 pl-11 text-base text-ink outline-none transition focus:border-cyan-400 disabled:opacity-50 rtl:pl-11 rtl:pr-4 ltr:pr-11 ltr:pl-4"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPin(!showPin)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink rtl:left-3 rtl:right-auto ltr:right-3 ltr:left-auto"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-ink rtl:left-3.5 rtl:right-auto ltr:right-3.5 ltr:left-auto"
                 >
                   {showPin ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
@@ -298,10 +303,10 @@ export function VaultAuthScreen() {
             <button
               type="submit"
               disabled={loading || !pin || lockoutSec > 0}
-              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-4 text-base font-semibold text-accent-fg transition hover:opacity-90 disabled:opacity-50"
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 px-4 text-base font-bold text-white shadow-lg shadow-cyan-600/20 transition-all hover:opacity-95 disabled:opacity-50"
             >
               <KeyRound className="size-4" />
-              {loading ? t("verifyingPin", lang) : t("openVaultBtn", lang)}
+              <span>{loading ? t("verifyingPin", lang) : t("openVaultBtn", lang)}</span>
             </button>
 
             <div className="pt-2 flex flex-col gap-2 text-center text-xs text-muted sm:text-sm">
@@ -543,19 +548,19 @@ export function SetPinModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4 backdrop-blur-sm">
-      <div role="dialog" aria-modal="true" className="w-full max-w-md rounded-2xl border border-line bg-surface p-6 shadow-xl">
-        <div className="flex items-center justify-between border-b border-line pb-4">
-          <h2 className="text-lg font-bold text-ink flex items-center gap-2">
-            <Lock className="size-5 text-accent" />
-            {currentVault?.hasPin ? t("editVaultSecurityTitle", lang) : t("setVaultSecurityTitle", lang)}
-          </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
+      <div role="dialog" aria-modal="true" className="bento-card w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden border border-white/10">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <span className="pill-badge bg-gradient-to-r from-cyan-500/15 to-blue-500/15 text-cyan-300 border border-cyan-500/25">
+            <Lock className="size-4 text-cyan-400" />
+            <span className="text-sm">{currentVault?.hasPin ? t("editVaultSecurityTitle", lang) : t("setVaultSecurityTitle", lang)}</span>
+          </span>
           <button
             onClick={onClose}
-            className="inline-flex items-center gap-1 rounded-lg border border-line px-2 py-1 text-xs font-semibold text-muted hover:text-ink"
+            className="inline-flex items-center gap-1 rounded-xl border border-white/10 bg-surface-alt/40 px-2.5 py-1 text-xs font-bold text-muted hover:text-ink hover:bg-surface-alt transition-all"
           >
             <ArrowRight className="size-3.5 rtl:rotate-0 ltr:rotate-180" />
-            {t("returnToHomeBtn", lang)}
+            <span>{t("returnToHomeBtn", lang)}</span>
           </button>
         </div>
 
@@ -707,28 +712,28 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4 backdrop-blur-sm">
-      <div role="dialog" aria-modal="true" className="w-full max-w-md rounded-2xl border border-line bg-surface p-6 shadow-xl">
-        <div className="flex items-center justify-between border-b border-line pb-4">
-          <h2 className="text-lg font-bold text-ink flex items-center gap-2">
-            <FolderArchive className="size-5 text-accent" />
-            {t("backupAndRestoreTitle", lang)}
-          </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
+      <div role="dialog" aria-modal="true" className="bento-card w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden border border-white/10">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <span className="pill-badge bg-gradient-to-r from-violet-500/15 to-purple-500/15 text-violet-300 border border-violet-500/25">
+            <FolderArchive className="size-4 text-violet-400" />
+            <span className="text-sm">{t("backupAndRestoreTitle", lang)}</span>
+          </span>
           <button
             onClick={onClose}
-            className="inline-flex items-center gap-1 rounded-lg border border-line px-2 py-1 text-xs font-semibold text-muted hover:text-ink"
+            className="inline-flex items-center gap-1 rounded-xl border border-white/10 bg-surface-alt/40 px-2.5 py-1 text-xs font-bold text-muted hover:text-ink hover:bg-surface-alt transition-all"
           >
             <ArrowRight className="size-3.5 rtl:rotate-0 ltr:rotate-180" />
-            {t("returnToHomeBtn", lang)}
+            <span>{t("returnToHomeBtn", lang)}</span>
           </button>
         </div>
 
-        <div className="mt-4 flex rounded-xl bg-surface-alt/50 p-1">
+        <div className="mt-4 flex rounded-2xl bg-surface-alt/50 p-1 border border-white/5">
           <button
             type="button"
             onClick={() => setTab("export")}
-            className={`flex-1 rounded-lg py-2 text-sm font-semibold transition ${
-              tab === "export" ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"
+            className={`flex-1 rounded-xl py-2 text-xs font-bold transition-all ${
+              tab === "export" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm" : "text-muted hover:text-ink"
             }`}
           >
             {t("exportBackupTab", lang)}
@@ -736,8 +741,8 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={() => setTab("import")}
-            className={`flex-1 rounded-lg py-2 text-sm font-semibold transition ${
-              tab === "import" ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"
+            className={`flex-1 rounded-xl py-2 text-xs font-bold transition-all ${
+              tab === "import" ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-sm" : "text-muted hover:text-ink"
             }`}
           >
             {t("importBackupTab", lang)}

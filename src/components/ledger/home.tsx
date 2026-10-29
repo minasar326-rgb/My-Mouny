@@ -27,6 +27,8 @@ import {
   FileText,
   CheckCircle2,
   Globe,
+  TrendingUp,
+  PieChart,
 } from "lucide-react";
 import {
   centsToInput,
@@ -692,42 +694,42 @@ function Ledger() {
       )}
 
       {/* Top Header: Vault status & quick controls */}
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-4 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-accent/15 text-accent">
-            <Lock className="size-5" />
+      <div className="bento-card mb-5 flex flex-wrap items-center justify-between gap-3.5 rounded-3xl p-4.5 sm:p-5 shadow-xl">
+        <div className="flex items-center gap-3.5">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 text-cyan-400 border border-cyan-500/30 shadow-xs">
+            <Lock className="size-5.5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-ink">{displayedVaultName}</span>
+              <span className="font-extrabold text-ink text-base sm:text-lg tracking-tight">{displayedVaultName}</span>
               {currentVault?.hasPin ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
+                <span className="pill-badge bg-gradient-to-r from-emerald-500/15 to-teal-500/15 text-emerald-300 border border-emerald-500/25">
                   <ShieldCheck className="size-3" />
-                  {t("vaultEncrypted", lang)}
+                  <span>{t("vaultEncrypted", lang)}</span>
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-surface-alt px-2 py-0.5 text-xs font-medium text-muted">
-                  {t("vaultOpen", lang)}
+                <span className="pill-badge bg-surface-alt text-muted border border-white/10">
+                  <span>{t("vaultOpen", lang)}</span>
                 </span>
               )}
             </div>
-            <p className="text-xs text-muted">{t("appSubtitle", lang)}</p>
+            <p className="text-xs text-muted/80 mt-0.5">{t("appSubtitle", lang)}</p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Language Switcher */}
-          <div className="flex items-center rounded-xl border border-line bg-surface-alt/40 p-1">
-            <Globe className="size-3.5 text-accent mx-1.5 hidden sm:inline" />
+          <div className="flex items-center rounded-2xl border border-white/10 bg-surface-alt/40 p-1 shadow-xs">
+            <Globe className="size-3.5 text-cyan-400 mx-1.5 hidden sm:inline" />
             {LANGUAGES.map((l) => (
               <button
                 key={l.id}
                 type="button"
                 onClick={() => setLang(l.id)}
-                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                className={`flex items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-bold transition-all ${
                   lang === l.id
-                    ? "bg-accent text-accent-fg shadow-xs"
-                    : "text-muted hover:text-ink"
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm"
+                    : "text-muted hover:text-ink hover:bg-surface-alt/60"
                 }`}
                 title={l.nativeLabel}
               >
@@ -738,22 +740,22 @@ function Ledger() {
           </div>
 
           {/* Currency Switcher */}
-          <div className="flex items-center rounded-xl border border-line bg-surface-alt/40 p-1">
-            <Coins className="size-3.5 text-accent mx-1.5 hidden sm:inline" />
+          <div className="flex items-center rounded-2xl border border-white/10 bg-surface-alt/40 p-1 shadow-xs">
+            <Coins className="size-3.5 text-amber-400 mx-1.5 hidden sm:inline" />
             {CURRENCIES.map((c) => (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => setCurrency(c.id)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                className={`rounded-xl px-2.5 py-1 text-xs font-bold transition-all ${
                   currency === c.id
-                    ? "bg-accent text-accent-fg shadow-xs"
-                    : "text-muted hover:text-ink"
+                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-sm"
+                    : "text-muted hover:text-ink hover:bg-surface-alt/60"
                 }`}
                 title={getCurrencyLabel(c.id, lang)}
               >
                 {getCurrencySymbol(c.id, lang)}{" "}
-                <span className="font-medium text-[11px]">({c.code})</span>
+                <span className="font-semibold text-[11px]">({c.code})</span>
               </button>
             ))}
           </div>
@@ -761,18 +763,18 @@ function Ledger() {
           {/* Online / Offline Status */}
           {isOnline ? (
             <span
-              className="inline-flex items-center gap-1 rounded-lg border border-line bg-surface-alt/40 px-2.5 py-1 text-xs text-muted"
+              className="pill-badge bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
               title={t("onlineTooltip", lang)}
             >
-              <Wifi className="size-3.5 text-accent" />
+              <Wifi className="size-3.5 text-emerald-400" />
               <span className="hidden sm:inline">{t("online", lang)}</span>
             </span>
           ) : (
             <span
-              className="inline-flex items-center gap-1 rounded-lg border border-accent/40 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent-fg"
+              className="pill-badge bg-rose-500/15 text-rose-300 border border-rose-500/30"
               title={t("offlineTooltip", lang)}
             >
-              <WifiOff className="size-3.5" />
+              <WifiOff className="size-3.5 text-rose-400" />
               <span>{t("offline", lang)}</span>
             </span>
           )}
@@ -781,10 +783,10 @@ function Ledger() {
             <button
               type="button"
               onClick={installApp}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-accent px-3 text-xs font-semibold text-accent-fg shadow-xs hover:opacity-90"
+              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-3.5 text-xs font-bold text-white shadow-md shadow-cyan-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               <Smartphone className="size-3.5" />
-              {t("installApp", lang)}
+              <span>{t("installApp", lang)}</span>
             </button>
           )}
 
@@ -793,31 +795,31 @@ function Ledger() {
             <button
               type="button"
               onClick={() => setShowSetPinModal(true)}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-accent/40 bg-accent/10 px-3 text-xs font-semibold text-accent hover:bg-accent/20"
+              className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/15 px-3 text-xs font-bold text-amber-300 hover:bg-amber-500/25 transition-all shadow-xs"
               title={t("setPinTooltip", lang)}
             >
               <Lock className="size-3.5" />
-              {t("setPin", lang)}
+              <span>{t("setPin", lang)}</span>
             </button>
           ) : (
             <>
               <button
                 type="button"
                 onClick={() => setShowSetPinModal(true)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-xs font-medium text-ink hover:border-ink"
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-white/10 bg-surface px-3 text-xs font-semibold text-ink hover:border-white/25 hover:bg-surface-alt transition-all shadow-xs"
                 title={t("pinSettingsTooltip", lang)}
               >
-                <KeyRound className="size-3.5 text-muted" />
-                {t("pinSettings", lang)}
+                <KeyRound className="size-3.5 text-cyan-400" />
+                <span>{t("pinSettings", lang)}</span>
               </button>
               <button
                 type="button"
                 onClick={() => lock()}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-xs font-medium text-debt hover:border-debt hover:bg-debt/5"
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 text-xs font-semibold text-rose-400 hover:border-rose-500 hover:bg-rose-500/20 transition-all shadow-xs"
                 title={t("lockVaultTooltip", lang)}
               >
                 <LogOut className="size-3.5" />
-                {t("lockVault", lang)}
+                <span>{t("lockVault", lang)}</span>
               </button>
             </>
           )}
@@ -825,23 +827,23 @@ function Ledger() {
           <button
             type="button"
             onClick={() => setShowBackupModal(true)}
-            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-xs font-medium text-ink hover:border-ink"
+            className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-white/10 bg-surface px-3 text-xs font-semibold text-ink hover:border-white/25 hover:bg-surface-alt transition-all shadow-xs"
             title={t("backupTooltip", lang)}
           >
-            <FolderArchive className="size-3.5 text-muted" />
-            {t("backup", lang)}
+            <FolderArchive className="size-3.5 text-violet-400" />
+            <span>{t("backup", lang)}</span>
           </button>
         </div>
       </div>
 
       {/* Main Navigation Tabs */}
-      <nav aria-label={t("navVaultSections", lang)} className="mb-6 flex rounded-2xl border border-line bg-surface p-1.5 shadow-xs">
+      <nav aria-label={t("navVaultSections", lang)} className="bento-card mb-6 flex rounded-2xl p-1.5 shadow-lg gap-1.5">
         <button
           type="button"
           onClick={() => setActiveTab("overview")}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-semibold transition ${
+          className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-bold transition-all ${
             activeTab === "overview"
-              ? "bg-accent text-accent-fg shadow-xs"
+              ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md shadow-cyan-500/25"
               : "text-muted hover:text-ink hover:bg-surface-alt/50"
           }`}
         >
@@ -851,9 +853,9 @@ function Ledger() {
         <button
           type="button"
           onClick={() => setActiveTab("ledger")}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-semibold transition ${
+          className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-bold transition-all ${
             activeTab === "ledger"
-              ? "bg-accent text-accent-fg shadow-xs"
+              ? "bg-gradient-to-r from-violet-600 to-purple-500 text-white shadow-md shadow-violet-500/25"
               : "text-muted hover:text-ink hover:bg-surface-alt/50"
           }`}
         >
@@ -872,9 +874,9 @@ function Ledger() {
         <button
           type="button"
           onClick={() => setActiveTab("debts")}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-semibold transition ${
+          className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-bold transition-all ${
             activeTab === "debts"
-              ? "bg-accent text-accent-fg shadow-xs"
+              ? "bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md shadow-amber-500/25"
               : "text-muted hover:text-ink hover:bg-surface-alt/50"
           }`}
         >
@@ -906,33 +908,45 @@ function Ledger() {
             {!started && <OpeningCard />}
 
             {/* Net Worth Card */}
-            <div className="rounded-2xl border border-line bg-surface p-5 shadow-xs">
-              <p className="text-xs font-medium text-muted">
-                {t("netWorth", lang)} · {getCurrencyLabel(currency, lang)}
-              </p>
+            <div className="bento-card rounded-3xl p-6 sm:p-7 relative overflow-hidden group shadow-xl">
+              <div className="absolute top-0 right-0 -mt-8 -mr-8 size-40 rounded-full bg-gradient-to-br from-violet-500/15 to-purple-500/5 blur-2xl pointer-events-none" />
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="pill-badge bg-gradient-to-r from-violet-500/15 to-purple-500/15 text-violet-300 border border-violet-500/30">
+                  <Coins className="size-3.5 text-violet-400" />
+                  <span>{t("netWorth", lang)}</span>
+                </span>
+                <span className="text-xs font-bold text-muted/80">
+                  {getCurrencyLabel(currency, lang)}
+                </span>
+              </div>
               <p
-                className={`mt-1 text-3xl font-bold tabular-nums tracking-tight sm:text-5xl ${
-                  ledger.net < 0 ? "text-debt" : "text-ink"
+                className={`mt-1 text-3xl font-black tabular-nums tracking-tight sm:text-5xl ${
+                  ledger.net < 0 ? "text-rose-400" : "text-ink"
                 }`}
               >
                 {formatEuro(ledger.net, currency, lang)}
               </p>
-              <p className="mt-2 text-xs text-muted">{t("netWorthFormula", lang)}</p>
+              <p className="mt-3 text-xs text-muted/80 flex items-center gap-1.5">
+                <span className="inline-block size-1.5 rounded-full bg-violet-400"></span>
+                <span>{t("netWorthFormula", lang)}</span>
+              </p>
             </div>
 
             {/* Wallets & Balances */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3.5">
               <BalanceCard
                 icon={<Wallet className="size-4" aria-hidden />}
                 label={formatPocketName("cash", lang)}
                 cents={ledger.cash}
                 onCorrect={() => setSheet({ kind: "adjust", pocket: "cash" })}
+                theme="emerald"
               />
               <BalanceCard
                 icon={<Landmark className="size-4" aria-hidden />}
                 label={formatPocketName("bank", lang)}
                 cents={ledger.bank}
                 onCorrect={() => setSheet({ kind: "adjust", pocket: "bank" })}
+                theme="cyan"
               />
               <div
                 role="button"
@@ -944,13 +958,16 @@ function Ledger() {
                     setActiveTab("debts");
                   }
                 }}
-                className="cursor-pointer rounded-2xl border border-line bg-surface p-4 transition hover:border-accent shadow-xs"
+                className="bento-card-interactive cursor-pointer rounded-3xl p-4.5 sm:p-5 flex flex-col justify-between"
               >
-                <div className="text-xs font-medium text-muted flex items-center justify-between">
-                  <span>{t("owedToMe", lang)}</span>
-                  <span className="text-accent text-[11px] font-bold">{t("viewArrow", lang)}</span>
+                <div className="flex items-center justify-between gap-1 mb-2">
+                  <span className="pill-badge bg-gradient-to-r from-teal-500/15 to-emerald-500/15 text-teal-300 border border-teal-500/25 text-[11px]">
+                    <Users className="size-3 text-teal-400" />
+                    <span>{t("owedToMe", lang)}</span>
+                  </span>
+                  <span className="text-teal-400 text-[11px] font-bold">{t("viewArrow", lang)}</span>
                 </div>
-                <p className="mt-2 text-xl font-bold tabular-nums text-accent">
+                <p className="mt-1 text-xl sm:text-2xl font-black tabular-nums text-teal-400">
                   {formatEuro(ledger.receivable, currency, lang)}
                 </p>
               </div>
@@ -964,72 +981,93 @@ function Ledger() {
                     setActiveTab("debts");
                   }
                 }}
-                className="cursor-pointer rounded-2xl border border-line bg-surface p-4 transition hover:border-debt shadow-xs"
+                className="bento-card-interactive cursor-pointer rounded-3xl p-4.5 sm:p-5 flex flex-col justify-between"
               >
-                <div className="text-xs font-medium text-muted flex items-center justify-between">
-                  <span>{t("owedByMe", lang)}</span>
-                  <span className="text-debt text-[11px] font-bold">{t("viewArrow", lang)}</span>
+                <div className="flex items-center justify-between gap-1 mb-2">
+                  <span className="pill-badge bg-gradient-to-r from-rose-500/15 to-pink-500/15 text-rose-300 border border-rose-500/25 text-[11px]">
+                    <Users className="size-3 text-rose-400" />
+                    <span>{t("owedByMe", lang)}</span>
+                  </span>
+                  <span className="text-rose-400 text-[11px] font-bold">{t("viewArrow", lang)}</span>
                 </div>
-                <p className="mt-2 text-xl font-bold tabular-nums text-debt">
+                <p className="mt-1 text-xl sm:text-2xl font-black tabular-nums text-rose-400">
                   {formatEuro(ledger.payable, currency, lang)}
                 </p>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="grid gap-2 pt-2">
+            <div className="grid gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "purchase" })}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-base font-semibold text-accent-fg shadow-xs transition hover:opacity-90"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 px-4 text-base font-bold text-white shadow-lg shadow-rose-600/20 transition-all hover:opacity-95 hover:shadow-xl active:scale-[0.99]"
               >
-                <ShoppingBag className="size-4" aria-hidden />
-                {t("btnPurchase", lang)}
+                <ShoppingBag className="size-5" aria-hidden />
+                <span>{t("btnPurchase", lang)}</span>
               </button>
-              <div className="grid grid-cols-2 gap-2">
-                <GhostButton onClick={() => setSheet({ kind: "income" })}>
+              <div className="grid grid-cols-2 gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setSheet({ kind: "income" })}
+                  className="bento-card-interactive flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-emerald-600/20 hover:opacity-95"
+                >
                   <Plus className="size-4" aria-hidden />
-                  {t("btnIncome", lang)}
-                </GhostButton>
-                <GhostButton onClick={() => setSheet({ kind: "transfer" })}>
+                  <span>{t("btnIncome", lang)}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSheet({ kind: "transfer" })}
+                  className="bento-card-interactive flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 px-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-cyan-600/20 hover:opacity-95"
+                >
                   <ArrowLeftRight className="size-4" aria-hidden />
-                  {t("btnTransfer", lang)}
-                </GhostButton>
+                  <span>{t("btnTransfer", lang)}</span>
+                </button>
               </div>
             </div>
           </section>
 
           <section className="space-y-6">
             {/* Monthly Flow Card */}
-            <div className="rounded-2xl border border-line bg-surface p-5 shadow-xs">
+            <div className="bento-card rounded-3xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-base font-bold text-ink">
-                  {t("monthlyFlowTitle", lang)} ({formatMonthLocalized(undefined, lang)})
-                </h2>
+                <div className="flex items-center gap-2">
+                  <span className="pill-badge bg-gradient-to-r from-amber-500/15 to-yellow-500/15 text-amber-300 border border-amber-500/25">
+                    <TrendingUp className="size-3.5 text-amber-400" />
+                    <span>{t("monthlyFlowTitle", lang)}</span>
+                  </span>
+                  <span className="text-xs text-muted/80">({formatMonthLocalized(undefined, lang)})</span>
+                </div>
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                  className={`pill-badge border ${
                     flow.netFlow >= 0
-                      ? "bg-accent/15 text-accent"
-                      : "bg-debt/15 text-debt"
+                      ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                      : "bg-rose-500/15 text-rose-300 border-rose-500/30"
                   }`}
                 >
                   {flow.netFlow >= 0 ? `+ ${formatEuro(flow.netFlow, currency, lang)}` : `− ${formatEuro(Math.abs(flow.netFlow), currency, lang)}`}
-                  <span className="font-medium text-[11px]">
+                  <span className="font-medium text-[10px] opacity-80">
                     ({flow.netFlow >= 0 ? t("monthlySurplus", lang) : t("monthlyDeficit", lang)})
                   </span>
                 </span>
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4">
-                <div className="rounded-xl bg-surface-alt/40 p-3">
-                  <p className="text-xs text-muted">{t("monthlyPurchases", lang)}</p>
-                  <p className="mt-1 text-xl sm:text-2xl font-bold tabular-nums text-debt">
+              <div className="mt-5 grid grid-cols-2 gap-3.5 sm:gap-4">
+                <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-4">
+                  <span className="pill-badge bg-rose-500/15 text-rose-300 border border-rose-500/25 text-[11px] mb-1">
+                    <ShoppingBag className="size-3 text-rose-400" />
+                    <span>{t("monthlyPurchases", lang)}</span>
+                  </span>
+                  <p className="mt-1 text-xl sm:text-2xl font-black tabular-nums text-rose-400">
                     {formatEuro(flow.spent, currency, lang)}
                   </p>
                 </div>
-                <div className="rounded-xl bg-surface-alt/40 p-3">
-                  <p className="text-xs text-muted">{t("monthlyIncome", lang)}</p>
-                  <p className="mt-1 text-xl sm:text-2xl font-bold tabular-nums text-accent">
+                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4">
+                  <span className="pill-badge bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] mb-1">
+                    <Plus className="size-3 text-emerald-400" />
+                    <span>{t("monthlyIncome", lang)}</span>
+                  </span>
+                  <p className="mt-1 text-xl sm:text-2xl font-black tabular-nums text-emerald-400">
                     {formatEuro(flow.earned, currency, lang)}
                   </p>
                 </div>
@@ -1037,24 +1075,25 @@ function Ledger() {
 
               {/* Category Spending Breakdown for current month */}
               {categoryStats.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-line/60">
-                  <p className="text-xs font-bold text-ink mb-2.5">
-                    {t("categoryBreakdownTitle", lang)}
+                <div className="mt-5 pt-4 border-t border-white/10">
+                  <p className="text-xs font-bold text-ink mb-3 flex items-center gap-1.5">
+                    <PieChart className="size-3.5 text-cyan-400" />
+                    <span>{t("categoryBreakdownTitle", lang)}</span>
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {categoryStats.slice(0, 4).map((cat) => (
-                      <div key={cat.category} className="space-y-1">
+                      <div key={cat.category} className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-medium text-ink flex items-center gap-1.5">
+                          <span className="font-semibold text-ink flex items-center gap-1.5">
                             <span>{getCategoryLabel(cat.category, lang)}</span>
                           </span>
-                          <span className="tabular-nums font-bold text-muted">
+                          <span className="tabular-nums font-bold text-muted/90">
                             {formatEuro(cat.cents, currency, lang)} ({cat.percentage}%)
                           </span>
                         </div>
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-alt">
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-surface-alt/70 border border-white/5">
                           <div
-                            className="h-full bg-accent transition-all duration-300"
+                            className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300 shadow-xs"
                             style={{ width: `${cat.percentage}%` }}
                           />
                         </div>
@@ -1064,32 +1103,35 @@ function Ledger() {
                 </div>
               )}
 
-              <p className="mt-3 text-xs text-muted">{t("monthlyFlowNote", lang)}</p>
+              <p className="mt-4 text-xs text-muted/70">{t("monthlyFlowNote", lang)}</p>
             </div>
 
             {/* Quick Recent Activity preview */}
-            <div className="rounded-2xl border border-line bg-surface p-5 shadow-xs">
-              <div className="flex items-center justify-between border-b border-line pb-3">
-                <h2 className="text-base font-bold text-ink flex items-center gap-2">
-                  <BookOpen className="size-4 text-accent" />
-                  {t("recentActivityTitle", lang)}
-                </h2>
+            <div className="bento-card rounded-3xl p-5 sm:p-6 shadow-xl">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3.5">
+                <div className="flex items-center gap-2">
+                  <span className="pill-badge bg-gradient-to-r from-blue-500/15 to-cyan-500/15 text-cyan-300 border border-cyan-500/25">
+                    <BookOpen className="size-3.5 text-cyan-400" />
+                    <span>{t("recentActivityTitle", lang)}</span>
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={() => setActiveTab("ledger")}
-                  className="text-xs font-semibold text-accent hover:underline"
+                  className="pill-badge bg-surface-alt/70 text-cyan-300 border border-white/10 hover:border-cyan-500/30 hover:bg-surface-alt transition-all"
                 >
-                  {t("viewAllCount", lang)} ({history.length}) {lang === "ar" ? "←" : "→"}
+                  <span>{t("viewAllCount", lang)} ({history.length})</span>
+                  <span>{lang === "ar" ? "←" : "→"}</span>
                 </button>
               </div>
               {history.length === 0 ? (
-                <p className="mt-4 text-xs text-muted leading-relaxed">
+                <p className="mt-4 text-xs text-muted/80 leading-relaxed py-4 text-center">
                   {t("emptyRecentActivity", lang)}
                 </p>
               ) : (
-                <ol className="mt-2 divide-y divide-line">
+                <ol className="mt-3 divide-y divide-white/5">
                   {history.slice(0, 5).map((tx) => (
-                    <li key={tx.id}>
+                    <li key={tx.id} className="py-1">
                       <HistoryRow
                         tx={tx}
                         confirming={pendingDelete === tx.id}
@@ -1112,61 +1154,64 @@ function Ledger() {
 
       {/* TAB 2: DEDICATED LEDGER / HISTORY (WITH SEARCH, FILTER & SORT) */}
       {activeTab === "ledger" && (
-        <div className="rounded-2xl border border-line bg-surface p-5 sm:p-6 shadow-xs space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
+        <div className="bento-card rounded-3xl p-5 sm:p-7 shadow-2xl space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
             <div>
-              <h2 className="text-xl font-bold text-ink flex items-center gap-2">
-                <BookOpen className="size-5 text-accent" />
-                {t("tabLedger", lang)}
-              </h2>
-              <p className="text-xs text-muted mt-1">
-                {t("ledgerFullStatement", lang)} ({history.length})
+              <div className="flex items-center gap-2.5">
+                <span className="pill-badge bg-gradient-to-r from-violet-500/15 to-purple-500/15 text-violet-300 border border-violet-500/30">
+                  <BookOpen className="size-4 text-violet-400" />
+                  <span className="text-sm">{t("tabLedger", lang)}</span>
+                </span>
+                <span className="text-xs text-muted/80">({history.length})</span>
+              </div>
+              <p className="text-xs text-muted/80 mt-1.5">
+                {t("ledgerFullStatement", lang)}
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "purchase" })}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-accent px-3 text-xs font-semibold text-accent-fg shadow-xs hover:opacity-90"
+                className="inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 px-3.5 text-xs font-bold text-white shadow-md shadow-rose-600/20 hover:opacity-95"
               >
                 <ShoppingBag className="size-3.5" />
-                {t("btnPurchase", lang)}
+                <span>{t("btnPurchase", lang)}</span>
               </button>
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "income" })}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-xs font-semibold text-ink hover:border-ink"
+                className="inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:opacity-95"
               >
-                <Plus className="size-3.5 text-accent" />
-                {t("btnIncome", lang)}
+                <Plus className="size-3.5" />
+                <span>{t("btnIncome", lang)}</span>
               </button>
             </div>
           </div>
 
           {deleteError && (
-            <div className="rounded-xl border border-debt/30 bg-debt/5 p-3 text-xs text-debt font-medium">
+            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-xs text-rose-300 font-semibold">
               {deleteError}
             </div>
           )}
 
           {/* Search, Filter & Sort Controls */}
           {history.length > 0 && (
-            <div className="space-y-3 rounded-2xl bg-surface-alt/40 p-3.5 border border-line">
+            <div className="space-y-3.5 rounded-2xl bg-surface-alt/40 p-4 border border-white/10">
               {/* Search input */}
               <div className="relative">
-                <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 size-4 text-muted rtl:right-3.5 ltr:left-3.5" />
+                <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 size-4 text-muted/70 rtl:right-3.5 ltr:left-3.5" />
                 <input
                   type="text"
                   value={ledgerSearch}
                   onChange={(e) => setLedgerSearch(e.target.value)}
                   placeholder={t("ledgerSearchPlaceholder", lang)}
-                  className="w-full rounded-xl border border-line bg-surface py-2.5 pr-10 pl-16 text-xs text-ink outline-none focus:border-accent rtl:pr-10 rtl:pl-16 ltr:pl-10 ltr:pr-16"
+                  className="w-full rounded-xl border border-white/10 bg-surface/80 py-2.5 pr-10 pl-16 text-xs text-ink outline-none focus:border-cyan-400 rtl:pr-10 rtl:pl-16 ltr:pl-10 ltr:pr-16"
                 />
                 {ledgerSearch && (
                   <button
                     type="button"
                     onClick={() => setLedgerSearch("")}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink text-xs font-semibold rtl:left-3 ltr:right-3"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 text-xs font-bold rtl:left-3 ltr:right-3"
                   >
                     {t("clearSearch", lang)}
                   </button>
@@ -1174,15 +1219,15 @@ function Ledger() {
               </div>
 
               {/* Filter Chips & Sort Select */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+              <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1">
                 <div className="flex flex-wrap items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => setLedgerFilter("all")}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "all"
-                        ? "bg-accent text-accent-fg"
-                        : "bg-surface text-muted hover:text-ink border border-line"
+                        ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm"
+                        : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
                     {t("filterAll", lang)} ({history.length})
@@ -1190,10 +1235,10 @@ function Ledger() {
                   <button
                     type="button"
                     onClick={() => setLedgerFilter("purchase")}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "purchase"
-                        ? "bg-accent text-accent-fg"
-                        : "bg-surface text-muted hover:text-ink border border-line"
+                        ? "bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-sm"
+                        : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
                     {t("filterPurchases", lang)}
@@ -1201,10 +1246,10 @@ function Ledger() {
                   <button
                     type="button"
                     onClick={() => setLedgerFilter("income")}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "income"
-                        ? "bg-accent text-accent-fg"
-                        : "bg-surface text-muted hover:text-ink border border-line"
+                        ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm"
+                        : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
                     {t("filterIncome", lang)}
@@ -1212,10 +1257,10 @@ function Ledger() {
                   <button
                     type="button"
                     onClick={() => setLedgerFilter("transfer")}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "transfer"
-                        ? "bg-accent text-accent-fg"
-                        : "bg-surface text-muted hover:text-ink border border-line"
+                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm"
+                        : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
                     {t("filterTransfers", lang)}
@@ -1223,10 +1268,10 @@ function Ledger() {
                   <button
                     type="button"
                     onClick={() => setLedgerFilter("debt")}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       ledgerFilter === "debt"
-                        ? "bg-accent text-accent-fg"
-                        : "bg-surface text-muted hover:text-ink border border-line"
+                        ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-sm"
+                        : "bg-surface-alt/60 text-muted hover:text-ink border border-white/5"
                     }`}
                   >
                     {t("filterDebts", lang)}
@@ -1238,7 +1283,7 @@ function Ledger() {
                   <select
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="rounded-lg border border-line bg-surface px-2 py-1 text-xs text-ink outline-none focus:border-accent"
+                    className="rounded-xl border border-white/10 bg-surface px-2.5 py-1.5 text-xs text-ink outline-none focus:border-cyan-400"
                     title={t("filterCategory", lang)}
                   >
                     <option value="all">{t("allCategories", lang)}</option>
@@ -1250,11 +1295,11 @@ function Ledger() {
                   </select>
 
                   <div className="flex items-center gap-1.5">
-                    <ArrowUpDown className="size-3.5 text-muted" />
+                    <ArrowUpDown className="size-3.5 text-cyan-400" />
                     <select
                       value={ledgerSort}
                       onChange={(e) => setLedgerSort(e.target.value as any)}
-                      className="rounded-lg border border-line bg-surface px-2 py-1 text-xs text-ink outline-none focus:border-accent"
+                      className="rounded-xl border border-white/10 bg-surface px-2.5 py-1.5 text-xs text-ink outline-none focus:border-cyan-400"
                     >
                       <option value="newest">{t("sortNewest", lang)}</option>
                       <option value="oldest">{t("sortOldest", lang)}</option>
@@ -1268,18 +1313,18 @@ function Ledger() {
 
           {history.length === 0 ? (
             <div className="py-12 text-center">
-              <BookOpen className="mx-auto size-12 text-muted/40" />
-              <p className="mt-3 text-sm font-semibold text-ink">{t("emptyLedgerTitle", lang)}</p>
-              <p className="mt-1 text-xs text-muted">
+              <BookOpen className="mx-auto size-12 text-muted/30" />
+              <p className="mt-3 text-sm font-bold text-ink">{t("emptyLedgerTitle", lang)}</p>
+              <p className="mt-1 text-xs text-muted/80">
                 {t("emptyLedgerDesc", lang)}
               </p>
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "purchase" })}
-                className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-accent px-4 text-xs font-semibold text-accent-fg"
+                className="mt-4 inline-flex h-9.5 items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 px-4 text-xs font-bold text-white shadow-md hover:opacity-90"
               >
                 <ShoppingBag className="size-3.5" />
-                {t("btnStartFirstTx", lang)}
+                <span>{t("btnStartFirstTx", lang)}</span>
               </button>
             </div>
           ) : filteredHistory.length === 0 ? (
@@ -1287,17 +1332,17 @@ function Ledger() {
               {t("noSearchResults", lang)}
             </div>
           ) : (
-            <ol className="divide-y divide-line">
+            <ol className="divide-y divide-white/5">
               {filteredHistory.map((tx, index) => {
                 const previous = filteredHistory[index - 1];
                 const showDay =
                   ledgerSort === "newest" &&
                   (!previous || formatDayLocalized(previous.at, lang) !== formatDayLocalized(tx.at, lang));
                 return (
-                  <li key={tx.id}>
+                  <li key={tx.id} className="py-1">
                     {showDay && (
-                      <div className="sticky top-0 z-10 bg-surface/95 py-2 backdrop-blur-xs">
-                        <span className="inline-block rounded-md bg-surface-alt px-2.5 py-1 text-xs font-bold text-muted">
+                      <div className="sticky top-0 z-10 bg-surface/95 py-2 backdrop-blur-md">
+                        <span className="pill-badge bg-surface-alt text-cyan-300 border border-white/10">
                           {formatDayLocalized(tx.at, lang)}
                         </span>
                       </div>
@@ -1320,16 +1365,16 @@ function Ledger() {
           )}
 
           {started && (
-            <div className="pt-4 border-t border-line flex flex-wrap items-center justify-between gap-2">
+            <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
               <button
                 type="button"
                 onClick={() => setSheet({ kind: "reset" })}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-accent transition"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-400 hover:text-rose-300 transition"
               >
                 <Trash2 className="size-3.5" />
-                {t("clearHistoryBtn", lang)}
+                <span>{t("clearHistoryBtn", lang)}</span>
               </button>
-              <p className="text-xs text-muted">
+              <p className="text-xs text-muted/70">
                 {t("localDataNotice", lang)}
               </p>
             </div>
@@ -1340,13 +1385,15 @@ function Ledger() {
       {/* TAB 3: DEDICATED RECEIVABLES & PAYABLES (DEBTS) */}
       {activeTab === "debts" && (
         <div className="space-y-6">
-          <div className="rounded-2xl border border-line bg-surface p-5 sm:p-6 shadow-xs">
-            <div className="border-b border-line pb-4">
-              <h2 className="text-xl font-bold text-ink flex items-center gap-2">
-                <Users className="size-5 text-accent" />
-                {t("debtsTitle", lang)}
-              </h2>
-              <p className="text-xs text-muted mt-1">
+          <div className="bento-card rounded-3xl p-5 sm:p-7 shadow-2xl">
+            <div className="border-b border-white/10 pb-4">
+              <div className="flex items-center gap-2.5">
+                <span className="pill-badge bg-gradient-to-r from-amber-500/15 to-rose-500/15 text-amber-300 border border-amber-500/30">
+                  <Users className="size-4 text-amber-400" />
+                  <span className="text-sm">{t("debtsTitle", lang)}</span>
+                </span>
+              </div>
+              <p className="text-xs text-muted/80 mt-1.5">
                 {t("debtsSubtitle", lang)}
               </p>
             </div>
@@ -1354,51 +1401,55 @@ function Ledger() {
             {/* Summary Cards */}
             <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Receivables Card */}
-              <div className="rounded-2xl border border-accent/30 bg-accent/5 p-4">
+              <div className="bento-card-interactive rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-4.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-accent">{t("totalReceivables", lang)}</span>
-                  <span className="rounded-full bg-accent/15 px-2 py-0.5 text-xs font-bold text-accent">
+                  <span className="pill-badge bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
+                    <span>{t("totalReceivables", lang)}</span>
+                  </span>
+                  <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs font-bold text-emerald-300 border border-emerald-500/20">
                     {ledger.peopleOweMe.length} {t("peopleCount", lang)}
                   </span>
                 </div>
-                <p className="mt-2 text-2xl font-bold tabular-nums text-accent">
+                <p className="mt-2.5 text-2xl font-black tabular-nums text-emerald-400">
                   {formatEuro(ledger.receivable, currency, lang)}
                 </p>
                 <button
                   type="button"
                   onClick={() => setSheet({ kind: "receivable" })}
-                  className="mt-3 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-3 text-xs font-semibold text-accent-fg shadow-xs hover:opacity-90"
+                  className="mt-3.5 inline-flex h-9.5 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:opacity-95"
                 >
                   <Plus className="size-3.5" />
-                  {t("btnAddReceivable", lang)}
+                  <span>{t("btnAddReceivable", lang)}</span>
                 </button>
               </div>
 
               {/* Payables Card */}
-              <div className="rounded-2xl border border-debt/30 bg-debt/5 p-4">
+              <div className="bento-card-interactive rounded-2xl border border-rose-500/25 bg-rose-500/5 p-4.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-debt">{t("totalPayables", lang)}</span>
-                  <span className="rounded-full bg-debt/15 px-2 py-0.5 text-xs font-bold text-debt">
+                  <span className="pill-badge bg-rose-500/15 text-rose-300 border border-rose-500/25">
+                    <span>{t("totalPayables", lang)}</span>
+                  </span>
+                  <span className="rounded-full bg-rose-500/15 px-2.5 py-0.5 text-xs font-bold text-rose-300 border border-rose-500/20">
                     {ledger.iOwe.length} {t("partiesCount", lang)}
                   </span>
                 </div>
-                <p className="mt-2 text-2xl font-bold tabular-nums text-debt">
+                <p className="mt-2.5 text-2xl font-black tabular-nums text-rose-400">
                   {formatEuro(ledger.payable, currency, lang)}
                 </p>
                 <button
                   type="button"
                   onClick={() => setSheet({ kind: "payable" })}
-                  className="mt-3 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-debt/30 bg-surface px-3 text-xs font-semibold text-debt hover:bg-debt/10"
+                  className="mt-3.5 inline-flex h-9.5 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 px-3 text-xs font-bold text-white shadow-md shadow-rose-600/20 hover:opacity-95"
                 >
                   <Plus className="size-3.5" />
-                  {t("btnAddPayable", lang)}
+                  <span>{t("btnAddPayable", lang)}</span>
                 </button>
               </div>
             </div>
           </div>
 
           {/* People Owe Me List */}
-          <div className="rounded-2xl border border-line bg-surface p-5 sm:p-6 shadow-xs">
+          <div className="bento-card rounded-3xl p-5 sm:p-7 shadow-2xl">
             <PeopleBlock
               title={t("receivablesListTitle", lang)}
               empty={t("emptyReceivables", lang)}
@@ -1415,7 +1466,7 @@ function Ledger() {
           </div>
 
           {/* I Owe People List */}
-          <div className="rounded-2xl border border-line bg-surface p-5 sm:p-6 shadow-xs">
+          <div className="bento-card rounded-3xl p-5 sm:p-7 shadow-2xl">
             <PeopleBlock
               title={t("payablesListTitle", lang)}
               empty={t("emptyPayables", lang)}
@@ -1526,27 +1577,56 @@ function BalanceCard({
   label,
   cents,
   onCorrect,
+  theme = "emerald",
 }: {
   icon: ReactNode;
   label: string;
   cents: number;
   onCorrect: () => void;
+  theme?: "emerald" | "cyan";
 }) {
   const currency = useLedger((state) => state.currency);
   const lang = useLedger((state) => state.lang);
+  const isEmerald = theme === "emerald";
+
   return (
-    <div className="rounded-2xl border border-line bg-surface p-4 shadow-xs">
-      <div className="flex items-center gap-2 text-xs font-medium text-muted">
-        {icon}
-        <span>{label}</span>
+    <div className="bento-card-interactive rounded-3xl p-4.5 sm:p-5 flex flex-col justify-between">
+      <div>
+        <div className="flex items-center justify-between gap-1.5 mb-2">
+          <span
+            className={`pill-badge ${
+              isEmerald
+                ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/25"
+                : "bg-cyan-500/15 text-cyan-300 border border-cyan-500/25"
+            }`}
+          >
+            <span
+              className={`flex size-4 items-center justify-center rounded-full ${
+                isEmerald ? "bg-emerald-500/20 text-emerald-300" : "bg-cyan-500/20 text-cyan-300"
+              }`}
+            >
+              {icon}
+            </span>
+            <span>{label}</span>
+          </span>
+        </div>
+        <p
+          className={`mt-2 text-xl sm:text-2xl font-extrabold tabular-nums ${
+            isEmerald ? "text-emerald-400" : "text-cyan-400"
+          }`}
+        >
+          {formatEuro(cents, currency, lang)}
+        </p>
       </div>
-      <p className="mt-2 text-xl font-bold tabular-nums text-ink">{formatEuro(cents, currency, lang)}</p>
       <button
         type="button"
         onClick={onCorrect}
-        className="mt-3 text-xs font-semibold text-accent underline-offset-4 hover:underline"
+        className={`mt-3 inline-flex items-center gap-1 text-xs font-semibold underline-offset-4 hover:underline transition-colors ${
+          isEmerald ? "text-emerald-400/80 hover:text-emerald-300" : "text-cyan-400/80 hover:text-cyan-300"
+        }`}
       >
-        {t("correctBalance", lang)}
+        <Pencil className="size-3" />
+        <span>{t("correctBalance", lang)}</span>
       </button>
     </div>
   );
@@ -1563,7 +1643,7 @@ function GhostButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-3 text-xs sm:text-sm font-semibold text-ink transition-colors duration-150 hover:border-ink shadow-xs"
+      className="bento-card-interactive inline-flex h-12 items-center justify-center gap-2 rounded-2xl px-4 text-xs sm:text-sm font-bold text-ink hover:text-white shadow-md active:scale-[0.98] transition-all"
     >
       {children}
     </button>
@@ -1595,33 +1675,38 @@ function OpeningCard() {
 
   return (
     <form
-      className="mt-4 rounded-2xl border border-line bg-surface p-5 shadow-xs"
+      className="bento-card mt-4 rounded-3xl p-5 sm:p-6 shadow-xl border border-white/10"
       onSubmit={(event) => {
         event.preventDefault();
         save();
       }}
     >
-      <h2 className="text-base font-bold text-ink">{t("openingPromptTitle", lang)}</h2>
-      <p className="mt-1 text-xs text-muted leading-relaxed">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="pill-badge bg-gradient-to-r from-emerald-500/15 to-teal-500/15 text-emerald-300 border border-emerald-500/25">
+          <Wallet className="size-3.5 text-emerald-400" />
+          <span>{t("openingPromptTitle", lang)}</span>
+        </span>
+      </div>
+      <p className="mt-1 text-xs text-muted/80 leading-relaxed">
         {t("openingPromptDesc", lang)}
       </p>
       <div className="mt-4 grid gap-3">
         <Field label={formatPocketName("cash", lang)} value={cash} onChange={setCash} placeholder="0.00" />
         <Field label={formatPocketName("bank", lang)} value={bank} onChange={setBank} placeholder="0.00" />
       </div>
-      {error && <p className="mt-3 text-xs text-debt font-medium">{error}</p>}
-      <div className="mt-4 grid gap-2">
+      {error && <p className="mt-3 text-xs text-rose-400 font-semibold">{error}</p>}
+      <div className="mt-4 grid gap-2.5">
         <button
           type="submit"
           disabled={submitting}
-          className="h-11 rounded-xl bg-accent text-sm font-semibold text-accent-fg shadow-xs transition-opacity duration-150 hover:opacity-90 disabled:opacity-50"
+          className="h-11 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-sm font-bold text-white shadow-md shadow-emerald-600/20 transition-all hover:opacity-95 disabled:opacity-50"
         >
           {t("btnSetBalances", lang)}
         </button>
         <button
           type="button"
           onClick={dismissStart}
-          className="h-10 text-xs text-muted hover:text-ink font-medium"
+          className="h-10 text-xs text-muted hover:text-ink font-semibold rounded-xl hover:bg-surface-alt/40 transition-all"
         >
           {t("btnStartFromZero", lang)}
         </button>
@@ -1649,48 +1734,85 @@ function PeopleBlock({
 }) {
   const currency = useLedger((state) => state.currency);
   const lang = useLedger((state) => state.lang);
+  const isAsset = tone === "asset";
+
   return (
     <div>
-      <h3 className="text-base font-bold text-ink mb-3">{title}</h3>
+      <div className="flex items-center justify-between mb-4">
+        <span
+          className={`pill-badge ${
+            isAsset
+              ? "bg-teal-500/15 text-teal-300 border border-teal-500/25"
+              : "bg-rose-500/15 text-rose-300 border border-rose-500/25"
+          }`}
+        >
+          <span className="flex size-4 items-center justify-center rounded-full bg-white/20">
+            <Users className="size-3" />
+          </span>
+          <span className="text-sm">{title}</span>
+        </span>
+        <span className="text-xs font-bold text-muted">
+          {people.length} {isAsset ? t("peopleCount", lang) : t("partiesCount", lang)}
+        </span>
+      </div>
+
       {people.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-line p-6 text-center text-xs text-muted">
+        <div className="rounded-2xl border border-dashed border-white/10 p-8 text-center text-xs text-muted/80 bg-surface-alt/20">
           {empty}
         </div>
       ) : (
-        <ul className="divide-y divide-line">
-          {people.map((person) => (
-            <li
-              key={person.key}
-              className="flex flex-col gap-3 py-3.5 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div>
-                <p className="font-semibold text-ink text-sm sm:text-base">{person.name}</p>
-                <p
-                  className={`mt-0.5 text-base font-bold tabular-nums ${
-                    tone === "asset" ? "text-accent" : "text-debt"
-                  }`}
-                >
-                  {formatEuro(person.cents, currency, lang)}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => onPrimary(person)}
-                  className="h-9 rounded-lg bg-accent px-3 text-xs font-semibold text-accent-fg shadow-xs hover:opacity-90"
-                >
-                  {primaryLabel}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onWaive(person)}
-                  className="h-9 rounded-lg border border-line bg-surface px-3 text-xs font-medium text-muted hover:text-ink hover:border-ink"
-                >
-                  {tone === "asset" ? t("btnWaiveReceivable", lang) : t("btnWaivePayable", lang)}
-                </button>
-              </div>
-            </li>
-          ))}
+        <ul className="space-y-2.5">
+          {people.map((person) => {
+            const initial = person.name.trim().charAt(0) || "👤";
+            return (
+              <li
+                key={person.key}
+                className="bento-card-interactive flex flex-col gap-3 p-4 rounded-2xl sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`flex size-10 shrink-0 items-center justify-center rounded-xl font-bold text-sm shadow-xs ${
+                      isAsset
+                        ? "bg-gradient-to-tr from-teal-500/20 to-emerald-500/20 text-teal-300 border border-teal-500/30"
+                        : "bg-gradient-to-tr from-rose-500/20 to-pink-500/20 text-rose-300 border border-rose-500/30"
+                    }`}
+                  >
+                    {initial}
+                  </div>
+                  <div>
+                    <p className="font-bold text-ink text-sm sm:text-base">{person.name}</p>
+                    <p
+                      className={`mt-0.5 text-base font-extrabold tabular-nums ${
+                        isAsset ? "text-teal-400" : "text-rose-400"
+                      }`}
+                    >
+                      {formatEuro(person.cents, currency, lang)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 self-end sm:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => onPrimary(person)}
+                    className={`h-9 rounded-xl px-4 text-xs font-bold text-white shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all ${
+                      isAsset
+                        ? "bg-gradient-to-r from-teal-500 to-emerald-600 shadow-teal-500/20"
+                        : "bg-gradient-to-r from-rose-500 to-pink-600 shadow-rose-500/20"
+                    }`}
+                  >
+                    {primaryLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onWaive(person)}
+                    className="h-9 rounded-xl border border-white/10 bg-surface-alt/40 px-3 text-xs font-semibold text-muted hover:text-ink hover:border-white/20 hover:bg-surface-alt/70 transition-all"
+                  >
+                    {isAsset ? t("btnWaiveReceivable", lang) : t("btnWaivePayable", lang)}
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
@@ -1715,71 +1837,92 @@ function HistoryRow({
   const currency = useLedger((state) => state.currency);
   const lang = useLedger((state) => state.lang);
   const view = describeLocalized(tx, lang);
-  const sign = view.tone === "out" || view.tone === "debt" ? "−" : view.tone === "neutral" ? "" : "+";
-  const color =
-    view.tone === "out" || view.tone === "debt"
-      ? "text-debt"
-      : view.tone === "neutral"
-        ? "text-ink"
-        : "text-accent";
+  const isOut = view.tone === "out" || view.tone === "debt";
+  const isNeutral = view.tone === "neutral";
+  const sign = isOut ? "−" : isNeutral ? "" : "+";
+  
+  const iconBg = isOut
+    ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+    : isNeutral
+      ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
+      : "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30";
+
+  const color = isOut
+    ? "text-rose-400"
+    : isNeutral
+      ? "text-ink"
+      : "text-emerald-400";
 
   return (
-    <div className="flex items-start justify-between gap-3 py-3.5">
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <p className="truncate font-semibold text-ink text-sm sm:text-base">{view.title}</p>
-          {tx.category && (
-            <span className="inline-flex items-center gap-1 rounded-md bg-surface-alt px-1.5 py-0.5 text-[11px] font-semibold text-muted">
-              {getCategoryLabel(tx.category, lang)}
-            </span>
+    <div className="flex items-start justify-between gap-3 py-3 px-2 rounded-2xl hover:bg-surface-alt/40 transition-colors">
+      <div className="flex items-start gap-3 min-w-0">
+        <div className={`mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl shadow-xs ${iconBg}`}>
+          {tx.kind === "purchase" ? (
+            <ShoppingBag className="size-4" />
+          ) : tx.kind === "income" ? (
+            <Plus className="size-4" />
+          ) : tx.kind === "transfer" ? (
+            <ArrowLeftRight className="size-4" />
+          ) : (
+            <Users className="size-4" />
           )}
         </div>
-        <p className="mt-0.5 text-xs text-muted">
-          {formatDayLocalized(tx.at, lang)} {formatTimeLocalized(tx.at, lang)} · {view.detail}
-        </p>
-        {confirming ? (
-          <div className="mt-2 flex gap-2">
-            <button
-              type="button"
-              onClick={onConfirm}
-              className="h-8 rounded-lg bg-debt px-3 text-xs font-semibold text-accent-fg shadow-xs"
-            >
-              {t("btnConfirmDelete", lang)}
-            </button>
-            <button
-              type="button"
-              onClick={onCancel}
-              className="h-8 rounded-lg border border-line px-3 text-xs text-muted"
-            >
-              {t("btnCancel", lang)}
-            </button>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <p className="truncate font-bold text-ink text-sm sm:text-base">{view.title}</p>
+            {tx.category && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-surface-alt px-2 py-0.5 text-[11px] font-semibold text-muted border border-line">
+                {getCategoryLabel(tx.category, lang)}
+              </span>
+            )}
           </div>
-        ) : (
-          <div className="mt-1.5 flex items-center gap-1.5">
-            {onEdit && (
+          <p className="mt-0.5 text-xs text-muted/80">
+            {formatDayLocalized(tx.at, lang)} {formatTimeLocalized(tx.at, lang)} · {view.detail}
+          </p>
+          {confirming ? (
+            <div className="mt-2 flex gap-2">
               <button
                 type="button"
-                onClick={onEdit}
-                className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-xs text-muted hover:text-accent hover:bg-accent/10 transition"
-                aria-label={`${t("btnEdit", lang)} ${view.title}`}
+                onClick={onConfirm}
+                className="h-8 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 px-3.5 text-xs font-bold text-white shadow-md hover:opacity-90"
               >
-                <Pencil className="size-3" aria-hidden />
-                {t("btnEdit", lang)}
+                {t("btnConfirmDelete", lang)}
               </button>
-            )}
-            <button
-              type="button"
-              onClick={onAsk}
-              className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-xs text-muted hover:text-debt hover:bg-debt/5 transition"
-              aria-label={`${t("btnDelete", lang)} ${view.title}`}
-            >
-              <Trash2 className="size-3" aria-hidden />
-              {t("btnDelete", lang)}
-            </button>
-          </div>
-        )}
+              <button
+                type="button"
+                onClick={onCancel}
+                className="h-8 rounded-xl border border-line px-3 text-xs text-muted hover:text-ink hover:bg-surface-alt"
+              >
+                {t("btnCancel", lang)}
+              </button>
+            </div>
+          ) : (
+            <div className="mt-1.5 flex items-center gap-1.5">
+              {onEdit && (
+                <button
+                  type="button"
+                  onClick={onEdit}
+                  className="inline-flex h-7 items-center gap-1 rounded-lg px-2.5 text-xs text-muted hover:text-cyan-400 hover:bg-cyan-500/10 transition border border-transparent hover:border-cyan-500/20"
+                  aria-label={`${t("btnEdit", lang)} ${view.title}`}
+                >
+                  <Pencil className="size-3" aria-hidden />
+                  <span>{t("btnEdit", lang)}</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onAsk}
+                className="inline-flex h-7 items-center gap-1 rounded-lg px-2.5 text-xs text-muted hover:text-rose-400 hover:bg-rose-500/10 transition border border-transparent hover:border-rose-500/20"
+                aria-label={`${t("btnDelete", lang)} ${view.title}`}
+              >
+                <Trash2 className="size-3" aria-hidden />
+                <span>{t("btnDelete", lang)}</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-      <p className={`shrink-0 tabular-nums font-bold text-sm sm:text-base ${color}`}>
+      <p className={`shrink-0 tabular-nums font-extrabold text-sm sm:text-base ${color}`}>
         {sign}
         {formatEuro(view.cents, currency, lang)}
       </p>
@@ -1819,17 +1962,19 @@ function SheetDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="sheet-panel safe-pad relative z-10 max-h-[85vh] w-full overflow-y-auto rounded-t-2xl border border-line bg-surface p-5 sm:max-w-md sm:rounded-2xl shadow-xl"
+        className="sheet-panel safe-pad relative z-10 max-h-[85vh] w-full overflow-y-auto rounded-t-3xl border border-white/10 bg-slate-900/95 backdrop-blur-2xl p-5 sm:p-6 sm:max-w-md sm:rounded-3xl shadow-2xl"
       >
-        <div className="flex items-start justify-between gap-3 border-b border-line pb-3">
-          <h2 id={titleId} className="text-base font-bold text-ink">
-            {title}
-          </h2>
+        <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3.5">
+          <span className="pill-badge bg-gradient-to-r from-cyan-500/15 to-blue-500/15 text-cyan-300 border border-cyan-500/25">
+            <h2 id={titleId} className="text-sm sm:text-base font-bold">
+              {title}
+            </h2>
+          </span>
           <button
             type="button"
             onClick={onClose}
             aria-label={t("closeWindowLabel", lang)}
-            className="inline-flex size-9 items-center justify-center rounded-lg text-muted hover:text-ink hover:bg-surface-alt"
+            className="inline-flex size-9 items-center justify-center rounded-xl text-muted/70 hover:text-ink hover:bg-surface-alt/70 border border-white/5 transition-all"
           >
             <X className="size-4" aria-hidden />
           </button>
