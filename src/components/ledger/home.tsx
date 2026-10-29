@@ -10,6 +10,9 @@ import {
   Lock,
   LogOut,
   Smartphone,
+  Tablet,
+  Laptop,
+  Download,
   Wifi,
   WifiOff,
   ShieldCheck,
@@ -111,34 +114,27 @@ function isRunningStandalone(): boolean {
 
 function usePwa() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [isInstallable, setIsInstallable] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [isOnline, setIsOnline] = useState(
     typeof navigator !== "undefined" ? navigator.onLine : true
   );
 
   useEffect(() => {
-    // If running inside Google Play TWA, installed PWA, or standalone app, never show install button
-    if (isRunningStandalone()) {
-      setIsInstallable(false);
-      return;
-    }
+    setIsStandalone(isRunningStandalone());
 
     const handleBeforeInstall = (e: Event) => {
-      // Re-verify that user is not in standalone / Google Play installed app
-      if (isRunningStandalone()) {
-        setIsInstallable(false);
-        return;
-      }
+      if (isRunningStandalone()) return;
       e.preventDefault();
       setDeferredPrompt(e);
-      setIsInstallable(true);
     };
 
     const handleAppInstalled = () => {
-      setIsInstallable(false);
+      setIsStandalone(true);
       setDeferredPrompt(null);
+      setShowInstallGuide(false);
       try {
-        localStorage.setItem("khazinti_pwa_installed", "true");
+        localStorage.setItem("mymouny_pwa_installed", "true");
       } catch {}
     };
 
@@ -150,11 +146,11 @@ function usePwa() {
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    // Listen to changes in display-mode (e.g. if transitioned to standalone)
     const mediaQuery = window.matchMedia("(display-mode: standalone)");
     const handleMediaChange = (e: MediaQueryListEvent) => {
       if (e.matches) {
-        setIsInstallable(false);
+        setIsStandalone(true);
+        setShowInstallGuide(false);
       }
     };
     if (mediaQuery.addEventListener) {
@@ -173,19 +169,238 @@ function usePwa() {
   }, []);
 
   const installApp = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") {
-      setIsInstallable(false);
-      setDeferredPrompt(null);
+    if (deferredPrompt) {
       try {
-        localStorage.setItem("khazinti_pwa_installed", "true");
-      } catch {}
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === "accepted") {
+          setIsStandalone(true);
+          setDeferredPrompt(null);
+          setShowInstallGuide(false);
+          try {
+            localStorage.setItem("mymouny_pwa_installed", "true");
+          } catch {}
+          return;
+        }
+      } catch {
+        setShowInstallGuide(true);
+        return;
+      }
     }
+    setShowInstallGuide(true);
   };
 
-  return { isInstallable, installApp, isOnline };
+  return {
+    isInstallable: !isStandalone,
+    installApp,
+    isOnline,
+    showInstallGuide,
+    setShowInstallGuide,
+  };
+}
+
+function InstallGuideModal({ onClose }: { onClose: () => void }) {
+  const lang = useLedger((s) => s.lang);
+  const [deviceTab, setDeviceTab] = useState<"android" | "ios" | "desktop">(() => {
+    if (typeof navigator === "undefined") return "android";
+    const ua = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(ua)) return "ios";
+    if (/windows|macintosh|linux/.test(ua) && !/android/.test(ua)) return "desktop";
+    return "android";
+  });
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+      <div className="w-full max-w-md rounded-2xl border border-line bg-surface p-5 shadow-xl sm:p-6 text-ink animate-in fade-in zoom-in-95 duration-150">
+        <div className="flex items-center justify-between pb-3 border-b border-line">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-accent/15 text-accent">
+              <Download className="size-5" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-ink leading-tight">
+                {lang === "ar"
+                  ? "تثبيت My Mouny كـ تطبيق"
+                  : lang === "el"
+                  ? "Εγκατάσταση My Mouny"
+                  : "Install My Mouny as an App"}
+              </h2>
+              <p className="text-xs text-muted">
+                {lang === "ar"
+                  ? "يعمل كـ تطبيق أصلي مستقل وبدون إنترنت"
+                  : lang === "el"
+                  ? "Λειτουργεί αυτόνομα και εκτός σύνδεσης"
+                  : "Runs standalone and 100% offline"}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1.5 text-muted hover:bg-surface-alt hover:text-ink transition cursor-pointer"
+            aria-label="Close"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+
+        {/* Device selector tabs */}
+        <div className="mt-4 flex rounded-xl bg-surface-alt/70 p-1 text-xs font-semibold">
+          <button
+            type="button"
+            onClick={() => setDeviceTab("android")}
+            className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 transition cursor-pointer ${
+              deviceTab === "android"
+                ? "bg-surface text-ink shadow-xs"
+                : "text-muted hover:text-ink"
+            }`}
+          >
+            <Smartphone className="size-3.5" />
+            <span>{lang === "ar" ? "أندرويد / تابلت" : "Android"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setDeviceTab("ios")}
+            className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 transition cursor-pointer ${
+              deviceTab === "ios"
+                ? "bg-surface text-ink shadow-xs"
+                : "text-muted hover:text-ink"
+            }`}
+          >
+            <Tablet className="size-3.5" />
+            <span>{lang === "ar" ? "آيفون / آيباد" : "iPhone / iPad"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setDeviceTab("desktop")}
+            className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 transition cursor-pointer ${
+              deviceTab === "desktop"
+                ? "bg-surface text-ink shadow-xs"
+                : "text-muted hover:text-ink"
+            }`}
+          >
+            <Laptop className="size-3.5" />
+            <span>{lang === "ar" ? "كمبيوتر / لابتوب" : "Laptop / PC"}</span>
+          </button>
+        </div>
+
+        {/* Tab contents */}
+        <div className="mt-4 rounded-xl border border-line bg-surface-alt/30 p-4 text-xs leading-relaxed">
+          {deviceTab === "android" && (
+            <div className="space-y-3">
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  1
+                </span>
+                <p>
+                  {lang === "ar"
+                    ? "افتح المتصفح (Chrome أو Edge أو Samsung Internet) على صفحة التطبيق."
+                    : "Open your browser on the app page."}
+                </p>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  2
+                </span>
+                <p>
+                  {lang === "ar"
+                    ? "اضغط على زر القائمة (الثلاث نقاط ⋮) في أعلى أو أسفل المتصفح."
+                    : "Tap the browser menu (three dots ⋮) at the top or bottom."}
+                </p>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  3
+                </span>
+                <p className="font-semibold text-accent">
+                  {lang === "ar"
+                    ? "اختر «تثبيت التطبيق» (Install app) أو «إضافة إلى الشاشة الرئيسية» (Add to Home screen)."
+                    : "Select 'Install app' or 'Add to Home screen'."}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {deviceTab === "ios" && (
+            <div className="space-y-3">
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  1
+                </span>
+                <p>
+                  {lang === "ar"
+                    ? "تأكد من فتح الرابط داخل متصفح Safari على الآيفون أو الآيباد."
+                    : "Make sure you open the link inside Safari on iPhone or iPad."}
+                </p>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  2
+                </span>
+                <p>
+                  {lang === "ar"
+                    ? "اضغط على زر «مشاركة» (Share) أسفل الشاشة (أيقونة المربع الذي يخرج منه سهم للأعلى)."
+                    : "Tap the 'Share' icon at the bottom of the screen (square with arrow up)."}
+                </p>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  3
+                </span>
+                <p className="font-semibold text-accent">
+                  {lang === "ar"
+                    ? "مرر لأسفل واختر «إضافة إلى الشاشة الرئيسية» (Add to Home Screen) ثم اضغط «إضافة»."
+                    : "Scroll down and tap 'Add to Home Screen', then tap 'Add'."}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {deviceTab === "desktop" && (
+            <div className="space-y-3">
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  1
+                </span>
+                <p>
+                  {lang === "ar"
+                    ? "في متصفح Chrome أو Edge، انظر إلى شريط العنوان (Address Bar) بالأعلى بجانب الرابط."
+                    : "In Chrome or Edge, look at the address bar near the top right."}
+                </p>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  2
+                </span>
+                <p className="font-semibold text-accent">
+                  {lang === "ar"
+                    ? "ستجد أيقونة تثبيت صغيرة على شكل كمبيوتر وسهم لأسفل أو زر «تثبيت My Mouny»."
+                    : "Click the small install icon (computer with down arrow) or 'Install My Mouny'."}
+                </p>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-accent-fg">
+                  3
+                </span>
+                <p>
+                  {lang === "ar"
+                    ? "أو من قائمة المتصفح (⋮) اختر «حفظ ومشاركة» -> «تثبيت My Mouny»، وسيفتح التطبيق فوراً كبرنامج مستقل على سطح المكتب!"
+                    : "Or from browser menu (⋮) choose 'Save and share' -> 'Install My Mouny' to launch as a standalone desktop app!"}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-4 w-full h-10 rounded-xl bg-accent text-xs font-bold text-accent-fg hover:opacity-95 transition cursor-pointer"
+        >
+          {lang === "ar" ? "فهمت، حسناً" : lang === "el" ? "Εντάξει" : "Got it, Thanks"}
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export function LedgerPage() {
@@ -358,7 +573,10 @@ function Ledger() {
   // Android / browser back button: 1 single step back closes set PIN modal (returns to main screen!)
   useModalBackHandler(showSetPinModal, () => setShowSetPinModal(false));
 
-  const { isInstallable, installApp, isOnline } = usePwa();
+  const { isInstallable, installApp, isOnline, showInstallGuide, setShowInstallGuide } = usePwa();
+
+  // Android / browser back button: 1 single step back closes install guide modal
+  useModalBackHandler(showInstallGuide, () => setShowInstallGuide(false));
 
   const ledger = derive(txs);
   const flow = monthFlow(txs);
@@ -1209,6 +1427,8 @@ function Ledger() {
       {showBackupModal && <BackupModal onClose={() => setShowBackupModal(false)} />}
 
       {showSetPinModal && <SetPinModal onClose={() => setShowSetPinModal(false)} />}
+
+      {showInstallGuide && <InstallGuideModal onClose={() => setShowInstallGuide(false)} />}
 
       {sheet && (
         <SheetDialog title={sheetTitle(sheet, lang)} onClose={() => setSheet(null)}>
