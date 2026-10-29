@@ -5,8 +5,8 @@ import { execSync } from "node:child_process";
 const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
-const REPO_NAME = "Zaker-MB";
-const REPO_BASE = "/Zaker-MB/";
+const REPO_NAME = "My-Mouny";
+const REPO_BASE = "/My-Mouny/";
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
 
@@ -156,7 +156,7 @@ if (actualCss && !html.includes(actualCss)) {
   const cssLinks = `
   <link rel="stylesheet" href="${REPO_BASE}assets/${actualCss}" data-precedence="default" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" data-precedence="default" />
-  <meta name="theme-color" content="#0284c7" />
+  <meta name="theme-color" content="#0d1520" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -199,21 +199,8 @@ if (!html.includes('navigator.serviceWorker.register')) {
   html = html.replace('</head>', immediateSwScript);
 }
 
-// Ensure client bundle scripts and TanStack stream are present in <body>
-if (actualJs && !html.includes('<script type="module"')) {
-  const hydrationBody = `
-<!--$--><!--$--><main class="mx-auto w-full max-w-5xl px-4 py-5 sm:px-6 sm:py-8 animate-pulse"><div class="mb-5 flex items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-4"><div class="flex items-center gap-3"><div class="size-10 rounded-xl bg-line/60"></div><div><div class="h-4 w-28 bg-line/80 rounded mb-1.5"></div><div class="h-3 w-48 bg-line/50 rounded"></div></div></div><div class="h-8 w-24 bg-line/60 rounded-xl"></div></div><div class="mb-6 h-12 rounded-2xl border border-line bg-surface p-1.5 flex gap-2"><div class="h-full flex-1 bg-accent/20 rounded-xl"></div><div class="h-full flex-1 bg-line/30 rounded-xl"></div><div class="h-full flex-1 bg-line/30 rounded-xl"></div></div><div class="rounded-2xl border border-line bg-surface p-5 mb-4"><div class="h-3 w-32 bg-line/60 rounded mb-2"></div><div class="h-10 w-44 bg-line/80 rounded mb-2"></div><div class="h-3 w-40 bg-line/50 rounded"></div></div><div class="grid grid-cols-2 gap-3 mb-4"><div class="h-28 rounded-2xl border border-line bg-surface p-4"></div><div class="h-28 rounded-2xl border border-line bg-surface p-4"></div></div></main><!--/$--><!--/$-->
-<script data-tsr-stream-part="">(self.$R=self.$R||{})["tsr"]=[];self.$_TSR={h(){this.hydrated=!0,this.c()},e(){this.streamEnded=!0,this.c()},c(){this.hydrated&&this.streamEnded&&(delete self.$_TSR,delete self.$R.tsr)},p(e){this.initialized?e():this.buffer.push(e)},buffer:[]};$_TSR.router=($R=>$R[0]={manifest:$R[1]={routes:$R[2]={__root__:$R[3]={preloads:$R[4]=["${REPO_BASE}assets/${actualJs}"],scripts:$R[5]=[$R[6]={attrs:$R[7]={type:"module",async:!0,src:"${REPO_BASE}assets/${actualJs}"}}]},"/":$R[8]={preloads:$R[9]=["${REPO_BASE}assets/${actualRoutes}"]}}},matches:$R[10]=[$R[11]={i:"__root__ ",u:${Date.now()},s:"success",ssr:!0},$R[12]={i:"  ",u:${Date.now()},s:"success",ssr:!0}]})($R["tsr"]);$_TSR.e();{let s=document.currentScript,p;while((p=s.previousElementSibling)&&p.hasAttribute('data-tsr-stream-part'))p.remove();s.remove()}</script>
-<script type="module" async="" src="${REPO_BASE}assets/${actualJs}"></script>`;
-
-  if (html.includes('<div id="root"></div>')) {
-    html = html.replace('<div id="root"></div>', `<div id="root"></div>\n${hydrationBody}`);
-  } else if (html.includes('</body>')) {
-    html = html.replace('</body>', `${hydrationBody}\n</body>`);
-  } else {
-    html += hydrationBody;
-  }
-}
+// Clean any rogue root div or duplicate skeletons if present
+html = html.replace(/<div id="root"><\/div>/g, '');
 
 // 5. Write index.html, 404.html, and .nojekyll
 fs.writeFileSync(path.join(distDir, "index.html"), html, "utf8");

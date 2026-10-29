@@ -3,10 +3,10 @@ const CACHE_NAME = "mymouny-offline-cache-v2026";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
-// Determine base scope dynamically (e.g. /Zaker-MB/)
+// Determine base scope dynamically (e.g. /My-Mouny/ or /Zaker-MB/)
 const SCOPE_BASE = (self.registration && self.registration.scope)
   ? new URL(self.registration.scope).pathname
-  : "/Zaker-MB/";
+  : (self.location.pathname.includes("Zaker-MB") ? "/Zaker-MB/" : "/My-Mouny/");
 const cleanBase = SCOPE_BASE.endsWith("/") ? SCOPE_BASE : SCOPE_BASE + "/";
 
 const OFFLINE_URL = `${cleanBase}offline.html`;

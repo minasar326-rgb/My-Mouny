@@ -42,13 +42,13 @@ function RootShell() {
                   .catch(() => {});
               }
             })
-            .catch((err) => console.warn("[ذاكر SW] Registration error:", err));
+            .catch((err) => console.warn("[my Mouny SW] Registration error:", err));
 
           // تفعيل التخزين الدائم غير القابل للمسح (Persistent Storage) لحفظ كافة الحسابات والخزائن محلياً
           if (typeof navigator !== "undefined" && navigator.storage && navigator.storage.persist) {
             navigator.storage.persist().then((granted) => {
               if (granted) {
-                console.log("[ذاكر] تم تفعيل التخزين الدائم المحلي 100% (Persistent Storage Active)");
+                console.log("[my Mouny] تم تفعيل التخزين الدائم المحلي 100% (Persistent Storage Active)");
               }
             }).catch(() => {});
           }
@@ -137,7 +137,7 @@ function RootComponent() {
                         reg.periodicSync.register('daily-balance-check', { minInterval: 24 * 60 * 60 * 1000 }).catch(function(){});
                       }
                     }).catch(function(err) {
-                      console.warn('[ذاكر SW] Head SW register error:', err);
+                      console.warn('[my Mouny SW] Head SW register error:', err);
                     });
                   }
                 }
@@ -163,7 +163,7 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
       },
       { title: APP_NAME },
-      { name: "theme-color", content: "#0284c7" },
+      { name: "theme-color", content: "#0d1520" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },

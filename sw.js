@@ -1,35 +1,35 @@
 // my Mouny - High-Performance Offline-First Service Worker
-const CACHE_NAME = "mymouny-cache-v1793311741237";
+const CACHE_NAME = "mymouny-cache-v1793312610726";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
-// Determine base scope dynamically (e.g. /Zaker-MB/)
+// Determine base scope dynamically (e.g. /My-Mouny/ or /My-Mouny/)
 const SCOPE_BASE = (self.registration && self.registration.scope)
   ? new URL(self.registration.scope).pathname
-  : "/Zaker-MB/";
+  : (self.location.pathname.includes("Zaker-MB") ? "/My-Mouny/" : "/My-Mouny/");
 const cleanBase = SCOPE_BASE.endsWith("/") ? SCOPE_BASE : SCOPE_BASE + "/";
 
 const OFFLINE_URL = `${cleanBase}offline.html`;
 
 // Core offline assets precached on install
 const PRECACHE_ASSETS = [
-  "/Zaker-MB/",
-  "/Zaker-MB/index.html",
-  "/Zaker-MB/offline.html",
-  "/Zaker-MB/manifest.json",
-  "/Zaker-MB/favicon.png",
-  "/Zaker-MB/favicon.svg",
-  "/Zaker-MB/apple-touch-icon.png",
-  "/Zaker-MB/icons/icon-192.png",
-  "/Zaker-MB/icons/icon-512.png",
-  "/Zaker-MB/icons/icon-maskable.png",
-  "/Zaker-MB/screenshots/screenshot-mobile.png",
-  "/Zaker-MB/screenshots/screenshot-desktop.png",
-  "/Zaker-MB/widgets/balance.json",
-  "/Zaker-MB/widgets/balance-data.json",
-  "/Zaker-MB/assets/index-DA0Pfrzm.js",
-  "/Zaker-MB/assets/routes-DhknFkiK.js",
-  "/Zaker-MB/assets/styles-CvM1BU6K.css"
+  "/My-Mouny/",
+  "/My-Mouny/index.html",
+  "/My-Mouny/offline.html",
+  "/My-Mouny/manifest.json",
+  "/My-Mouny/favicon.png",
+  "/My-Mouny/favicon.svg",
+  "/My-Mouny/apple-touch-icon.png",
+  "/My-Mouny/icons/icon-192.png",
+  "/My-Mouny/icons/icon-512.png",
+  "/My-Mouny/icons/icon-maskable.png",
+  "/My-Mouny/screenshots/screenshot-mobile.png",
+  "/My-Mouny/screenshots/screenshot-desktop.png",
+  "/My-Mouny/widgets/balance.json",
+  "/My-Mouny/widgets/balance-data.json",
+  "/My-Mouny/assets/index-CS2VgoXC.js",
+  "/My-Mouny/assets/routes-D_0jhDFY.js",
+  "/My-Mouny/assets/styles-CvM1BU6K.css"
 ];
 
 // 1. تثبيت الـ Service Worker وحفظ الأصول الأساسية وصفحة الأوفلاين في الكاش فوراً

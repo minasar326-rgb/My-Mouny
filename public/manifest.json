@@ -1,10 +1,10 @@
 {
-  "id": "https://minasar326-rgb.github.io/Zaker-MB/",
+  "id": "https://minasar326-rgb.github.io/My-Mouny/",
   "name": "my Mouny - إدارة المصاريف والخزنة المالية",
   "short_name": "my Mouny",
   "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات والخزنة المالية المشفرة محلياً 100% بدون إنترنت وبدون خوادم.",
-  "start_url": "/Zaker-MB/?source=pwa",
-  "scope": "/Zaker-MB/",
+  "start_url": "/My-Mouny/?source=pwa",
+  "scope": "/My-Mouny/",
   "display": "standalone",
   "display_override": [
     "window-controls-overlay",
@@ -13,8 +13,8 @@
     "minimal-ui"
   ],
   "orientation": "any",
-  "background_color": "#0f172a",
-  "theme_color": "#0284c7",
+  "background_color": "#0d1520",
+  "theme_color": "#0d1520",
   "dir": "rtl",
   "lang": "ar",
   "categories": [
@@ -25,6 +25,12 @@
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "prefer_related_applications": false,
+  "related_applications": [],
+  "scope_extensions": [
+    {
+      "origin": "https://minasar326-rgb.github.io"
+    }
+  ],
   "launch_handler": {
     "client_mode": [
       "navigate-existing",
@@ -41,15 +47,15 @@
       ]
     },
     "new_tab_button": {
-      "url": "/Zaker-MB/"
+      "url": "/My-Mouny/"
     }
   },
   "note_taking": {
-    "new_note_url": "/Zaker-MB/?action=new_note"
+    "new_note_url": "/My-Mouny/?action=new_note"
   },
   "file_handlers": [
     {
-      "action": "/Zaker-MB/?action=import",
+      "action": "/My-Mouny/?action=import",
       "name": "نسخة احتياطية لتطبيق my Mouny",
       "accept": {
         "application/json": [
@@ -62,8 +68,9 @@
     }
   ],
   "share_target": {
-    "action": "/Zaker-MB/?action=share",
+    "action": "/My-Mouny/?action=share",
     "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
     "params": {
       "title": "title",
       "text": "text",
@@ -73,7 +80,7 @@
   "protocol_handlers": [
     {
       "protocol": "web+mymouny",
-      "url": "/Zaker-MB/?action=%s"
+      "url": "/My-Mouny/?action=%s"
     }
   ],
   "handle_links": "preferred",
@@ -89,28 +96,28 @@
       "type": "application/json",
       "screenshots": [
         {
-          "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
+          "src": "/My-Mouny/screenshots/screenshot-mobile.png",
           "sizes": "390x844",
-          "label": "معاينة ودجت my Mouny"
+          "label": "معايانة ودجت my Mouny"
         }
       ]
     }
   ],
   "icons": [
     {
-      "src": "/Zaker-MB/icons/icon-192.png",
+      "src": "/My-Mouny/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Zaker-MB/icons/icon-512.png",
+      "src": "/My-Mouny/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Zaker-MB/icons/icon-maskable.png",
+      "src": "/My-Mouny/icons/icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -118,14 +125,14 @@
   ],
   "screenshots": [
     {
-      "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
+      "src": "/My-Mouny/screenshots/screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "واجهة تطبيق my Mouny لإدارة المصاريف على الموبايل"
     },
     {
-      "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
+      "src": "/My-Mouny/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
@@ -137,10 +144,10 @@
       "name": "سجّل شراء ومصروف",
       "short_name": "مصروف",
       "description": "تسجيل عملية شراء وخصم فوري من الكاش أو البنك",
-      "url": "/Zaker-MB/?action=new_expense",
+      "url": "/My-Mouny/?action=new_expense",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -150,10 +157,10 @@
       "name": "سجّل إيراد ودخل",
       "short_name": "دخل",
       "description": "تسجيل إيراد مالي جديد في رصيدك",
-      "url": "/Zaker-MB/?action=new_income",
+      "url": "/My-Mouny/?action=new_income",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -163,10 +170,10 @@
       "name": "الخزنة المالية والديون",
       "short_name": "الخزنة",
       "description": "عرض ما لك وما عليك والخزنة المشفرة",
-      "url": "/Zaker-MB/?action=vault",
+      "url": "/My-Mouny/?action=vault",
       "icons": [
         {
-          "src": "/Zaker-MB/icons/icon-192.png",
+          "src": "/My-Mouny/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
