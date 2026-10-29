@@ -98,55 +98,38 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // استراتيجية طلبات التنقل (صفحات HTML)
+  // استراتيجية طلبات التنقل (صفحات HTML): Network First لضمان تحميل أحدث ملفات CSS و JS دائماً، مع Fallback للكاش فوراً عند انقطاع الإنترنت (Offline)
   if (req.mode === "navigate") {
     const scope = self.registration ? self.registration.scope : "/";
-    // في بيئة التطوير المحلية (localhost/127.0.0.1)، جلب النسخة المباشرة دائماً لتجنب تعارض HMR
-    if (isDev) {
-      event.respondWith(
-        fetch(req).catch(async () => {
-          const cache = await caches.open(CACHE_NAME);
-          const cached = (await cache.match(req, { ignoreSearch: true })) || (await cache.match(scope, { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }));
-          return cached || new Response("Offline in development mode", { status: 503 });
-        })
-      );
-      return;
-    }
-
-    // في بيئة الإنتاج: Cache First فوري (0ms) مع تحديث في الخلفية
     event.respondWith(
-      (async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cached = (await cache.match(req, { ignoreSearch: true })) || (await cache.match(scope, { ignoreSearch: true })) || (await cache.match("/", { ignoreSearch: true }));
-
-        // مهمة جلب التحديث من الشبكة وتخزينه في الخلفية
-        const networkFetchPromise = fetch(req)
-          .then((response) => {
-            if (response && response.status === 200) {
-              const copy = response.clone();
+      fetch(req)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
               cache.put(req, copy);
-              cache.put(scope, response.clone());
-            }
-            return response;
-          })
-          .catch(() => null);
+              try {
+                cache.put(scope, response.clone());
+              } catch (_) {}
+            });
+          }
+          return response;
+        })
+        .catch(async () => {
+          // في حالة عدم وجود إنترنت، استرجاع الصفحة من الكاش فوراً للعمل أوفلاين
+          const cache = await caches.open(CACHE_NAME);
+          const cached =
+            (await cache.match(req, { ignoreSearch: true })) ||
+            (await cache.match(scope, { ignoreSearch: true })) ||
+            (await cache.match("/", { ignoreSearch: true }));
 
-        // إذا كانت الصفحة موجودة في الكاش، نعيدها فوراً وبدون أي انتظار (Instant Load!)
-        if (cached) {
-          event.waitUntil(networkFetchPromise);
-          return cached;
-        }
+          if (cached) return cached;
 
-        // في أول زيارة خالص ولم يتم التخزين بعد، ننتظر استجابة الشبكة
-        const networkResponse = await networkFetchPromise;
-        if (networkResponse) return networkResponse;
-
-        // Fallback في حال انقطاع الشبكة تماماً قبل التخزين
-        return new Response(
-          `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>My Mouny</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;text-align:center;padding:50px 20px;background:#f4f1eb;color:#1c1a17"><h2>My Mouny</h2><p style="color:#666">التطبيق يعمل دون إنترنت. يرجى الضغط أدناه لتحديث الصفحة.</p><button onclick="location.reload()" style="padding:10px 24px;border-radius:10px;background:#0d9488;color:#fff;border:none;cursor:pointer;font-weight:bold;margin-top:20px">تحديث الصفحة</button></body></html>`,
-          { headers: { "Content-Type": "text/html; charset=utf-8" } }
-        );
-      })()
+          return new Response(
+            `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>My Mouny</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;text-align:center;padding:50px 20px;background:#f4f1eb;color:#1c1a17"><h2>My Mouny</h2><p style="color:#666">أنت الآن تعمل دون اتصال بالإنترنت.</p><button onclick="location.reload()" style="padding:10px 24px;border-radius:10px;background:#0d9488;color:#fff;border:none;cursor:pointer;font-weight:bold;margin-top:20px">تحديث</button></body></html>`,
+            { headers: { "Content-Type": "text/html; charset=utf-8" } }
+          );
+        })
     );
     return;
   }

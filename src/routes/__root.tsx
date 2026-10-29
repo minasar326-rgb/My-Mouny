@@ -66,18 +66,37 @@ function RootComponent() {
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-                var isDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.port === '8888';
-                if (isDevHost) {
-                  navigator.serviceWorker.getRegistrations().then(function(regs) {
-                    for (var i = 0; i < regs.length; i++) { regs[i].unregister(); }
-                  });
-                  if ('caches' in window) {
-                    caches.keys().then(function(keys) {
-                      for (var i = 0; i < keys.length; i++) {
-                        caches.delete(keys[i]);
+              if (typeof window !== 'undefined') {
+                window.addEventListener('error', function(e) {
+                  if (e.target && e.target.tagName === 'LINK' && e.target.rel === 'stylesheet') {
+                    if (!sessionStorage.getItem('css_heal')) {
+                      sessionStorage.setItem('css_heal', '1');
+                      if ('caches' in window) {
+                        caches.keys().then(function(keys) {
+                          return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+                        }).then(function() {
+                          location.reload();
+                        });
+                      } else {
+                        location.reload();
                       }
+                    }
+                  }
+                }, true);
+
+                if ('serviceWorker' in navigator) {
+                  var isDevHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.port === '8888';
+                  if (isDevHost) {
+                    navigator.serviceWorker.getRegistrations().then(function(regs) {
+                      for (var i = 0; i < regs.length; i++) { regs[i].unregister(); }
                     });
+                    if ('caches' in window) {
+                      caches.keys().then(function(keys) {
+                        for (var i = 0; i < keys.length; i++) {
+                          caches.delete(keys[i]);
+                        }
+                      });
+                    }
                   }
                 }
               }
