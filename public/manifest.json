@@ -1,8 +1,8 @@
 {
-  "id": "com.minasar.zakerm",
-  "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
-  "short_name": "ذاكر",
-  "description": "ذاكر: تطبيق إدارة المصاريف والحسابات والخزنة مشفر محلياً ويعمل بالكامل دون إنترنت.",
+  "id": "com.mymouny.app",
+  "name": "my Mouny",
+  "short_name": "my Mouny",
+  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100%.",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
@@ -39,14 +39,14 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق My Mouny على الهاتف المحمول"
+      "label": "واجهة تطبيق my Mouny على الهاتف المحمول"
     },
     {
       "src": "/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تحكم My Mouny على الكمبيوتر والتابلت"
+      "label": "لوحة تحكم my Mouny على الكمبيوتر والتابلت"
     }
   ],
   "shortcuts": [

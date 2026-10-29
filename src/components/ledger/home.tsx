@@ -220,10 +220,10 @@ function InstallGuideModal({ onClose }: { onClose: () => void }) {
             <div>
               <h2 className="text-base font-bold text-ink leading-tight">
                 {lang === "ar"
-                  ? "تثبيت My Mouny كـ تطبيق"
+                  ? "تثبيت my Mouny كـ تطبيق"
                   : lang === "el"
-                  ? "Εγκατάσταση My Mouny"
-                  : "Install My Mouny as an App"}
+                  ? "Εγκατάσταση my Mouny"
+                  : "Install my Mouny as an App"}
               </h2>
               <p className="text-xs text-muted">
                 {lang === "ar"
@@ -373,8 +373,8 @@ function InstallGuideModal({ onClose }: { onClose: () => void }) {
                 </span>
                 <p className="font-semibold text-accent">
                   {lang === "ar"
-                    ? "ستجد أيقونة تثبيت صغيرة على شكل كمبيوتر وسهم لأسفل أو زر «تثبيت My Mouny»."
-                    : "Click the small install icon (computer with down arrow) or 'Install My Mouny'."}
+                    ? "ستجد أيقونة تثبيت صغيرة على شكل كمبيوتر وسهم لأسفل أو زر «تثبيت my Mouny»."
+                    : "Click the small install icon (computer with down arrow) or 'Install my Mouny'."}
                 </p>
               </div>
               <div className="flex items-start gap-2.5">
@@ -383,8 +383,8 @@ function InstallGuideModal({ onClose }: { onClose: () => void }) {
                 </span>
                 <p>
                   {lang === "ar"
-                    ? "أو من قائمة المتصفح (⋮) اختر «حفظ ومشاركة» -> «تثبيت My Mouny»، وسيفتح التطبيق فوراً كبرنامج مستقل على سطح المكتب!"
-                    : "Or from browser menu (⋮) choose 'Save and share' -> 'Install My Mouny' to launch as a standalone desktop app!"}
+                    ? "أو من قائمة المتصفح (⋮) اختر «حفظ ومشاركة» -> «تثبيت my Mouny»، وسيفتح التطبيق فوراً كبرنامج مستقل على سطح المكتب!"
+                    : "Or from browser menu (⋮) choose 'Save and share' -> 'Install my Mouny' to launch as a standalone desktop app!"}
                 </p>
               </div>
             </div>
@@ -634,15 +634,19 @@ function Ledger() {
     currentVault.name === "خزينتي الرئيسية" ||
     currentVault.name === "خزينتي الأساسية" ||
     currentVault.name === "خزنة My Mouny" ||
+    currentVault.name === "خزنة my Mouny" ||
     currentVault.name === "ماي موني" ||
     currentVault.name === "My Mouny" ||
+    currentVault.name === "my Mouny" ||
     currentVault.name === "My Main Vault" ||
     currentVault.name === "My Mouny Vault" ||
+    currentVault.name === "my Mouny Vault" ||
     currentVault.name === "Το Κύριο Ταμείο μου" ||
     currentVault.name === "Το Ταμείο μου (My Mouny)" ||
+    currentVault.name === "Το Ταμείο μου (my Mouny)" ||
     currentVault.name === "Μάι Μούνι (My Mouny)";
   const displayedVaultName = isDefaultVault
-    ? "My Mouny"
+    ? "my Mouny"
     : currentVault.name;
 
   return (

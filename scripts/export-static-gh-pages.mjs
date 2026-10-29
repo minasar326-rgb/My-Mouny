@@ -5,7 +5,7 @@ const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
 const repoFromGit = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split("/")[1] : null;
-const REPO_NAME = process.env.REPO_NAME || repoFromGit || "Zaker-MB";
+const REPO_NAME = process.env.REPO_NAME || repoFromGit || "My-Mouny";
 const REPO_BASE = `/${REPO_NAME}/`;
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);

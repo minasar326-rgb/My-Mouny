@@ -26,15 +26,19 @@ function getVaultDisplayName(name?: string, lang: Language = "ar"): string {
     name === "خزينتي الرئيسية" ||
     name === "خزينتي الأساسية" ||
     name === "خزنة My Mouny" ||
+    name === "خزنة my Mouny" ||
     name === "ماي موني" ||
     name === "My Mouny" ||
+    name === "my Mouny" ||
     name === "My Main Vault" ||
     name === "My Mouny Vault" ||
+    name === "my Mouny Vault" ||
     name === "Το Κύριο Ταμείο μου" ||
     name === "Το Ταμείο μου (My Mouny)" ||
+    name === "Το Ταμείο μου (my Mouny)" ||
     name === "Μάι Μούνι (My Mouny)"
   ) {
-    return "My Mouny";
+    return "my Mouny";
   }
   return name;
 }
@@ -761,15 +765,19 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
             currentVault.name === "خزينتي الرئيسية" ||
             currentVault.name === "خزينتي الأساسية" ||
             currentVault.name === "خزنة My Mouny" ||
+            currentVault.name === "خزنة my Mouny" ||
             currentVault.name === "ماي موني" ||
             currentVault.name === "My Mouny" ||
+            currentVault.name === "my Mouny" ||
             currentVault.name === "My Main Vault" ||
             currentVault.name === "My Mouny Vault" ||
+            currentVault.name === "my Mouny Vault" ||
             currentVault.name === "Το Κύριο Ταμείο μου" ||
             currentVault.name === "Το Ταμείο μου (My Mouny)" ||
+            currentVault.name === "Το Ταμείο μου (my Mouny)" ||
             currentVault.name === "Μάι Μούνι (My Mouny)";
           const displayedVaultName = isDefaultVault
-            ? "My Mouny"
+            ? "my Mouny"
             : currentVault.name;
           return (
             <div className="mt-5 space-y-4">

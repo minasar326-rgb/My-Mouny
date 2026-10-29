@@ -22,7 +22,7 @@ execSync(`"${gitPath}" init`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" add -A`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" commit -m "deploy: static GitHub Pages build"`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" branch -M gh-pages`, { cwd: distDir, stdio: "inherit" });
-execSync(`"${gitPath}" remote add origin https://github.com/minasar326-rgb/Zaker-MB.git`, { cwd: distDir, stdio: "inherit" });
+execSync(`"${gitPath}" remote add origin https://github.com/minasar326-rgb/My-Mouny.git`, { cwd: distDir, stdio: "inherit" });
 execSync(`"${gitPath}" push -f origin gh-pages`, { cwd: distDir, stdio: "inherit" });
 
 console.log("Successfully pushed to gh-pages branch!");

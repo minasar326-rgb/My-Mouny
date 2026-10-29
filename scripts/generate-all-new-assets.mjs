@@ -209,7 +209,7 @@ async function generateAll() {
     <div class="glow"></div>
     <div class="content">
       <div class="badge">🔒 مشفر محلياً 100% • دون إنترنت</div>
-      <h1>My Mouny</h1>
+      <h1>my Mouny</h1>
       <p>إدارة نفقاتك، أرصدة الكاش والبنك، وسجلات ديونك في مكان واحد بأعلى درجات الخصوصية والأمان أوفلاين 100%.</p>
       <div class="tags">
         <div class="tag">⚡ فتح فوري</div>
@@ -265,7 +265,7 @@ async function generateAll() {
   <body>
     <div class="content">
       <div style="display:inline-block;padding:8px 20px;border-radius:30px;background:rgba(13,148,136,0.2);border:1px solid rgba(13,148,136,0.4);color:#2dd4bf;font-weight:700;margin-bottom:24px;font-size:16px;">🔒 100% Offline & Encrypted Personal Finance</div>
-      <h1>My Mouny</h1>
+      <h1>my Mouny</h1>
       <p>Smart Personal Finance, Cash & Bank Balances, and Debt Management. 100% Private, Local & Offline.</p>
     </div>
     <div class="icon-box">

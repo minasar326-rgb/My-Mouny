@@ -20,7 +20,7 @@ export const LANGUAGES: LanguageInfo[] = [
 export const translations = {
   ar: {
     // Top Header & Vault
-    appName: "My Mouny",
+    appName: "my Mouny",
     appSubtitle: "بياناتك محفوظة ومشفرة محلياً في جهازك بدون اتصال خارجي",
     vaultEncrypted: "مشفّرة ومحمية 🔒",
     vaultOpen: "خزنة محلية مفتوحة 🔓",
@@ -186,7 +186,7 @@ export const translations = {
 
     // Exit Toast & Footer
     pressBackAgainToExit: "اضغط رجوع مرة أخرى للخروج من التطبيق",
-    footerCopyright: "My Mouny © 2026",
+    footerCopyright: "my Mouny © 2026",
     footerPrivacy: "سياسة الخصوصية والأمان",
     footerSecurity: "تشفير محلي عسكري AES-256 · أوفلاين 100% بدون خوادم",
 
@@ -204,7 +204,7 @@ export const translations = {
     waiveNotice: "الإسقاط لا يحرّك الكاش ولا البنك، ويعدّل الصافي فقط.",
 
     // Auth screen & Vault Creation & PIN Management
-    defaultVaultName: "My Mouny",
+    defaultVaultName: "my Mouny",
     pinMinLengthError: "رمز المرور يجب أن يتكون من 4 خانات على الأقل (أو اتركه فارغاً للدخول بدون رمز)",
     pinsDoNotMatchError: "رمزا المرور غير متطابقين",
     chooseBackupFileError: "يرجى اختيار ملف النسخة الاحتياطية (.json)",
@@ -224,7 +224,7 @@ export const translations = {
     createNewVaultBtn: "إنشاء خزنة جديدة على هذا الجهاز",
     importVaultFromBackupBtn: "استيراد خزنة من نسخة احتياطية (.json)",
     vaultNameLabel: "اسم الخزنة",
-    vaultNamePlaceholder: "مثال: خزنة My Mouny، مصاريف البيت",
+    vaultNamePlaceholder: "مثال: خزنة my Mouny، مصاريف البيت",
     vaultPinOptionalLabel: "رمز المرور (PIN أو كلمة سر)",
     optionalBadge: "اختياري",
     pinOptionalPlaceholder: "اتركه فارغاً للدخول بدون رمز، أو 4 خانات",
@@ -288,7 +288,7 @@ export const translations = {
 
   en: {
     // Top Header & Vault
-    appName: "My Mouny",
+    appName: "my Mouny",
     appSubtitle: "Your data is stored and encrypted locally on this device without external servers",
     vaultEncrypted: "Encrypted & Protected 🔒",
     vaultOpen: "Open Local Vault 🔓",
@@ -454,7 +454,7 @@ export const translations = {
 
     // Exit Toast & Footer
     pressBackAgainToExit: "Press back again to exit the app",
-    footerCopyright: "My Mouny © 2026",
+    footerCopyright: "my Mouny © 2026",
     footerPrivacy: "Privacy Policy & Security",
     footerSecurity: "Military-grade local AES-256 · 100% Offline without servers",
 
@@ -472,7 +472,7 @@ export const translations = {
     waiveNotice: "Waiving does not move Cash or Bank, it only updates Net Worth.",
 
     // Auth screen & Vault Creation & PIN Management
-    defaultVaultName: "My Mouny",
+    defaultVaultName: "my Mouny",
     pinMinLengthError: "PIN must be at least 4 digits (or leave blank to enter without PIN)",
     pinsDoNotMatchError: "PINs do not match",
     chooseBackupFileError: "Please select a backup file (.json)",
@@ -556,7 +556,7 @@ export const translations = {
 
   el: {
     // Top Header & Vault
-    appName: "My Mouny",
+    appName: "my Mouny",
     appSubtitle: "Τα δεδομένα σας αποθηκεύονται και κρυπτογραφούνται τοπικά σε αυτήν τη συσκευή",
     vaultEncrypted: "Κρυπτογραφημένο & Προστατευμένο 🔒",
     vaultOpen: "Ανοιχτό Τοπικό Θησαυροφυλάκιο 🔓",
@@ -722,7 +722,7 @@ export const translations = {
 
     // Exit Toast & Footer
     pressBackAgainToExit: "Πατήστε ξανά πίσω για έξοδο από την εφαρμογή",
-    footerCopyright: "My Mouny © 2026",
+    footerCopyright: "my Mouny © 2026",
     footerPrivacy: "Πολιτική Απορρήτου & Ασφάλεια",
     footerSecurity: "Στρατιωτικού επιπέδου τοπικό AES-256 · 100% Εκτός σύνδεσης χωρίς διακομιστές",
 
@@ -740,7 +740,7 @@ export const translations = {
     waiveNotice: "Η διαγραφή δεν επηρεάζει τα Μετρητά ή την Τράπεζα, ενημερώνει μόνο την Καθαρή Αξία.",
 
     // Auth screen & Vault Creation & PIN Management
-    defaultVaultName: "My Mouny",
+    defaultVaultName: "my Mouny",
     pinMinLengthError: "Το PIN πρέπει να αποτελείται από τουλάχιστον 4 ψηφία (ή αφήστε το κενό)",
     pinsDoNotMatchError: "Τα PIN δεν ταιριάζουν",
     chooseBackupFileError: "Παρακαλώ επιλέξτε αρχείο αντιγράφου ασφαλείας (.json)",

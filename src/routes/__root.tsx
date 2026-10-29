@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ledger/home";
 import { useLedger } from "@/lib/ledger/store";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "ذاكر";
+const APP_NAME = "my Mouny";
 
 function RootShell() {
   useEffect(() => {
@@ -60,7 +60,7 @@ function RootComponent() {
     if (typeof window !== "undefined") {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-      document.title = "ذاكر - تطبيق إدارة المصاريف والخزنة";
+      document.title = "my Mouny";
     }
   }, [lang]);
 
@@ -129,10 +129,10 @@ export const Route = createRootRoute({
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "ذاكر" },
+      { name: "apple-mobile-web-app-title", content: "my Mouny" },
       {
         name: "description",
-        content: "خزنتك المالية المستقلة والمشفرة محلياً: كاش، بنك، ما لك وما عليك دون إنترنت.",
+        content: "my Mouny: خزنتك المالية الذكية والمشفرة محلياً - أوفلاين 100% دون خوادم.",
       },
       {
         httpEquiv: "Content-Security-Policy",
