@@ -94,6 +94,7 @@ function fixPaths(str) {
 html = fixPaths(html);
 
 // Clean up platform-specific dynamic middleware artifacts not present on static GitHub Pages
+html = html.replace(/<link rel="manifest" href="\/__grok\/manifest\.webmanifest">/g, '');
 html = html.replace(/<link rel="manifest" href="\/My-Mouny\/__grok\/manifest\.webmanifest">/g, '');
 html = html.replace(/<script src="https:\/\/grok\.com\/grok-app-builder\/extensions\.js"[^>]*><\/script>/g, '');
 html = html.replace(/<meta name="twitter:card"[^>]*>/g, '');
