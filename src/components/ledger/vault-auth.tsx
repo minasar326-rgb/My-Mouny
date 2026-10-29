@@ -38,7 +38,7 @@ function getVaultDisplayName(name?: string, lang: Language = "ar"): string {
     name === "Το Ταμείο μου (my Mouny)" ||
     name === "Μάι Μούνι (My Mouny)"
   ) {
-    return "my Mouny";
+    return t(lang).appName;
   }
   return name;
 }
@@ -777,7 +777,7 @@ export function BackupModal({ onClose }: { onClose: () => void }) {
             currentVault.name === "Το Ταμείο μου (my Mouny)" ||
             currentVault.name === "Μάι Μούνι (My Mouny)";
           const displayedVaultName = isDefaultVault
-            ? "my Mouny"
+            ? t(lang).appName
             : currentVault.name;
           return (
             <div className="mt-5 space-y-4">

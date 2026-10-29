@@ -374,7 +374,7 @@ function InstallGuideModal({ onClose }: { onClose: () => void }) {
                 <p className="font-semibold text-accent">
                   {lang === "ar"
                     ? "ستجد أيقونة تثبيت صغيرة على شكل كمبيوتر وسهم لأسفل أو زر «تثبيت my Mouny»."
-                    : "Click the small install icon (computer with down arrow) or 'Install my Mouny'."}
+                    : "Click the small install icon (computer with down arrow) or 'Install Zaker'."}
                 </p>
               </div>
               <div className="flex items-start gap-2.5">
@@ -384,7 +384,7 @@ function InstallGuideModal({ onClose }: { onClose: () => void }) {
                 <p>
                   {lang === "ar"
                     ? "أو من قائمة المتصفح (⋮) اختر «حفظ ومشاركة» -> «تثبيت my Mouny»، وسيفتح التطبيق فوراً كبرنامج مستقل على سطح المكتب!"
-                    : "Or from browser menu (⋮) choose 'Save and share' -> 'Install my Mouny' to launch as a standalone desktop app!"}
+                    : "Or from browser menu (⋮) choose 'Save and share' -> 'Install Zaker' to launch as a standalone desktop app!"}
                 </p>
               </div>
             </div>
@@ -646,7 +646,7 @@ function Ledger() {
     currentVault.name === "Το Ταμείο μου (my Mouny)" ||
     currentVault.name === "Μάι Μούνι (My Mouny)";
   const displayedVaultName = isDefaultVault
-    ? "my Mouny"
+    ? t.appName
     : currentVault.name;
 
   return (

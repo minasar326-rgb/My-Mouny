@@ -19,15 +19,13 @@ function RootShell() {
           }
         });
       } else {
-        window.addEventListener("load", () => {
+        const registerSW = () => {
           const base =
-            typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
-              ? "/Zaker-MB/"
-              : typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-m")
-                ? "/Zaker-m/"
-                : typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
-                  ? "/My-Mouny/"
-                  : "/";
+            typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
+              ? "/My-Mouny/"
+              : typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
+                ? "/Zaker-MB/"
+                : "/";
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
@@ -35,7 +33,13 @@ function RootShell() {
               reg.update().catch(() => {});
             })
             .catch((err) => console.warn("[SW] Registration error:", err));
-        });
+        };
+
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+          registerSW();
+        } else {
+          window.addEventListener("load", registerSW);
+        }
       }
     }
   }, []);
@@ -101,6 +105,13 @@ function RootComponent() {
                         }
                       });
                     }
+                  } else {
+                    var swBase = location.pathname.startsWith('/My-Mouny') ? '/My-Mouny/' : (location.pathname.startsWith('/Zaker-MB') ? '/Zaker-MB/' : '/');
+                    navigator.serviceWorker.register(swBase + 'sw.js', { scope: swBase }).then(function(reg) {
+                      console.log('[my Mouny] Head SW registered:', reg.scope);
+                    }).catch(function(err) {
+                      console.warn('[my Mouny] Head SW register error:', err);
+                    });
                   }
                 }
               }

@@ -1,33 +1,37 @@
 {
-  "id": "com.mymouny.app",
-  "name": "my Mouny",
-  "short_name": "my Mouny",
-  "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات أوفلاين ومشفر محلياً 100%.",
-  "start_url": "/?source=pwa",
-  "scope": "/",
+  "id": "https://minasar326-rgb.github.io/Zaker-MB/",
+  "name": "ذاكر - تطبيق إدارة المصاريف والخزنة",
+  "short_name": "ذاكر",
+  "description": "ذاكر: تطبيق إدارة المصاريف والحسابات والخزنة مشفر محلياً ويعمل بالكامل دون إنترنت.",
+  "start_url": "/Zaker-MB/?source=pwa",
+  "scope": "/Zaker-MB/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f4f1eb",
   "theme_color": "#1c1a17",
   "dir": "rtl",
   "lang": "ar",
-  "categories": ["finance", "productivity", "utilities"],
+  "categories": [
+    "finance",
+    "productivity",
+    "utilities"
+  ],
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/Zaker-MB/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/Zaker-MB/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-maskable.png",
+      "src": "/Zaker-MB/icons/icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -35,18 +39,18 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/screenshot-mobile.png",
+      "src": "/Zaker-MB/screenshots/screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة تطبيق my Mouny على الهاتف المحمول"
+      "label": "واجهة تطبيق ذاكر على الهاتف المحمول"
     },
     {
-      "src": "/screenshots/screenshot-desktop.png",
+      "src": "/Zaker-MB/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "لوحة تحكم my Mouny على الكمبيوتر والتابلت"
+      "label": "لوحة تحكم تطبيق ذاكر على الكمبيوتر والتابلت"
     }
   ],
   "shortcuts": [
@@ -54,15 +58,37 @@
       "name": "سجّل شراء",
       "short_name": "شراء",
       "description": "تسجيل عملية شراء وخصم فوري",
-      "url": "/",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/Zaker-MB/",
+      "icons": [
+        {
+          "src": "/Zaker-MB/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
-      "name": "المستحقات والديون",
-      "short_name": "الديون",
-      "description": "عرض ما لك وما عليك",
-      "url": "/",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "name": "سجّل دخل",
+      "short_name": "دخل",
+      "description": "تسجيل إيداع دخل جديد",
+      "url": "/Zaker-MB/",
+      "icons": [
+        {
+          "src": "/Zaker-MB/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "دفتر الحسابات",
+      "short_name": "الدفتر",
+      "description": "عرض الحركات والمعاملات المالية",
+      "url": "/Zaker-MB/",
+      "icons": [
+        {
+          "src": "/Zaker-MB/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

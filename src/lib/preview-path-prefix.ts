@@ -42,6 +42,9 @@ export function previewPathRewrite(): LocationRewrite | undefined {
       return prefixRewrite(match[1]);
     }
   }
+  if (window.location.pathname.startsWith("/Zaker-MB")) {
+    return prefixRewrite("/Zaker-MB");
+  }
   if (window.location.pathname.startsWith("/Zaker-m")) {
     return prefixRewrite("/Zaker-m");
   }

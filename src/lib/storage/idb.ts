@@ -48,7 +48,7 @@ export type VaultBackup = {
   checksum: string;
 };
 
-const DB_NAME = "KhazintiLocalDB";
+const DB_NAME = "ZakerLocalDB";
 const DB_VERSION = 2;
 
 // Hardware & persistent rate limiting and anti-brute-force lockout
@@ -57,7 +57,7 @@ type AttemptRecord = {
   lockedUntil: number;
 };
 const lockoutMap = new Map<string, AttemptRecord>();
-const LOCKOUT_KEY_PREFIX = "khazinti_vault_lockout_";
+const LOCKOUT_KEY_PREFIX = "zaker_vault_lockout_";
 
 function getLockoutRecord(vaultId: string): AttemptRecord {
   try {

@@ -5,7 +5,7 @@ const root = process.cwd();
 const vercelStatic = path.join(root, ".vercel", "output", "static");
 const distDir = path.join(root, "dist");
 const repoFromGit = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split("/")[1] : null;
-const REPO_NAME = process.env.REPO_NAME || repoFromGit || "My-Mouny";
+const REPO_NAME = process.env.REPO_NAME || repoFromGit || "Zaker-MB";
 const REPO_BASE = `/${REPO_NAME}/`;
 
 console.log(`Exporting production build for GitHub Pages into: ${distDir} (Base: ${REPO_BASE})`);
@@ -124,6 +124,22 @@ if (fs.existsSync(assetsDir)) {
   html = html.replaceAll(`${REPO_BASE}${REPO_NAME}/`, REPO_BASE);
 }
 
+// Ensure canonical manifest link and immediate Service Worker registration in <head>
+if (!html.includes('<link rel="manifest"')) {
+  html = html.replace('</head>', `  <link rel="manifest" href="${REPO_BASE}manifest.json">\n</head>`);
+}
+
+const immediateSwScript = `
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('${REPO_BASE}sw.js', { scope: '${REPO_BASE}' })
+        .then(function(r) { console.log('[PWA] ServiceWorker registered with scope:', r.scope); })
+        .catch(function(e) { console.warn('[PWA] ServiceWorker registration warning:', e); });
+    }
+  </script>
+</head>`;
+html = html.replace('</head>', immediateSwScript);
+
 // 5. Write index.html, 404.html, and .nojekyll
 fs.writeFileSync(path.join(distDir, "index.html"), html, "utf8");
 fs.writeFileSync(path.join(distDir, "404.html"), html, "utf8");
@@ -175,6 +191,38 @@ if (fs.existsSync(manifestPath)) {
             const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
             return {
               ...ic,
+              src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
+            };
+          })
+        : undefined,
+    }));
+  }
+  if (Array.isArray(manifest.file_handlers)) {
+    manifest.file_handlers = manifest.file_handlers.map((fh) => ({
+      ...fh,
+      action: REPO_BASE,
+    }));
+  }
+  if (manifest.share_target) {
+    manifest.share_target = {
+      ...manifest.share_target,
+      action: REPO_BASE,
+    };
+  }
+  if (Array.isArray(manifest.protocol_handlers)) {
+    manifest.protocol_handlers = manifest.protocol_handlers.map((ph) => ({
+      ...ph,
+      url: `${REPO_BASE}?action=%s`,
+    }));
+  }
+  if (Array.isArray(manifest.widgets)) {
+    manifest.widgets = manifest.widgets.map((w) => ({
+      ...w,
+      screenshots: Array.isArray(w.screenshots)
+        ? w.screenshots.map((sc) => {
+            const cleanSrc = sc.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
+            return {
+              ...sc,
               src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
             };
           })

@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-mouny-cache-v10";
+const CACHE_NAME = "zaker-mb-cache-v1";
 
 const PRECACHE_ASSETS = [
   "",
