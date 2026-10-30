@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.minasar.zakerm",
+      "sha256_cert_fingerprints": [
+        "D0:68:7E:C5:02:0B:74:DE:19:56:9A:86:54:EC:65:8A:A0:77:D1:22:3A:B3:0A:36:24:7A:62:1C:D2:35:C1:13"
+      ]
+    }
+  }
+]
