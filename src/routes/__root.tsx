@@ -20,35 +20,26 @@ function RootShell() {
         });
       } else {
         const registerSW = () => {
+          // تنظيف أي Service Worker قديم مسجل على Scope سابق مثل Zaker-MB
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            for (const reg of registrations) {
+              if (reg.scope && !reg.scope.includes("/My-Mouny/")) {
+                console.log("[my Mouny PWA] Unregistering obsolete SW scope:", reg.scope);
+                reg.unregister().catch(() => {});
+              }
+            }
+          }).catch(() => {});
+
           const base =
             typeof window !== "undefined" && window.location.pathname.startsWith("/My-Mouny")
               ? "/My-Mouny/"
-              : (typeof window !== "undefined" && window.location.pathname.startsWith("/Zaker-MB")
-                ? "/Zaker-MB/"
-                : "/");
-          let refreshing = false;
-          navigator.serviceWorker.addEventListener("controllerchange", () => {
-            if (!refreshing) {
-              refreshing = true;
-              window.location.reload();
-            }
-          });
+              : "/";
 
           navigator.serviceWorker
             .register(`${base}sw.js`, { scope: base })
             .then((reg) => {
               console.log("[my Mouny SW] Registered successfully:", reg.scope);
               reg.update().catch(() => {});
-              reg.addEventListener("updatefound", () => {
-                const newWorker = reg.installing;
-                if (newWorker) {
-                  newWorker.addEventListener("statechange", () => {
-                    if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-                      newWorker.postMessage({ type: "SKIP_WAITING" });
-                    }
-                  });
-                }
-              });
               // تسجيل Background Sync إذا كان مدعوماً
               if ("sync" in reg && typeof (reg as any).sync?.register === "function") {
                 (reg as any).sync.register("sync-ledger").catch(() => {});
@@ -62,7 +53,7 @@ function RootShell() {
             })
             .catch((err) => console.warn("[my Mouny SW] Registration error:", err));
 
-          // تفعيل التخزين الدائم غير القابل للمسح (Persistent Storage) لحفظ كافة الحسابات والخزائن محلياً
+          // تفعيل التخزين الدائم غير القابل للمسح (Persistent Storage) لحفظ كافة الحسابات والخزائن محلياً للأبد
           if (typeof navigator !== "undefined" && navigator.storage && navigator.storage.persist) {
             navigator.storage.persist().then((granted) => {
               if (granted) {

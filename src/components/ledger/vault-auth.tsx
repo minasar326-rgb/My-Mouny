@@ -113,7 +113,7 @@ export function VaultAuthScreen() {
     if (loading || !selectedVaultId) return;
     setError(null);
     setLoading(true);
-    const res = await unlock(selectedVaultId, pin);
+    const res = await unlock(selectedVaultId, selectedVault?.hasPin ? pin : undefined);
     setLoading(false);
     if (!res.ok) {
       setError(res.error);

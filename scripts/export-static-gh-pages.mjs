@@ -181,6 +181,13 @@ if (!html.includes('navigator.serviceWorker.register')) {
   const immediateSwScript = `
   <script>
     if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        for (var i = 0; i < regs.length; i++) {
+          if (regs[i].scope && !regs[i].scope.includes('${REPO_BASE}')) {
+            regs[i].unregister().catch(function(){});
+          }
+        }
+      }).catch(function(){});
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('${REPO_BASE}sw.js', { scope: '${REPO_BASE}' })
           .then(function(r) {
@@ -320,12 +327,16 @@ if (fs.existsSync(swPath)) {
 
   const precacheList = [
     REPO_BASE,
+    REPO_BASE.endsWith("/") ? REPO_BASE.slice(0, -1) : REPO_BASE,
     `${REPO_BASE}index.html`,
+    `${REPO_BASE}?source=pwa`,
     `${REPO_BASE}offline.html`,
     `${REPO_BASE}manifest.json`,
     `${REPO_BASE}favicon.png`,
     `${REPO_BASE}favicon.svg`,
+    `${REPO_BASE}favicon.ico`,
     `${REPO_BASE}apple-touch-icon.png`,
+    `${REPO_BASE}privacy.html`,
     `${REPO_BASE}icons/icon-192.png`,
     `${REPO_BASE}icons/icon-512.png`,
     `${REPO_BASE}icons/icon-maskable.png`,

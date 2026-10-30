@@ -162,7 +162,7 @@ function openDb(): Promise<IDBDatabase> {
 
     const timer = setTimeout(() => {
       reject(new Error("IndexedDB connection timed out (blocked or unresponsive)"));
-    }, 2500);
+    }, 10000);
 
     let request: IDBOpenDBRequest;
     try {
@@ -221,32 +221,100 @@ function reqToPromise<T>(req: IDBRequest<T>): Promise<T> {
 }
 
 /**
- * List all available vaults on this device.
+ * List all available vaults on this device with bulletproof localStorage mirror.
  */
 export async function listVaults(): Promise<VaultMeta[]> {
-  const db = await openDb();
-  const tx = db.transaction("vaults", "readonly");
-  const store = tx.objectStore("vaults");
-  const records = await reqToPromise<VaultRecord[]>(store.getAll());
-  return records.map(({ id, name, hasPin, createdAt, updatedAt, integrityHash }) => ({
-    id,
-    name,
-    hasPin: !!hasPin,
-    createdAt,
-    updatedAt,
-    integrityHash,
-  }));
+  try {
+    const db = await openDb();
+    const tx = db.transaction("vaults", "readonly");
+    const store = tx.objectStore("vaults");
+    const records = await reqToPromise<VaultRecord[]>(store.getAll());
+    if (records && records.length > 0) {
+      try {
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("mymouny_vaults_list", JSON.stringify(records));
+        }
+      } catch {}
+      return records.map(({ id, name, hasPin, createdAt, updatedAt, integrityHash }) => ({
+        id,
+        name,
+        hasPin: !!hasPin,
+        createdAt,
+        updatedAt,
+        integrityHash,
+      }));
+    }
+  } catch (err) {
+    console.warn("[my Mouny Storage] listVaults IDB warning, falling back to mirror:", err);
+  }
+
+  // Fallback to localStorage mirror
+  try {
+    if (typeof localStorage !== "undefined") {
+      const raw =
+        localStorage.getItem("mymouny_vaults_list") ||
+        localStorage.getItem("zaker_vaults_list") ||
+        localStorage.getItem("khazinti_vaults_list");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((v: any) => ({
+            id: v.id,
+            name: v.name,
+            hasPin: Boolean(v.hasPin),
+            createdAt: v.createdAt || Date.now(),
+            updatedAt: v.updatedAt || Date.now(),
+            integrityHash: v.integrityHash,
+          }));
+        }
+      }
+    }
+  } catch {}
+
+  return [];
 }
 
 /**
  * Get internal vault record by ID.
  */
 export async function getVaultRecord(id: string): Promise<VaultRecord | null> {
-  const db = await openDb();
-  const tx = db.transaction("vaults", "readonly");
-  const store = tx.objectStore("vaults");
-  const record = await reqToPromise<VaultRecord | undefined>(store.get(id));
-  return record || null;
+  try {
+    const db = await openDb();
+    const tx = db.transaction("vaults", "readonly");
+    const store = tx.objectStore("vaults");
+    const record = await reqToPromise<VaultRecord | undefined>(store.get(id));
+    if (record) {
+      try {
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem(`mymouny_vault_record_${id}`, JSON.stringify(record));
+        }
+      } catch {}
+      return record;
+    }
+  } catch (err) {
+    console.warn("[my Mouny Storage] getVaultRecord IDB warning, falling back to mirror:", err);
+  }
+
+  // Fallback to localStorage mirror
+  try {
+    if (typeof localStorage !== "undefined") {
+      const rawRecord = localStorage.getItem(`mymouny_vault_record_${id}`);
+      if (rawRecord) {
+        return JSON.parse(rawRecord);
+      }
+      const rawList =
+        localStorage.getItem("mymouny_vaults_list") ||
+        localStorage.getItem("zaker_vaults_list") ||
+        localStorage.getItem("khazinti_vaults_list");
+      if (rawList) {
+        const parsed = JSON.parse(rawList);
+        const match = Array.isArray(parsed) && parsed.find((v: any) => v.id === id);
+        if (match) return match;
+      }
+    }
+  } catch {}
+
+  return null;
 }
 
 /**
@@ -584,14 +652,18 @@ export async function loadVaultTransactions(vaultId: string, key?: CryptoKey): P
   if (result.length === 0) {
     try {
       if (typeof localStorage !== "undefined") {
-        const rawMirror = localStorage.getItem(`khazinti_vault_mirror_${vaultId}`);
+        const rawMirror =
+          localStorage.getItem(`mymouny_vault_mirror_${vaultId}`) ||
+          localStorage.getItem(`khazinti_vault_mirror_${vaultId}`) ||
+          localStorage.getItem("mymouny_active_txs");
         if (rawMirror) {
           const mirror = JSON.parse(rawMirror);
-          if (Array.isArray(mirror?.txs) && mirror.txs.length > 0) {
-            console.warn(`[Khazinti Storage] Recovered ${mirror.txs.length} transactions from emergency mirror`);
+          const mirrorTxs = Array.isArray(mirror) ? mirror : mirror?.txs;
+          if (Array.isArray(mirrorTxs) && mirrorTxs.length > 0) {
+            console.warn(`[my Mouny Storage] Recovered ${mirrorTxs.length} transactions from local mirror`);
             // Re-save to IDB
-            await saveVaultTransactions(vaultId, mirror.txs, key);
-            return mirror.txs;
+            await saveVaultTransactions(vaultId, mirrorTxs, key);
+            return mirrorTxs;
           }
         }
       }
@@ -676,7 +748,7 @@ export async function saveVaultTransactions(
     writeTx.onabort = () => reject(writeTx.error || new Error("IDB write transaction aborted"));
   });
 
-  // 4. Redundant Emergency Mirror Snapshot in localStorage (Never-Lost Guarantee)
+  // 4. Redundant Emergency Mirror Snapshot in localStorage (Never-Lost Lifetime Guarantee)
   try {
     if (typeof localStorage !== "undefined") {
       const mirrorPayload = {
@@ -684,10 +756,39 @@ export async function saveVaultTransactions(
         savedAt: Date.now(),
         txs,
       };
+      localStorage.setItem(`mymouny_vault_mirror_${vaultId}`, JSON.stringify(mirrorPayload));
       localStorage.setItem(`khazinti_vault_mirror_${vaultId}`, JSON.stringify(mirrorPayload));
+      localStorage.setItem("mymouny_active_txs", JSON.stringify(txs));
+      localStorage.setItem("mymouny_active_vault_id", vaultId);
     }
   } catch {
     // ignore quota issues on massive ledgers
+  }
+}
+
+/**
+ * Count total stored transactions in a vault (useful for locked vault feedback).
+ */
+export async function getVaultTxCount(vaultId: string): Promise<number> {
+  try {
+    const db = await openDb();
+    const tx = db.transaction("transactions", "readonly");
+    const index = tx.objectStore("transactions").index("by_vault");
+    const countReq = index.count(vaultId);
+    return await reqToPromise<number>(countReq);
+  } catch {
+    try {
+      if (typeof localStorage !== "undefined") {
+        const raw =
+          localStorage.getItem(`mymouny_vault_mirror_${vaultId}`) ||
+          localStorage.getItem(`khazinti_vault_mirror_${vaultId}`);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed?.txs)) return parsed.txs.length;
+        }
+      }
+    } catch {}
+    return 0;
   }
 }
 

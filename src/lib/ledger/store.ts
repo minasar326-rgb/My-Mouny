@@ -92,47 +92,76 @@ function getWarmSnapshot(): {
   }
 
   try {
-    const raw = localStorage.getItem("zaker_warm_cache") || localStorage.getItem("khazinti_warm_cache");
-    if (!raw) {
-      return {
-        isInitialized: false,
-        isUnlocked: false,
-        currentVault: null,
-        txs: [],
-        started: false,
-      };
-    }
-    const parsed = JSON.parse(raw);
-    if (!parsed || !parsed.currentVault) {
-      return {
-        isInitialized: false,
-        isUnlocked: false,
-        currentVault: null,
-        txs: [],
-        started: false,
-      };
+    const raw =
+      localStorage.getItem("mymouny_warm_cache") ||
+      localStorage.getItem("zaker_warm_cache") ||
+      localStorage.getItem("khazinti_warm_cache");
+
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.currentVault) {
+        const currentVault: VaultMeta = parsed.currentVault;
+        let txs: Tx[] = Array.isArray(parsed.txs) ? parsed.txs : [];
+
+        // If txs is empty but vault has no PIN, check mirror
+        if (txs.length === 0 && !currentVault.hasPin) {
+          const mirrorRaw =
+            localStorage.getItem(`mymouny_vault_mirror_${currentVault.id}`) ||
+            localStorage.getItem(`khazinti_vault_mirror_${currentVault.id}`) ||
+            localStorage.getItem("mymouny_active_txs");
+          if (mirrorRaw) {
+            try {
+              const parsedMirror = JSON.parse(mirrorRaw);
+              if (Array.isArray(parsedMirror)) txs = parsedMirror;
+              else if (Array.isArray(parsedMirror?.txs)) txs = parsedMirror.txs;
+            } catch {}
+          }
+        }
+
+        const isUnlocked: boolean = !currentVault.hasPin || Boolean(parsed.isUnlocked);
+
+        return {
+          isInitialized: true,
+          isUnlocked,
+          currentVault,
+          txs,
+          started: txs.length > 0,
+        };
+      }
     }
 
-    const currentVault: VaultMeta = parsed.currentVault;
-    const txs: Tx[] = Array.isArray(parsed.txs) ? parsed.txs : [];
-    const isUnlocked: boolean = !currentVault.hasPin || Boolean(parsed.isUnlocked);
+    // Direct fallback from active txs and default vault mirror
+    const activeTxsRaw = localStorage.getItem("mymouny_active_txs");
+    const activeVaultsRaw =
+      localStorage.getItem("mymouny_vaults_list") ||
+      localStorage.getItem("zaker_vaults_list");
 
-    return {
-      isInitialized: true,
-      isUnlocked,
-      currentVault,
-      txs,
-      started: txs.length > 0,
-    };
-  } catch {
-    return {
-      isInitialized: false,
-      isUnlocked: false,
-      currentVault: null,
-      txs: [],
-      started: false,
-    };
-  }
+    if (activeVaultsRaw) {
+      const vaultsList = JSON.parse(activeVaultsRaw);
+      if (Array.isArray(vaultsList) && vaultsList.length > 0) {
+        const firstVault = vaultsList[0];
+        let txs: Tx[] = [];
+        if (activeTxsRaw) {
+          try { txs = JSON.parse(activeTxsRaw); } catch {}
+        }
+        return {
+          isInitialized: true,
+          isUnlocked: !firstVault.hasPin,
+          currentVault: firstVault,
+          txs,
+          started: txs.length > 0,
+        };
+      }
+    }
+  } catch {}
+
+  return {
+    isInitialized: false,
+    isUnlocked: false,
+    currentVault: null,
+    txs: [],
+    started: false,
+  };
 }
 
 function saveWarmSnapshot(vault: VaultMeta | null, isUnlocked: boolean, txs: Tx[]) {
@@ -144,7 +173,15 @@ function saveWarmSnapshot(vault: VaultMeta | null, isUnlocked: boolean, txs: Tx[
       txs: vault.hasPin ? [] : txs,
       timestamp: Date.now(),
     };
+    localStorage.setItem("mymouny_warm_cache", JSON.stringify(cacheData));
     localStorage.setItem("zaker_warm_cache", JSON.stringify(cacheData));
+    if (!vault.hasPin) {
+      localStorage.setItem("mymouny_active_txs", JSON.stringify(txs));
+      localStorage.setItem(
+        `mymouny_vault_mirror_${vault.id}`,
+        JSON.stringify({ vaultId: vault.id, savedAt: Date.now(), txs })
+      );
+    }
   } catch {
     // Ignore quota issues
   }
@@ -255,7 +292,37 @@ export const useLedger = create<LedgerState>((set, get) => ({
           return;
         }
 
-        // If target vault has a PIN, require unlock
+        // If target vault has a PIN, check if already unlocked in this browser session
+        let sessionPin: string | null = null;
+        try {
+          if (typeof sessionStorage !== "undefined") {
+            sessionPin = sessionStorage.getItem("mymouny_session_pin_" + targetVault.id);
+          }
+        } catch {}
+
+        if (sessionPin) {
+          try {
+            const { meta, key } = await idbUnlockVault(targetVault.id, sessionPin);
+            const txs = await loadVaultTransactions(targetVault.id, key);
+            saveWarmSnapshot(meta, true, txs);
+            set({
+              isInitialized: true,
+              isUnlocked: true,
+              vaults,
+              currentVault: meta,
+              activeCryptoKey: key || null,
+              txs,
+              started: txs.length > 0,
+            });
+            return;
+          } catch {
+            try {
+              sessionStorage.removeItem("mymouny_session_pin_" + targetVault.id);
+            } catch {}
+          }
+        }
+
+        // If target vault has a PIN and no active session, require unlock
         saveWarmSnapshot(targetVault, false, []);
         set({
           isInitialized: true,
@@ -271,6 +338,22 @@ export const useLedger = create<LedgerState>((set, get) => ({
       await initPromise;
     } catch (err) {
       console.error("[useLedger] Failed to init session:", err);
+      // Fallback: check localStorage mirror before resetting!
+      const mirrorVaults = await listVaults().catch(() => []);
+      if (mirrorVaults.length > 0) {
+        const first = mirrorVaults[0];
+        const txs = !first.hasPin ? await loadVaultTransactions(first.id, undefined).catch(() => []) : [];
+        set({
+          isInitialized: true,
+          isUnlocked: !first.hasPin,
+          vaults: mirrorVaults,
+          currentVault: first,
+          activeCryptoKey: null,
+          txs,
+          started: txs.length > 0,
+        });
+        return;
+      }
       const fallbackVault: VaultMeta = {
         id: "default-vault",
         name: "my Mouny",
@@ -318,6 +401,11 @@ export const useLedger = create<LedgerState>((set, get) => ({
       const txs = await loadVaultTransactions(vaultId, key);
       const vaults = await listVaults();
       saveWarmSnapshot(meta, true, txs);
+      try {
+        if (pin && typeof sessionStorage !== "undefined") {
+          sessionStorage.setItem("mymouny_session_pin_" + vaultId, pin);
+        }
+      } catch {}
       set({
         isUnlocked: true,
         currentVault: meta,
@@ -333,7 +421,15 @@ export const useLedger = create<LedgerState>((set, get) => ({
   },
 
   lock: async () => {
-    saveWarmSnapshot(get().currentVault, false, []);
+    const cur = get().currentVault;
+    if (cur) {
+      try {
+        if (typeof sessionStorage !== "undefined") {
+          sessionStorage.removeItem("mymouny_session_pin_" + cur.id);
+        }
+      } catch {}
+    }
+    saveWarmSnapshot(cur, false, []);
     await lockActiveVault();
     const vaults = await listVaults();
     set({

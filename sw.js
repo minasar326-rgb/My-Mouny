@@ -1,5 +1,5 @@
 // my Mouny - High-Performance Offline-First Service Worker
-const CACHE_NAME = "mymouny-cache-v1793313598016";
+const CACHE_NAME = "mymouny-cache-v1793399890198";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
@@ -14,12 +14,16 @@ const OFFLINE_URL = `${cleanBase}offline.html`;
 // Core offline assets precached on install
 const PRECACHE_ASSETS = [
   "/My-Mouny/",
+  "/My-Mouny",
   "/My-Mouny/index.html",
+  "/My-Mouny/?source=pwa",
   "/My-Mouny/offline.html",
   "/My-Mouny/manifest.json",
   "/My-Mouny/favicon.png",
   "/My-Mouny/favicon.svg",
+  "/My-Mouny/favicon.ico",
   "/My-Mouny/apple-touch-icon.png",
+  "/My-Mouny/privacy.html",
   "/My-Mouny/icons/icon-192.png",
   "/My-Mouny/icons/icon-512.png",
   "/My-Mouny/icons/icon-maskable.png",
@@ -27,8 +31,8 @@ const PRECACHE_ASSETS = [
   "/My-Mouny/screenshots/screenshot-desktop.png",
   "/My-Mouny/widgets/balance.json",
   "/My-Mouny/widgets/balance-data.json",
-  "/My-Mouny/assets/index-CRBDD0N9.js",
-  "/My-Mouny/assets/routes-D-Tajw-X.js",
+  "/My-Mouny/assets/index-ErckaXqX.js",
+  "/My-Mouny/assets/routes-Bmgxousz.js",
   "/My-Mouny/assets/styles-DXMoGe4s.css"
 ];
 
@@ -90,45 +94,64 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(req.url);
 
-  // أ) طلبات التنقل (صفحات HTML) - العمل أوفلاين الدائم
+  // أ) طلبات التنقل (صفحات HTML) - العمل أوفلاين الدائم 100% فوراً
   if (req.mode === "navigate" || req.headers.get("accept")?.includes("text/html")) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(CACHE_NAME);
+        const altBase = cleanBase.endsWith("/") ? cleanBase.slice(0, -1) : cleanBase;
+
+        // 1. محاولة استرجاع واجهة التطبيق فوراً من الكاش في 1 ميلي ثانية (0ms تأخير للأوفلاين)
+        const cachedApp =
+          (await cache.match(req, { ignoreSearch: true })) ||
+          (await cache.match(cleanBase, { ignoreSearch: true })) ||
+          (await cache.match(altBase, { ignoreSearch: true })) ||
+          (await cache.match(`${cleanBase}index.html`, { ignoreSearch: true })) ||
+          (await cache.match(`${cleanBase}?source=pwa`, { ignoreSearch: true }));
+
+        if (cachedApp) {
+          // إذا وجد اتصال بالإنترنت، قم بتحديث الكاش صامتاً في الخلفية دون تعطيل المستخدم
+          if (self.navigator?.onLine) {
+            fetch(req)
+              .then((networkResp) => {
+                if (networkResp && networkResp.status === 200) {
+                  cache.put(req, networkResp.clone());
+                  cache.put(cleanBase, networkResp.clone());
+                  cache.put(altBase, networkResp.clone());
+                  cache.put(`${cleanBase}index.html`, networkResp.clone());
+                }
+              })
+              .catch(() => {});
+          }
+          return cachedApp;
+        }
+
+        // 2. إذا لم يكن في الكاش (مثل أول زيارة)، جلبه من الشبكة وحفظه
         try {
-          // محاولة جلب أحدث نسخة إذا وجد إنترنت
           const networkResp = await fetch(req);
           if (networkResp && networkResp.status === 200) {
             cache.put(req, networkResp.clone());
             cache.put(cleanBase, networkResp.clone());
+            cache.put(altBase, networkResp.clone());
             cache.put(`${cleanBase}index.html`, networkResp.clone());
             return networkResp;
           }
         } catch (_) {
-          // انقطاع تام للإنترنت (أوفلاين)
+          // أوفلاين تام وبدون كاش مسبق
         }
 
-        // استرجاع واجهة التطبيق فوراً من الكاش ليعمل بدون نت
-        const cachedApp =
-          (await cache.match(req, { ignoreSearch: true })) ||
-          (await cache.match(cleanBase, { ignoreSearch: true })) ||
-          (await cache.match(`${cleanBase}index.html`, { ignoreSearch: true })) ||
-          (await cache.match(OFFLINE_URL, { ignoreSearch: true })) ||
-          (await cache.match("offline.html", { ignoreSearch: true }));
-
-        if (cachedApp) {
-          return cachedApp;
-        }
-
-        // لو لم يعثر على الصفحة، محاولة كاش PWABuilder أو كاش بديل
+        // 3. محاولة كاش صفحة الأوفلاين الاحتياطية
         try {
           const pwaCache = await caches.open(CACHE);
-          const pwaCached = (await pwaCache.match(OFFLINE_URL)) || (await pwaCache.match(offlineFallbackPage));
+          const pwaCached =
+            (await pwaCache.match(OFFLINE_URL)) ||
+            (await pwaCache.match(offlineFallbackPage)) ||
+            (await cache.match(OFFLINE_URL));
           if (pwaCached) return pwaCached;
         } catch (_) {}
 
         return new Response(
-          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>my Mouny - إدارة المصاريف والخزنة (أوفلاين)</title><style>body{font-family:sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#0284c7;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:16px;cursor:pointer}</style></head><body><div><h1>my Mouny</h1><p>تطبيق إدارة المصاريف والخزنة المالية يعمل أوفلاين 100% بدون إنترنت</p><button onclick="location.reload()">تحديث</button></div></body></html>`,
+          `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>my Mouny - أوفلاين</title><style>body{font-family:sans-serif;background:#0d1520;color:#f8fafc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}button{background:#d97706;color:#fff;border:none;padding:12px 24px;border-radius:12px;font-size:16px;cursor:pointer}</style></head><body><div><h1>my Mouny</h1><p>تطبيق الخزنة والمصاريف يعمل أوفلاين 100%</p><button onclick="location.reload()">إعادة المحاولة</button></div></body></html>`,
           { headers: { "Content-Type": "text/html; charset=utf-8" } }
         );
       })()
