@@ -155,7 +155,6 @@ html = html.replace(/<meta[^>]*name="description"[^>]*>/gi, `<meta name="descrip
 if (actualCss && !html.includes(actualCss)) {
   const cssLinks = `
   <link rel="stylesheet" href="${REPO_BASE}assets/${actualCss}" data-precedence="default" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" data-precedence="default" />
   <meta name="theme-color" content="#0d1520" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
