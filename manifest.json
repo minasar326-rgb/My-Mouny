@@ -139,7 +139,7 @@
       "name": "سجّل شراء ومصروف",
       "short_name": "مصروف",
       "description": "تسجيل عملية شراء وخصم فوري من الكاش أو البنك",
-      "url": "/My-Mouny/My-Mouny/?action=new_expense",
+      "url": "/My-Mouny/?action=new_expense",
       "icons": [
         {
           "src": "/My-Mouny/icons/icon-192.png",
@@ -152,7 +152,7 @@
       "name": "سجّل إيراد ودخل",
       "short_name": "دخل",
       "description": "تسجيل إيراد مالي جديد في رصيدك",
-      "url": "/My-Mouny/My-Mouny/?action=new_income",
+      "url": "/My-Mouny/?action=new_income",
       "icons": [
         {
           "src": "/My-Mouny/icons/icon-192.png",
@@ -165,7 +165,7 @@
       "name": "الخزنة المالية والديون",
       "short_name": "الخزنة",
       "description": "عرض ما لك وما عليك والخزنة المشفرة",
-      "url": "/My-Mouny/My-Mouny/?action=vault",
+      "url": "/My-Mouny/?action=vault",
       "icons": [
         {
           "src": "/My-Mouny/icons/icon-192.png",

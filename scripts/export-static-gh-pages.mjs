@@ -257,20 +257,24 @@ manifest.scope = REPO_BASE;
     });
   }
   if (Array.isArray(manifest.shortcuts)) {
-    manifest.shortcuts = manifest.shortcuts.map((sh) => ({
-      ...sh,
-      url: `${REPO_BASE}${sh.url ? sh.url.replace(/^\/?(?:Zaker-MB\/)?/, "") : ""}`,
-      icons: Array.isArray(sh.icons)
-        ? sh.icons.map((ic) => {
-            const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
-            return {
-              ...ic,
-              type: ic.type || "image/png",
-              src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
-            };
-          })
-        : undefined,
-    }));
+    manifest.shortcuts = manifest.shortcuts.map((sh) => {
+      const query = sh.url && sh.url.includes("?") ? sh.url.slice(sh.url.indexOf("?")) : "";
+      const normalizedUrl = `${REPO_BASE}${query}`;
+      return {
+        ...sh,
+        url: normalizedUrl,
+        icons: Array.isArray(sh.icons)
+          ? sh.icons.map((ic) => {
+              const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
+              return {
+                ...ic,
+                type: ic.type || "image/png",
+                src: `${REPO_BASE}${cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc}`,
+              };
+            })
+          : undefined,
+      };
+    });
   }
   if (Array.isArray(manifest.file_handlers)) {
     manifest.file_handlers = manifest.file_handlers.map((fh) => ({

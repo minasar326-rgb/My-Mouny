@@ -1,5 +1,5 @@
 // my Mouny - High-Performance Offline-First Service Worker
-const CACHE_NAME = "mymouny-offline-cache-v2026";
+const CACHE_NAME = "mymouny-offline-cache-v20261102-1";
 const CACHE = "pwabuilder-offline-page";
 const offlineFallbackPage = "offline.html";
 
