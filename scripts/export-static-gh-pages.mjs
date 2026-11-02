@@ -38,7 +38,7 @@ const serverFunc = await import(
   "file:///" + path.join(root, ".vercel", "output", "functions", "__server.func", "index.mjs").replace(/\\/g, "/")
 );
 const handler = serverFunc.default;
-const req = new Request("http://localhost:8080/");
+const req = new Request("http://localhost:8080/My-Mouny/");
 const res = await handler.fetch(req);
 
 if (res.status !== 200) {
@@ -236,7 +236,7 @@ manifest.short_name = "my Mouny";
 manifest.description = "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات والخزنة المالية المشفرة محلياً 100% بدون إنترنت وبدون خوادم.";
 manifest.categories = ["finance", "productivity", "utilities", "business"];
 manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
-manifest.start_url = `${REPO_BASE}?source=pwa`;
+manifest.start_url = REPO_BASE;
 manifest.scope = REPO_BASE;
 manifest.prefer_related_applications = false;
 manifest.related_applications = Array.isArray(manifest.related_applications)
@@ -347,6 +347,10 @@ if (fs.existsSync(swPath)) {
     `${REPO_BASE}favicon.svg`,
     `${REPO_BASE}favicon.ico`,
     `${REPO_BASE}apple-touch-icon.png`,
+    `${REPO_BASE}fonts/ibm-plex-arabic-400.woff2`,
+    `${REPO_BASE}fonts/ibm-plex-arabic-500.woff2`,
+    `${REPO_BASE}fonts/ibm-plex-arabic-600.woff2`,
+    `${REPO_BASE}fonts/ibm-plex-arabic-700.woff2`,
     `${REPO_BASE}privacy.html`,
     `${REPO_BASE}icons/icon-192.png`,
     `${REPO_BASE}icons/icon-512.png`,
@@ -368,7 +372,7 @@ if (fs.existsSync(swPath)) {
   const timestamp = Date.now();
   swContent = swContent.replace(
     /const CACHE_NAME = "[^"]*";/,
-    `const CACHE_NAME = "mymouny-cache-v${timestamp}";`
+    `const CACHE_NAME = "my-mouny-v2-${timestamp}";`
   );
 
   swContent = fixPaths(swContent);
@@ -392,7 +396,13 @@ if (fs.existsSync(sourceWidgetsDir)) {
 }
 
 // 9. Mirror all static files and folders from dist to repository root for dual-mode deployment (branch root or gh-pages)
-const rootFoldersToSync = ["assets", "icons", "screenshots", "widgets", ".well-known"];
+const rootFoldersToSync = ["assets", "icons", "screenshots", "widgets", "fonts", ".well-known"];
+
+const sourceFontsDir = path.join(root, "public", "fonts");
+const distFontsDir = path.join(distDir, "fonts");
+if (fs.existsSync(sourceFontsDir)) {
+  copyDir(sourceFontsDir, distFontsDir);
+}
 for (const folder of rootFoldersToSync) {
   const src = path.join(distDir, folder);
   const dest = path.join(root, folder);

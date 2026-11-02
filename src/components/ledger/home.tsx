@@ -1564,7 +1564,7 @@ function Ledger() {
             <span>{t("appName", lang)} &copy; 2026</span>
             <span>·</span>
             <a
-              href="/privacy.html"
+              href="./privacy.html"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-accent underline underline-offset-2 flex items-center gap-1 font-medium"

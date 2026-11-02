@@ -3,7 +3,7 @@
   "name": "my Mouny - إدارة المصاريف والخزنة المالية",
   "short_name": "my Mouny",
   "description": "my Mouny: تطبيق إدارة الأموال والمصاريف والحسابات والخزنة المالية المشفرة محلياً 100% بدون إنترنت وبدون خوادم.",
-  "start_url": "/My-Mouny/?source=pwa",
+  "start_url": "/My-Mouny/",
   "scope": "/My-Mouny/",
   "display": "standalone",
   "display_override": [

@@ -205,7 +205,7 @@ export const Route = createRootRoute({
       {
         httpEquiv: "Content-Security-Policy",
         content:
-          "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://grok.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://grok.com; connect-src 'self' ws: http://localhost:* https://localhost:* https://grok.com; base-uri 'self'; form-action 'self';",
+          "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self' ws: http://localhost:* https://localhost:*; base-uri 'self'; form-action 'self';",
       },
       { httpEquiv: "X-Content-Type-Options", content: "nosniff" },
       { name: "referrer", content: "no-referrer" },
@@ -214,13 +214,7 @@ export const Route = createRootRoute({
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap",
-      },
-      { rel: "manifest", href: "/manifest.json" },
+      { rel: "manifest", href: "/My-Mouny/manifest.json" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
