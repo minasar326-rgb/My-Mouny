@@ -1,1 +1,0 @@
-import{t as e}from"./index-DA0Pfrzm.js";var t=e;export{t as component};
