@@ -238,6 +238,13 @@ manifest.categories = ["finance", "productivity", "utilities", "business"];
 manifest.id = `https://minasar326-rgb.github.io${REPO_BASE}`;
 manifest.start_url = `${REPO_BASE}?source=pwa`;
 manifest.scope = REPO_BASE;
+manifest.prefer_related_applications = false;
+manifest.related_applications = Array.isArray(manifest.related_applications)
+  ? manifest.related_applications
+  : [];
+manifest.scope_extensions = [
+  { origin: "https://minasar326-rgb.github.io" },
+];
   if (Array.isArray(manifest.icons)) {
     manifest.icons = manifest.icons.map((ic) => {
       const cleanSrc = ic.src.replace(/^\/(?:My-Mouny|Zaker-m|Zaker-MB|zaker)\//, "/");
